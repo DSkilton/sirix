@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.sirix.gui.view;
 
@@ -9,35 +9,37 @@ import processing.core.PApplet;
 
 /**
  * Interface for processing GUIs.
- * 
+ *
  * @author Johannes Lichtenberger, University of Konstanz
- * 
+ *
  */
 public interface ProcessingGUI {
-	/**
-	 * Processing.org draw method.
-	 */
-	void draw();
 
-	/**
-	 * Update the GUI.
-	 * 
-	 * @param pReset
-	 *          determines if zoomer must be resetted or not
-	 */
-	void update(final EResetZoomer pReset);
+    /**
+     * Processing.org draw method.
+     */
+    void draw();
 
-	/**
-	 * Relocate ControlP5 stuff after the frame which includes the view has been
-	 * resized.
-	 */
-	void relocate();
+    /**
+     * Update the GUI.
+     *
+     * @param pReset determines if zoomer must be resetted or not
+     */
+    void update(final EResetZoomer pReset);
 
-	/**
-	 * Get the Processing {@link PApplet} instance.
-	 */
-	PApplet getApplet();
+    /**
+     * Relocate ControlP5 stuff after the frame which includes the view has been
+     * resized.
+     */
+    void relocate();
 
-	/** Reset the GUI */
-	void resetGUI();
+    /**
+     * Get the Processing {@link PApplet} instance.
+     */
+    PApplet getApplet();
+
+    /**
+     * Reset the GUI
+     */
+    void resetGUI();
 }

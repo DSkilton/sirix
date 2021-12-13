@@ -16,15 +16,14 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.gui.view.model.interfaces;
 
 import java.util.concurrent.BlockingQueue;
@@ -39,63 +38,72 @@ import org.sirix.gui.view.sunburst.model.Modification;
 import com.amazonaws.auth.policy.Resource;
 
 /**
- * Interface which has to be implemented from traversal models. That is a class which encapsulates
- * all stuff related to traverse a {@link Resource}/a document tree.
+ * Interface which has to be implemented from traversal models. That is a class
+ * which encapsulates all stuff related to traverse a {@link Resource}/a
+ * document tree.
  *
  * @author Johannes Lichtenberger, University of Konstanz
  *
  */
 public interface TraverseModel extends Observable {
 
-  /**
-   * Is sent to observers once all descendant-or-self counts for each node have been submitted to a
-   * {@link ExecutorService} and fired.
-   */
-  int DESCENDANTS_DONE = -1;
+    /**
+     * Is sent to observers once all descendant-or-self counts for each node
+     * have been submitted to a {@link ExecutorService} and fired.
+     */
+    int DESCENDANTS_DONE = -1;
 
-  /** Depth to prune. */
-  int DEPTH_TO_PRUNE = 2;
+    /**
+     * Depth to prune.
+     */
+    int DEPTH_TO_PRUNE = 2;
 
-  /** Factor to add to weighting of modifications. */
-  int FACTOR = 30;
+    /**
+     * Factor to add to weighting of modifications.
+     */
+    int FACTOR = 30;
 
-  /** Angle to prune in radians. */
-  double ANGLE_TO_PRUNE = 0.02d;
+    /**
+     * Angle to prune in radians.
+     */
+    double ANGLE_TO_PRUNE = 0.02d;
 
-  /**
-   * Create a {@link SunburstItem} used as a callback method in {@link SunburstDescendantAxis}.
-   *
-   * @param pItem {@link Item} reference
-   * @param pDepth current depth in the tree
-   * @param pIndex index of the current item
-   * @return child extension
-   * @throws NullPointerException if pItem is {@code null}
-   * @throws IllegalArgumentException if {@code paramDepth < 0} or {@code paramIndex < 0}
-   *
-   */
-  float createSunburstItem(Item pItem, int pDepth, int pIndex);
+    /**
+     * Create a {@link SunburstItem} used as a callback method in
+     * {@link SunburstDescendantAxis}.
+     *
+     * @param pItem {@link Item} reference
+     * @param pDepth current depth in the tree
+     * @param pIndex index of the current item
+     * @return child extension
+     * @throws NullPointerException if pItem is {@code null}
+     * @throws IllegalArgumentException if {@code paramDepth < 0} or
+     * {@code paramIndex < 0}
+     *
+     */
+    float createSunburstItem(Item pItem, int pDepth, int pIndex);
 
-  /**
-   * Write a descendants per node in a {@link BlockingQueue}.
-   *
-   * @param rtx optional {@link XmlNodeReadOnlyTrx} instance
-   * @throws ExecutionException if execution fails
-   * @throws InterruptedException if task gets interrupted
-   * @throws NullPointerException if {@code rtx} is {@code null}
-   */
-  void descendants(XmlNodeReadOnlyTrx rtx) throws InterruptedException, ExecutionException;
+    /**
+     * Write a descendants per node in a {@link BlockingQueue}.
+     *
+     * @param rtx optional {@link XmlNodeReadOnlyTrx} instance
+     * @throws ExecutionException if execution fails
+     * @throws InterruptedException if task gets interrupted
+     * @throws NullPointerException if {@code rtx} is {@code null}
+     */
+    void descendants(XmlNodeReadOnlyTrx rtx) throws InterruptedException, ExecutionException;
 
-  /**
-   * Get if current item has been pruned or not.
-   *
-   * @return true if it has been pruned, false otherwise
-   */
-  boolean getIsPruned();
+    /**
+     * Get if current item has been pruned or not.
+     *
+     * @return true if it has been pruned, false otherwise
+     */
+    boolean getIsPruned();
 
-  /**
-   * Get modification count for each node stored in a {@link BlockingQueue}.
-   *
-   * @return {@link BlockingQueue} instance
-   */
-  BlockingQueue<Future<Modification>> getModificationQueue();
+    /**
+     * Get modification count for each node stored in a {@link BlockingQueue}.
+     *
+     * @return {@link BlockingQueue} instance
+     */
+    BlockingQueue<Future<Modification>> getModificationQueue();
 }

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011, University of Konstanz, Distributed Systems Group
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * * Redistributions of source code must retain the above copyright
@@ -12,19 +12,18 @@
  * * Neither the name of the University of Konstanz nor the
  * names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.gui.view;
 
 import javax.annotation.Nonnegative;
@@ -40,159 +39,154 @@ import processing.core.PGraphics;
 
 /**
  * Interface for a visual item.
- * 
+ *
  * @author Johannes Lichtenberger, University of Konstanz
- * 
+ *
  */
 public interface VisualItem extends Comparable<VisualItem> {
-	/**
-	 * Update an item.
-	 * 
-	 * @param pDraw
-	 *          drawing mode
-	 * @param pMappingMode
-	 *          determines how to normalize
-	 * @param pGraphics
-	 *          the {@link PGraphics} instance to write to
-	 */
-	void update(Draw pDraw, int pMappingMode, @Nonnull PGraphics pGraphics);
 
-	/**
-	 * Item hovered.
-	 * 
-	 * @param pGraphic
-	 *          {@link PGraphics} instance
-	 */
-	void hover(PGraphics pGraphic);
+    /**
+     * Update an item.
+     *
+     * @param pDraw drawing mode
+     * @param pMappingMode determines how to normalize
+     * @param pGraphics the {@link PGraphics} instance to write to
+     */
+    void update(Draw pDraw, int pMappingMode, @Nonnull PGraphics pGraphics);
 
-	/**
-	 * Get node key.
-	 * 
-	 * @return node key
-	 */
-	long getKey();
+    /**
+     * Item hovered.
+     *
+     * @param pGraphic {@link PGraphics} instance
+     */
+    void hover(PGraphics pGraphic);
 
-	/**
-	 * Set XPath state.
-	 * 
-	 * @param pState
-	 *          {@link XPathState} value
-	 */
-	void setXPathState(XPathState pState);
+    /**
+     * Get node key.
+     *
+     * @return node key
+     */
+    long getKey();
 
-	/**
-	 * Set grey state.
-	 * 
-	 * @param pState
-	 *          {@link EGreyState} value
-	 */
-	void setGreyState(EGreyState pState);
+    /**
+     * Set XPath state.
+     *
+     * @param pState {@link XPathState} value
+     */
+    void setXPathState(XPathState pState);
 
-	/**
-	 * Get grey state.
-	 * 
-	 * @return grey state
-	 */
-	EGreyState getGreyState();
+    /**
+     * Set grey state.
+     *
+     * @param pState {@link EGreyState} value
+     */
+    void setGreyState(EGreyState pState);
 
-	/**
-	 * Get type of diff.
-	 * 
-	 * @return type of diff
-	 */
-	DiffType getDiff();
+    /**
+     * Get grey state.
+     *
+     * @return grey state
+     */
+    EGreyState getGreyState();
 
-	/**
-	 * Set if node should be colored or not.
-	 * 
-	 * @param pColorNode
-	 *          enum to determine if node should be colored or not
-	 */
-	void setColorNode(EColorNode pColorNode);
+    /**
+     * Get type of diff.
+     *
+     * @return type of diff
+     */
+    DiffType getDiff();
 
-	/**
-	 * Set the revision the item belongs to.
-	 * 
-	 * @param pRevision
-	 *          the revision to set
-	 */
-	void setRevision(@Nonnegative long pRevision);
+    /**
+     * Set if node should be colored or not.
+     *
+     * @param pColorNode enum to determine if node should be colored or not
+     */
+    void setColorNode(EColorNode pColorNode);
 
-	/** Get the revision the item belongs to. */
-	long getRevision();
+    /**
+     * Set the revision the item belongs to.
+     *
+     * @param pRevision the revision to set
+     */
+    void setRevision(@Nonnegative long pRevision);
 
-	/** Get text value of the item. */
-	String getText();
+    /**
+     * Get the revision the item belongs to.
+     */
+    long getRevision();
 
-	/**
-	 * Set the minimum value.
-	 * 
-	 * @param pMinimum
-	 *          value
-	 */
-	void setMinimum(@Nonnegative float pMinimum);
+    /**
+     * Get text value of the item.
+     */
+    String getText();
 
-	/**
-	 * Set the maximum value.
-	 * 
-	 * @param pMaximum
-	 *          value
-	 */
-	void setMaximum(@Nonnegative float pMaximum);
+    /**
+     * Set the minimum value.
+     *
+     * @param pMinimum value
+     */
+    void setMinimum(@Nonnegative float pMinimum);
 
-	/**
-	 * Item depth.
-	 * 
-	 * @return the depth of the item
-	 */
-	int getDepth();
+    /**
+     * Set the maximum value.
+     *
+     * @param pMaximum value
+     */
+    void setMaximum(@Nonnegative float pMaximum);
 
-	/**
-	 * Get value.
-	 * 
-	 * @return value
-	 */
-	float getValue();
+    /**
+     * Item depth.
+     *
+     * @return the depth of the item
+     */
+    int getDepth();
 
-	/**
-	 * Get index of parent item.
-	 * 
-	 * @return index of the parent item
-	 */
-	int getIndexToParent();
+    /**
+     * Get value.
+     *
+     * @return value
+     */
+    float getValue();
 
-	/**
-	 * Get minimum value.
-	 * 
-	 * @return minimum value
-	 */
-	float getMinimum();
+    /**
+     * Get index of parent item.
+     *
+     * @return index of the parent item
+     */
+    int getIndexToParent();
 
-	/**
-	 * Get maximum value.
-	 * 
-	 * @return maximum value
-	 */
-	float getMaximum();
+    /**
+     * Get minimum value.
+     *
+     * @return minimum value
+     */
+    float getMinimum();
 
-	/**
-	 * Get nodeKey of node in older revision which has been compared.
-	 * 
-	 * @return {@code nodeKey} of node in old revision
-	 */
-	long getOldKey();
+    /**
+     * Get maximum value.
+     *
+     * @return maximum value
+     */
+    float getMaximum();
 
-	/**
-	 * Get modification count.
-	 * 
-	 * @return modification count
-	 */
-	int getModificationCount();
+    /**
+     * Get nodeKey of node in older revision which has been compared.
+     *
+     * @return {@code nodeKey} of node in old revision
+     */
+    long getOldKey();
 
-	/**
-	 * Get maximum depth of unchanged items.
-	 * 
-	 * @return maximum depth of unchanged items
-	 */
-	int getOriginalDepth();
+    /**
+     * Get modification count.
+     *
+     * @return modification count
+     */
+    int getModificationCount();
+
+    /**
+     * Get maximum depth of unchanged items.
+     *
+     * @return maximum depth of unchanged items
+     */
+    int getOriginalDepth();
 }

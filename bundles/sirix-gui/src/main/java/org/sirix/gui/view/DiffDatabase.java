@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011, University of Konstanz, Distributed Systems Group
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * * Redistributions of source code must retain the above copyright
@@ -12,12 +12,12 @@
  * * Neither the name of the University of Konstanz nor the
  * names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
@@ -48,115 +48,133 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 
-/** Database to store generated diffs. */
+/**
+ * Database to store generated diffs.
+ */
 public class DiffDatabase implements AutoCloseable {
 
-	/** {@link LogWrapper} reference. */
-	private static final LogWrapper LOGWRAPPER = new LogWrapper(
-			LoggerFactory.getLogger(DiffDatabase.class));
+    /**
+     * {@link LogWrapper} reference.
+     */
+    private static final LogWrapper LOGWRAPPER = new LogWrapper(
+            LoggerFactory.getLogger(DiffDatabase.class));
 
-	/** Class catalog. */
-	private static final String CLASS_CATALOG = "java_class_catalog";
+    /**
+     * Class catalog.
+     */
+    private static final String CLASS_CATALOG = "java_class_catalog";
 
-	/** Berkeley {@link Environment} for the database. */
-	private final Environment mEnv;
+    /**
+     * Berkeley {@link Environment} for the database.
+     */
+    private final Environment mEnv;
 
-	/** {@link File} where to store the database. */
-	private final File mStorageFile;
+    /**
+     * {@link File} where to store the database.
+     */
+    private final File mStorageFile;
 
-	/** Counter to give every instance a different place. */
-	private AtomicInteger mCounter;
+    /**
+     * Counter to give every instance a different place.
+     */
+    private AtomicInteger mCounter;
 
-	/** Name for the database. */
-	private static final String NAME = "DiffDatabase";
+    /**
+     * Name for the database.
+     */
+    private static final String NAME = "DiffDatabase";
 
-	/** {@link ClassCatalog} reference. */
-	private ClassCatalog mCatalog;
+    /**
+     * {@link ClassCatalog} reference.
+     */
+    private ClassCatalog mCatalog;
 
-	/** {@link Database} reference. */
-	private Database mDatabase;
+    /**
+     * {@link Database} reference.
+     */
+    private Database mDatabase;
 
-	/** {@link StoredMap} reference. */
-	private StoredMap<Integer, DiffTuple> mMap;
+    /**
+     * {@link StoredMap} reference.
+     */
+    private StoredMap<Integer, DiffTuple> mMap;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param pFile
-	 *          {@link File} where the database should be stored
-	 * @throws NullPointerException
-	 *           if {@code paramFile} is {@code null}
-	 */
-	public DiffDatabase(final File pFile) {
-		checkNotNull(pFile);
-		mCounter = new AtomicInteger();
-		mStorageFile = new File(pFile,
-				new StringBuilder(new File("diff").getName()).append(File.separator)
-						.append(mCounter.incrementAndGet()).toString());
-		try {
-			if (mStorageFile.exists()) {
-				Files.recursiveRemove(mStorageFile.toPath());
-			}
-		} catch (final SirixIOException e) {
-			LOGWRAPPER.error(e.getMessage(), e);
-		}
-		if (!mStorageFile.mkdirs()) {
-			throw new IllegalStateException(
-					"Couldn't create directory for storage of diffs!");
-		}
+    /**
+     * Constructor.
+     *
+     * @param pFile {@link File} where the database should be stored
+     * @throws NullPointerException if {@code paramFile} is {@code null}
+     */
+    public DiffDatabase(final File pFile) {
+        checkNotNull(pFile);
+        mCounter = new AtomicInteger();
+        mStorageFile = new File(pFile,
+                new StringBuilder(new File("diff").getName()).append(File.separator)
+                        .append(mCounter.incrementAndGet()).toString());
+        try {
+            if (mStorageFile.exists()) {
+                Files.recursiveRemove(mStorageFile.toPath());
+            }
+        } catch (final SirixIOException e) {
+            LOGWRAPPER.error(e.getMessage(), e);
+        }
+        if (!mStorageFile.mkdirs()) {
+            throw new IllegalStateException(
+                    "Couldn't create directory for storage of diffs!");
+        }
 
-		// Create environment configuration and environment.
-		final EnvironmentConfig environmentConfig = new EnvironmentConfig();
-		environmentConfig.setAllowCreate(true);
-		environmentConfig.setTransactional(false);
-		mEnv = new Environment(mStorageFile, environmentConfig);
+        // Create environment configuration and environment.
+        final EnvironmentConfig environmentConfig = new EnvironmentConfig();
+        environmentConfig.setAllowCreate(true);
+        environmentConfig.setTransactional(false);
+        mEnv = new Environment(mStorageFile, environmentConfig);
 
-		// Create database configuration.
-		final DatabaseConfig conf = new DatabaseConfig();
-		conf.setAllowCreate(true);
-		conf.setTemporary(true);
+        // Create database configuration.
+        final DatabaseConfig conf = new DatabaseConfig();
+        conf.setAllowCreate(true);
+        conf.setTemporary(true);
 
-		// Catalog is needed for serial bindings (java serialization).
-		final Database catalogDb = mEnv.openDatabase(null, CLASS_CATALOG, conf);
-		mCatalog = new StoredClassCatalog(catalogDb);
+        // Catalog is needed for serial bindings (java serialization).
+        final Database catalogDb = mEnv.openDatabase(null, CLASS_CATALOG, conf);
+        mCatalog = new StoredClassCatalog(catalogDb);
 
-		// Use Integer tuple binding for key entries.
-		final EntryBinding<Integer> keyBinding = TupleBinding
-				.getPrimitiveBinding(Integer.class);
+        // Use Integer tuple binding for key entries.
+        final EntryBinding<Integer> keyBinding = TupleBinding
+                .getPrimitiveBinding(Integer.class);
 
-		// Use Diff serial binding for data entries.
-		final EntryBinding<DiffTuple> dataBinding = new SerialBinding<>(mCatalog,
-				DiffTuple.class);
+        // Use Diff serial binding for data entries.
+        final EntryBinding<DiffTuple> dataBinding = new SerialBinding<>(mCatalog,
+                DiffTuple.class);
 
-		// Create a database.
-		mDatabase = mEnv.openDatabase(null, NAME, conf);
+        // Create a database.
+        mDatabase = mEnv.openDatabase(null, NAME, conf);
 
-		// Create a map view of the database.
-		mMap = new StoredMap<>(mDatabase, keyBinding, dataBinding, true);
-	}
+        // Create a map view of the database.
+        mMap = new StoredMap<>(mDatabase, keyBinding, dataBinding, true);
+    }
 
-	/**
-	 * Get a map view.
-	 * 
-	 * @return the {@link StoredMap} instance
-	 */
-	public StoredMap<Integer, DiffTuple> getMap() {
-		return mMap;
-	}
+    /**
+     * Get a map view.
+     *
+     * @return the {@link StoredMap} instance
+     */
+    public StoredMap<Integer, DiffTuple> getMap() {
+        return mMap;
+    }
 
-	/**
-	 * Get {@link Environment}.
-	 * 
-	 * @return the {@link Environment} instance
-	 */
-	public Environment getEnvironment() {
-		return mEnv;
-	}
+    /**
+     * Get {@link Environment}.
+     *
+     * @return the {@link Environment} instance
+     */
+    public Environment getEnvironment() {
+        return mEnv;
+    }
 
-	@Override
-	public void close() {
-		mCatalog.close();
-		mDatabase.close();
-		mEnv.close();
-	}
+    @Override
+    public void close() {
+        mCatalog.close();
+        mDatabase.close();
+        mEnv.close();
+    }
 }

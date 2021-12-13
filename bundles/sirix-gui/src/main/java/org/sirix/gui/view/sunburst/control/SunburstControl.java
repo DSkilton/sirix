@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011, University of Konstanz, Distributed Systems Group
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * * Redistributions of source code must retain the above copyright
@@ -12,12 +12,12 @@
  * * Neither the name of the University of Konstanz nor the
  * names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
@@ -39,63 +39,55 @@ import controlP5.ControlListener;
 /**
  * Interface for SunburstControllers which adds specific methods to
  * {@link Control}.
- * 
+ *
  * @author Johannes Lichtenberger, University of Konstanz
- * 
+ *
  */
 public interface SunburstControl extends Control, ControlListener,
-		ZoomPanListener {
-	/**
-	 * Method to process event for submit-button.
-	 * 
-	 * @param pValue
-	 *          change value
-	 * @throws XMLStreamException
-	 *           if the XML fragment isn't well formed
-	 */
-	void submit(int pValue) throws XMLStreamException;
+        ZoomPanListener {
 
-	/**
-	 * Method to process event for commit-button.
-	 * 
-	 * @param pValue
-	 *          change value
-	 * @throws XMLStreamException
-	 *           if the XML fragment isn't well formed
-	 */
-	void commit(int pValue) throws XMLStreamException;
+    /**
+     * Method to process event for submit-button.
+     *
+     * @param pValue change value
+     * @throws XMLStreamException if the XML fragment isn't well formed
+     */
+    void submit(int pValue) throws XMLStreamException;
 
-	/**
-	 * Method to process event for cancel-button.
-	 * 
-	 * @param pValue
-	 *          change value
-	 */
-	void cancel(int pValue);
+    /**
+     * Method to process event for commit-button.
+     *
+     * @param pValue change value
+     * @throws XMLStreamException if the XML fragment isn't well formed
+     */
+    void commit(int pValue) throws XMLStreamException;
 
-	/**
-	 * Set items, which usually invokes the same method in the model.
-	 * 
-	 * @param pItems
-	 *          {@link List} of {@link SunburstItems}
-	 * @throws NullPointerException
-	 *           if {@code pItems} is {@code null}
-	 */
-	void setItems(List<SunburstItem> pItems);
+    /**
+     * Method to process event for cancel-button.
+     *
+     * @param pValue change value
+     */
+    void cancel(int pValue);
 
-	/**
-	 * Set depth max of outer ring.
-	 * 
-	 * @param depthMax
-	 *          max depth of outer ring
-	 */
-	void setNewMaxDepth(int depthMax);
+    /**
+     * Set items, which usually invokes the same method in the model.
+     *
+     * @param pItems {@link List} of {@link SunburstItems}
+     * @throws NullPointerException if {@code pItems} is {@code null}
+     */
+    void setItems(List<SunburstItem> pItems);
 
-	/**
-	 * Set depth max of inner ring.
-	 * 
-	 * @param depthMax
-	 *          max depth of inner ring
-	 */
-	void setOldMaxDepth(int depthMax);
+    /**
+     * Set depth max of outer ring.
+     *
+     * @param depthMax max depth of outer ring
+     */
+    void setNewMaxDepth(int depthMax);
+
+    /**
+     * Set depth max of inner ring.
+     *
+     * @param depthMax max depth of inner ring
+     */
+    void setOldMaxDepth(int depthMax);
 }

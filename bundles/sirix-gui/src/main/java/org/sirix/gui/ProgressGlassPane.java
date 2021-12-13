@@ -28,7 +28,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.gui;
 
 import java.awt.AlphaComposite;
@@ -47,107 +46,108 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 
 /**
- * 
+ *
  * @author Romain Guy
  */
 public class ProgressGlassPane extends JComponent {
-	private static final int BAR_WIDTH = 200;
-	private static final int BAR_HEIGHT = 10;
 
-	private static final Color TEXT_COLOR = new Color(0x333333);
-	private static final Color BORDER_COLOR = new Color(0x333333);
+    private static final int BAR_WIDTH = 200;
+    private static final int BAR_HEIGHT = 10;
 
-	private static final float[] GRADIENT_FRACTIONS = new float[] { 0.0f, 0.499f,
-			0.5f, 1.0f };
-	private static final Color[] GRADIENT_COLORS = new Color[] { Color.GRAY,
-			Color.DARK_GRAY, Color.BLACK, Color.GRAY };
-	private static final Color GRADIENT_COLOR2 = Color.WHITE;
-	private static final Color GRADIENT_COLOR1 = Color.GRAY;
+    private static final Color TEXT_COLOR = new Color(0x333333);
+    private static final Color BORDER_COLOR = new Color(0x333333);
 
-	private String message = "Traversing tree...";
-	private int progress = 0;
+    private static final float[] GRADIENT_FRACTIONS = new float[]{0.0f, 0.499f,
+        0.5f, 1.0f};
+    private static final Color[] GRADIENT_COLORS = new Color[]{Color.GRAY,
+        Color.DARK_GRAY, Color.BLACK, Color.GRAY};
+    private static final Color GRADIENT_COLOR2 = Color.WHITE;
+    private static final Color GRADIENT_COLOR1 = Color.GRAY;
 
-	public ProgressGlassPane() {
-		setBackground(Color.WHITE);
-		setFont(new Font("Default", Font.BOLD, 14));
-	}
+    private String message = "Traversing tree...";
+    private int progress = 0;
 
-	public int getProgress() {
-		return progress;
-	}
+    public ProgressGlassPane() {
+        setBackground(Color.WHITE);
+        setFont(new Font("Default", Font.BOLD, 14));
+    }
 
-	public void setProgress(int progress) {
-		int oldProgress = this.progress;
-		this.progress = progress;
+    public int getProgress() {
+        return progress;
+    }
 
-		// computes the damaged area
-		FontMetrics metrics = getGraphics().getFontMetrics(getFont());
-		int w = (int) (BAR_WIDTH * ((float) oldProgress / 100.0f));
-		int x = w + (getWidth() - BAR_WIDTH) / 2;
-		int y = (getHeight() - BAR_HEIGHT) / 2;
-		y += metrics.getDescent() / 2;
+    public void setProgress(int progress) {
+        int oldProgress = this.progress;
+        this.progress = progress;
 
-		w = (int) (BAR_WIDTH * ((float) progress / 100.0f)) - w;
-		int h = BAR_HEIGHT;
+        // computes the damaged area
+        FontMetrics metrics = getGraphics().getFontMetrics(getFont());
+        int w = (int) (BAR_WIDTH * ((float) oldProgress / 100.0f));
+        int x = w + (getWidth() - BAR_WIDTH) / 2;
+        int y = (getHeight() - BAR_HEIGHT) / 2;
+        y += metrics.getDescent() / 2;
 
-		repaint(x, y, w, h);
-	}
+        w = (int) (BAR_WIDTH * ((float) progress / 100.0f)) - w;
+        int h = BAR_HEIGHT;
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		// enables anti-aliasing
-		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+        repaint(x, y, w, h);
+    }
 
-		// gets the current clipping area
-		Rectangle clip = g.getClipBounds();
+    @Override
+    protected void paintComponent(Graphics g) {
+        // enables anti-aliasing
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
 
-		// sets a 65% translucent composite
-		AlphaComposite alpha = AlphaComposite.SrcOver.derive(0.65f);
-		Composite composite = g2.getComposite();
-		g2.setComposite(alpha);
+        // gets the current clipping area
+        Rectangle clip = g.getClipBounds();
 
-		// fills the background
-		g2.setColor(getBackground());
-		g2.fillRect(clip.x, clip.y, clip.width, clip.height);
+        // sets a 65% translucent composite
+        AlphaComposite alpha = AlphaComposite.SrcOver.derive(0.65f);
+        Composite composite = g2.getComposite();
+        g2.setComposite(alpha);
 
-		// centers the progress bar on screen
-		FontMetrics metrics = g.getFontMetrics();
-		int x = (getWidth() - BAR_WIDTH) / 2;
-		int y = (getHeight() - BAR_HEIGHT - metrics.getDescent()) / 2;
+        // fills the background
+        g2.setColor(getBackground());
+        g2.fillRect(clip.x, clip.y, clip.width, clip.height);
 
-		// draws the text
-		g2.setColor(TEXT_COLOR);
-		g2.drawString(message, x, y);
+        // centers the progress bar on screen
+        FontMetrics metrics = g.getFontMetrics();
+        int x = (getWidth() - BAR_WIDTH) / 2;
+        int y = (getHeight() - BAR_HEIGHT - metrics.getDescent()) / 2;
 
-		// goes to the position of the progress bar
-		y += metrics.getDescent();
+        // draws the text
+        g2.setColor(TEXT_COLOR);
+        g2.drawString(message, x, y);
 
-		// computes the size of the progress indicator
-		int w = (int) (BAR_WIDTH * ((float) progress / 100.0f));
-		int h = BAR_HEIGHT;
+        // goes to the position of the progress bar
+        y += metrics.getDescent();
 
-		// draws the content of the progress bar
-		Paint paint = g2.getPaint();
+        // computes the size of the progress indicator
+        int w = (int) (BAR_WIDTH * ((float) progress / 100.0f));
+        int h = BAR_HEIGHT;
 
-		// bar's background
-		Paint gradient = new GradientPaint(x, y, GRADIENT_COLOR1, x, y + h,
-				GRADIENT_COLOR2);
-		g2.setPaint(gradient);
-		g2.fillRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+        // draws the content of the progress bar
+        Paint paint = g2.getPaint();
 
-		// actual progress
-		gradient = new LinearGradientPaint(x, y, x, y + h, GRADIENT_FRACTIONS,
-				GRADIENT_COLORS);
-		g2.setPaint(gradient);
-		g2.fillRect(x, y, w, h);
+        // bar's background
+        Paint gradient = new GradientPaint(x, y, GRADIENT_COLOR1, x, y + h,
+                GRADIENT_COLOR2);
+        g2.setPaint(gradient);
+        g2.fillRect(x, y, BAR_WIDTH, BAR_HEIGHT);
 
-		g2.setPaint(paint);
+        // actual progress
+        gradient = new LinearGradientPaint(x, y, x, y + h, GRADIENT_FRACTIONS,
+                GRADIENT_COLORS);
+        g2.setPaint(gradient);
+        g2.fillRect(x, y, w, h);
 
-		// draws the progress bar border
-		g2.drawRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+        g2.setPaint(paint);
 
-		g2.setComposite(composite);
-	}
+        // draws the progress bar border
+        g2.drawRect(x, y, BAR_WIDTH, BAR_HEIGHT);
+
+        g2.setComposite(composite);
+    }
 }

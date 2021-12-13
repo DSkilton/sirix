@@ -4,33 +4,34 @@ import org.sirix.api.NodeReadTrx;
 import org.sirix.diff.DiffFactory.DiffType;
 
 public class TransactionTuple {
-	private long mKey;
-	private NodeReadTrx mRtx;
-	private DiffType mDiff;
-	private int mDepth;
 
-	public TransactionTuple(final long pKey, final NodeReadTrx pRtx,
-			final DiffType pDiff, final int pDepth) {
-		mKey = pKey;
-		mRtx = pRtx;
-		mDiff = pDiff;
-		mDepth = pDepth;
-	}
+    private long mKey;
+    private NodeReadTrx mRtx;
+    private DiffType mDiff;
+    private int mDepth;
 
-	public long getKey() {
-		return mKey;
-	}
+    public TransactionTuple(final long pKey, final NodeReadTrx pRtx,
+            final DiffType pDiff, final int pDepth) {
+        mKey = pKey;
+        mRtx = pRtx;
+        mDiff = pDiff;
+        mDepth = pDepth;
+    }
 
-	public NodeReadTrx getRtx() {
-		return mRtx;
-	}
+    public long getKey() {
+        return mKey;
+    }
 
-	public DiffType getDiff() {
-		return mDiff;
-	}
+    public NodeReadTrx getRtx() {
+        return mRtx;
+    }
 
-	public int getDepth() {
-		return mDepth;
-	}
+    public DiffType getDiff() {
+        return mDiff;
+    }
+
+    public int getDepth() {
+        return mDepth;
+    }
 
 }
