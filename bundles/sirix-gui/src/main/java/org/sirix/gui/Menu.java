@@ -111,8 +111,7 @@ enum Menu {
      * @param paramGUI reference to main GUI frame
      * @param paramCommand the menu command
      */
-    void setupItem(final JMenuItem paramItem, final GUI paramGUI,
-            final IGUICommand paramCommand) {
+    void setupItem(final JMenuItem paramItem, final GUI paramGUI, final IGUICommand paramCommand) {
         assert paramItem != null;
         assert paramGUI != null;
         assert paramCommand != null;

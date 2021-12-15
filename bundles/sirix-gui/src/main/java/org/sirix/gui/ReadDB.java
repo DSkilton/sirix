@@ -231,11 +231,11 @@ public final class ReadDB implements AutoCloseable {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("database", mDatabase)
-                .add("session", mSession)
-                .add("rtx", mRtx)
-                .add("revision", mRevision)
-                .add("comp Revision", mCompareRevision)
-                .toString();
+            .add("database", mDatabase)
+            .add("session", mSession)
+            .add("rtx", mRtx)
+            .add("revision", mRevision)
+            .add("comp Revision", mCompareRevision)
+            .toString();
     }
 }

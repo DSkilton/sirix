@@ -262,7 +262,7 @@ public final class TextView extends JScrollPane implements View {
 
     ;
 
-	@Override
+    @Override
     public JComponent component() {
         return this;
     }

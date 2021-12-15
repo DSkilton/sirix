@@ -85,8 +85,7 @@ public class WrapLayout extends FlowLayout {
      * @param paramHgap the horizontal gap between components
      * @param paramVgap the vertical gap between components
      */
-    public WrapLayout(final int paramAlign, final int paramHgap,
-            final int paramVgap) {
+    public WrapLayout(final int paramAlign, final int paramHgap, final int paramVgap) {
         super(paramAlign, paramHgap, paramVgap);
     }
 
@@ -126,8 +125,7 @@ public class WrapLayout extends FlowLayout {
      * @param paramPreferred should preferred size be calculated
      * @return the dimension to layout the target container
      */
-    private Dimension layoutSize(final Container paramTarget,
-            final boolean paramPreferred) {
+    private Dimension layoutSize(final Container paramTarget, final boolean paramPreferred) {
         synchronized (paramTarget.getTreeLock()) {
             // Each row must fit with the width allocated to the containter.
             // When the container width = 0, the preferred width of the container

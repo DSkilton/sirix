@@ -109,11 +109,9 @@ enum Shredding {
          */
         NORMAL {
             @Override
-            Callable<Long> newInstance(final File pSource, final NodeWriteTrx pWtx)
-                    throws IOException, XMLStreamException, SirixUsageException {
+            Callable<Long> newInstance(final File pSource, final NodeWriteTrx pWtx) throws IOException, XMLStreamException, SirixUsageException {
                 final XMLEventReader reader = XMLShredder.createFileReader(pSource);
-                return new XMLShredder.Builder(pWtx, reader, Insert.ASFIRSTCHILD)
-                        .includeComments(true).includePIs(true).build();
+                return new XMLShredder.Builder(pWtx, reader, Insert.ASFIRSTCHILD).includeComments(true).includePIs(true).build();
             }
         },
         /**
@@ -154,29 +152,25 @@ enum Shredding {
      * @param source the source file to shredder
      * @param target the database to create/open
      */
-    private static boolean shredder(final File source, final File target,
-            final EType pType) {
+    private static boolean shredder(final File source, final File target, final EType pType) {
         assert source != null;
         assert target != null;
         assert pType != null;
         boolean retVal = true;
         try {
             final Database database = setupDatabase(target);
-            try (final Session session = database
-                    .getSession(new SessionConfiguration.Builder("shredded").build());
-                    final NodeWriteTrx wtx = session.beginNodeWriteTrx();) {
-                final ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.submit(pType.newInstance(source, wtx));
-                executor.shutdown();
-                executor.awaitTermination(5 * 60, TimeUnit.SECONDS);
+            try (final Session session = database.getSession(new SessionConfiguration.Builder("shredded").build());
+                final NodeWriteTrx wtx = session.beginNodeWriteTrx();) {
+                    final ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.submit(pType.newInstance(source, wtx));
+                    executor.shutdown();
+                    executor.awaitTermination(5 * 60, TimeUnit.SECONDS);
             }
-        } catch (final IOException | XMLStreamException | InterruptedException
-                | SirixException e) {
+        } catch (final IOException | XMLStreamException | InterruptedException | SirixException e) {
             LOGWRAPPER.error(e.getMessage(), e);
             retVal = false;
         }
         return retVal;
-
     }
 
     /**
@@ -186,15 +180,13 @@ enum Shredding {
      * @return {@link Database} implementation
      * @throws SirixException if something went wrong
      */
-    private static Database setupDatabase(final File target)
-            throws SirixException {
+    private static Database setupDatabase(final File target) throws SirixException {
         assert target != null;
         final DatabaseConfiguration config = new DatabaseConfiguration(target);
         Databases.truncateDatabase(config);
         Databases.createDatabase(config);
         final Database db = Databases.openDatabase(target);
-        db.createResource(new ResourceConfiguration.Builder("shredded", config)
-                .build());
+        db.createResource(new ResourceConfiguration.Builder("shredded", config).build());
         return db;
     }
 }
