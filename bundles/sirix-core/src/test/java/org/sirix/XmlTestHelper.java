@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix;
 
 import static org.junit.Assert.fail;
@@ -52,7 +53,8 @@ import org.sirix.utils.XmlDocumentCreator;
 
 /**
  *
- * Helper class for offering convenient usage of {@link XmlResourceManagerImpl}s for test cases.
+ * Helper class for offering convenient usage of {@link XmlResourceManagerImpl}s
+ * for test cases.
  *
  * This includes instantiation of databases plus resources.
  *
@@ -61,242 +63,251 @@ import org.sirix.utils.XmlDocumentCreator;
  */
 public final class XmlTestHelper {
 
-  /** Temporary directory path. */
-  private static final String TMPDIR = System.getProperty("java.io.tmpdir");
+    /**
+     * Temporary directory path.
+     */
+    private static final String TMPDIR = System.getProperty("java.io.tmpdir");
 
-  /** Common resource name. */
-  public static final String RESOURCE = "shredded";
+    /**
+     * Common resource name.
+     */
+    public static final String RESOURCE = "shredded";
 
-  /** Paths where the data is stored to. */
-  public enum PATHS {
-    // PATH1 (Sirix)
-    PATH1(Paths.get(TMPDIR, "sirix", "path1")),
+    /**
+     * Paths where the data is stored to.
+     */
+    public enum PATHS {
+        // PATH1 (Sirix)
+        PATH1(Paths.get(TMPDIR, "sirix", "path1")),
+        // PATH2 (Sirix)
+        PATH2(Paths.get(TMPDIR, "sirix", "path2")),
+        // PATH3 (XML)
+        PATH3(Paths.get(TMPDIR, "xml", "test.xml"));
 
-    // PATH2 (Sirix)
-    PATH2(Paths.get(TMPDIR, "sirix", "path2")),
+        final Path file;
 
-    // PATH3 (XML)
-    PATH3(Paths.get(TMPDIR, "xml", "test.xml"));
+        final DatabaseConfiguration config;
 
-    final Path file;
-
-    final DatabaseConfiguration config;
-
-    PATHS(final Path file) {
-      this.file = file;
-      config = new DatabaseConfiguration(file);
-    }
-
-    public Path getFile() {
-      return file;
-    }
-
-    public DatabaseConfiguration getConfig() {
-      return config.setDatabaseType(DatabaseType.XML);
-    }
-
-  }
-
-  /** Common random instance for generating common tag names. */
-  public final static Random random = new Random();
-
-  /** Path <=> Database instances. */
-  private final static Map<Path, Database<XmlResourceManager>> INSTANCES = new Hashtable<>();
-
-  @Test
-  public void testDummy() {
-    // Just empty to ensure maven running
-  }
-
-  /**
-   * Getting a database and create one if not existing. This includes the creation of a resource with
-   * the settings in the builder as standard.
-   *
-   * @param file to be created
-   * @return a database-obj
-   */
-  @Ignore
-  public static final Database<XmlResourceManager> getDatabase(final Path file) {
-    if (INSTANCES.containsKey(file)) {
-      return INSTANCES.get(file);
-    } else {
-      try {
-        final DatabaseConfiguration config = new DatabaseConfiguration(file);
-        if (!Files.exists(file)) {
-          Databases.createXmlDatabase(config);
+        PATHS(final Path file) {
+            this.file = file;
+            config = new DatabaseConfiguration(file);
         }
-        final var database = Databases.openXmlDatabase(file);
+
+        public Path getFile() {
+            return file;
+        }
+
+        public DatabaseConfiguration getConfig() {
+            return config.setDatabaseType(DatabaseType.XML);
+        }
+
+    }
+
+    /**
+     * Common random instance for generating common tag names.
+     */
+    public final static Random random = new Random();
+
+    /**
+     * Path <=> Database instances.
+     */
+    private final static Map<Path, Database<XmlResourceManager>> INSTANCES = new Hashtable<>();
+
+    @Test
+    public void testDummy() {
+        // Just empty to ensure maven running
+    }
+
+    /**
+     * Getting a database and create one if not existing. This includes the
+     * creation of a resource with the settings in the builder as standard.
+     *
+     * @param file to be created
+     * @return a database-obj
+     */
+    @Ignore
+    public static final Database<XmlResourceManager> getDatabase(final Path file) {
+        if (INSTANCES.containsKey(file)) {
+            return INSTANCES.get(file);
+        } else {
+            try {
+                final DatabaseConfiguration config = new DatabaseConfiguration(file);
+                if (!Files.exists(file)) {
+                    Databases.createXmlDatabase(config);
+                }
+                final var database = Databases.openXmlDatabase(file);
+                database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
+                INSTANCES.put(file, database);
+                return database;
+            } catch (final SirixRuntimeException e) {
+                fail(e.toString());
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Getting a database and create one if not existing. This includes the
+     * creation of a resource with the settings in the builder as standard.
+     *
+     * @param file to be created
+     * @return a database-obj
+     */
+    @Ignore
+    public static final Database<XmlResourceManager> getDatabase(final Path file, final User user) {
+        if (INSTANCES.containsKey(file)) {
+            return INSTANCES.get(file);
+        } else {
+            try {
+                final DatabaseConfiguration config = new DatabaseConfiguration(file);
+                if (!Files.exists(file)) {
+                    Databases.createXmlDatabase(config);
+                }
+                final var database = Databases.openXmlDatabase(file, user);
+                database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
+                INSTANCES.put(file, database);
+                return database;
+            } catch (final SirixRuntimeException e) {
+                fail(e.toString());
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Getting a database and create one if not existing. This includes the
+     * creation of a resource with the settings in the builder as standard.
+     *
+     * @param file to be created
+     * @return a database-obj
+     */
+    @Ignore
+    public static final Database<XmlResourceManager> getDatabaseWithDeweyIDsEnabled(final Path file) {
+        if (INSTANCES.containsKey(file)) {
+            return INSTANCES.get(file);
+        } else {
+            try {
+                final DatabaseConfiguration config = new DatabaseConfiguration(file);
+                if (!Files.exists(file)) {
+                    Databases.createXmlDatabase(config);
+                }
+                final var database = Databases.openXmlDatabase(file);
+                database.createResource(new ResourceConfiguration.Builder(RESOURCE).useDeweyIDs(true).build());
+                INSTANCES.put(file, database);
+                return database;
+            } catch (final SirixRuntimeException e) {
+                fail(e.toString());
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Deleting all resources as defined in the enum {@link PATHS}.
+     *
+     * @throws SirixException
+     */
+    @Ignore
+    public static final void deleteEverything() {
+        closeEverything();
+        Databases.removeDatabase(PATHS.PATH1.getFile());
+        Databases.removeDatabase(PATHS.PATH2.getFile());
+    }
+
+    /**
+     * Closing all resources as defined in the enum {@link PATHS}.
+     *
+     * @throws SirixException
+     */
+    @Ignore
+    public static final void closeEverything() {
+        if (INSTANCES.containsKey(PATHS.PATH1.getFile())) {
+            final var database = INSTANCES.remove(PATHS.PATH1.getFile());
+            database.close();
+        }
+        if (INSTANCES.containsKey(PATHS.PATH2.getFile())) {
+            final var database = INSTANCES.remove(PATHS.PATH2.getFile());
+            database.close();
+        }
+    }
+
+    /**
+     * Read a file into a StringBuilder.
+     *
+     * @param file the file to read
+     * @param whitespaces retrieve file and don't remove any whitespaces
+     * @return StringBuilder instance, which has the string representation of
+     * the document
+     * @throws IOException if an I/O operation fails
+     */
+    @Ignore("Not a test, utility method only")
+    public static StringBuilder readFile(final Path file, final boolean whitespaces) throws IOException {
+        final BufferedReader in = new BufferedReader(new FileReader(file.toFile()));
+        final StringBuilder sBuilder = new StringBuilder();
+        for (String line = in.readLine(); line != null; line = in.readLine()) {
+            if (whitespaces) {
+                sBuilder.append(line + CharsForSerializing.NEWLINE);
+            } else {
+                sBuilder.append(line.trim());
+            }
+        }
+
+        // Remove last newline.
+        if (whitespaces) {
+            sBuilder.replace(sBuilder.length() - 1, sBuilder.length(), "");
+        }
+        in.close();
+
+        return sBuilder;
+    }
+
+    /**
+     * Creating a test document at {@link PATHS#PATH1}.
+     *
+     * @throws SirixException if anything went wrong
+     */
+    public static void createTestDocument() {
+        final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
         database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
-        INSTANCES.put(file, database);
-        return database;
-      } catch (final SirixRuntimeException e) {
-        fail(e.toString());
-        return null;
-      }
-    }
-  }
-
-  /**
-   * Getting a database and create one if not existing. This includes the creation of a resource with
-   * the settings in the builder as standard.
-   *
-   * @param file to be created
-   * @return a database-obj
-   */
-  @Ignore
-  public static final Database<XmlResourceManager> getDatabase(final Path file, final User user) {
-    if (INSTANCES.containsKey(file)) {
-      return INSTANCES.get(file);
-    } else {
-      try {
-        final DatabaseConfiguration config = new DatabaseConfiguration(file);
-        if (!Files.exists(file)) {
-          Databases.createXmlDatabase(config);
+        try (final XmlResourceManager manager = database.openResourceManager(RESOURCE); final XmlNodeTrx wtx = manager.beginNodeTrx()) {
+            XmlDocumentCreator.create(wtx);
+            wtx.commit();
         }
-        final var database = Databases.openXmlDatabase(file, user);
+    }
+
+    /**
+     * Creating a test document with comments and processing instructions at
+     * {@link PATHS#PATH1}.
+     *
+     * @throws SirixException if anything went wrong
+     */
+    public static void createPICommentTestDocument() {
+        final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
         database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
-        INSTANCES.put(file, database);
-        return database;
-      } catch (final SirixRuntimeException e) {
-        fail(e.toString());
-        return null;
-      }
-    }
-  }
-
-  /**
-   * Getting a database and create one if not existing. This includes the creation of a resource with
-   * the settings in the builder as standard.
-   *
-   * @param file to be created
-   * @return a database-obj
-   */
-  @Ignore
-  public static final Database<XmlResourceManager> getDatabaseWithDeweyIDsEnabled(final Path file) {
-    if (INSTANCES.containsKey(file)) {
-      return INSTANCES.get(file);
-    } else {
-      try {
-        final DatabaseConfiguration config = new DatabaseConfiguration(file);
-        if (!Files.exists(file)) {
-          Databases.createXmlDatabase(config);
+        try (final XmlResourceManager manager = database.openResourceManager(RESOURCE); final XmlNodeTrx wtx = manager.beginNodeTrx()) {
+            XmlDocumentCreator.createCommentPI(wtx);
+            wtx.commit();
         }
-        final var database = Databases.openXmlDatabase(file);
-        database.createResource(new ResourceConfiguration.Builder(RESOURCE).useDeweyIDs(true).build());
-        INSTANCES.put(file, database);
-        return database;
-      } catch (final SirixRuntimeException e) {
-        fail(e.toString());
-        return null;
-      }
-    }
-  }
-
-  /**
-   * Deleting all resources as defined in the enum {@link PATHS}.
-   *
-   * @throws SirixException
-   */
-  @Ignore
-  public static final void deleteEverything() {
-    closeEverything();
-    Databases.removeDatabase(PATHS.PATH1.getFile());
-    Databases.removeDatabase(PATHS.PATH2.getFile());
-  }
-
-  /**
-   * Closing all resources as defined in the enum {@link PATHS}.
-   *
-   * @throws SirixException
-   */
-  @Ignore
-  public static final void closeEverything() {
-    if (INSTANCES.containsKey(PATHS.PATH1.getFile())) {
-      final var database = INSTANCES.remove(PATHS.PATH1.getFile());
-      database.close();
-    }
-    if (INSTANCES.containsKey(PATHS.PATH2.getFile())) {
-      final var database = INSTANCES.remove(PATHS.PATH2.getFile());
-      database.close();
-    }
-  }
-
-  /**
-   * Read a file into a StringBuilder.
-   *
-   * @param file the file to read
-   * @param whitespaces retrieve file and don't remove any whitespaces
-   * @return StringBuilder instance, which has the string representation of the document
-   * @throws IOException if an I/O operation fails
-   */
-  @Ignore("Not a test, utility method only")
-  public static StringBuilder readFile(final Path file, final boolean whitespaces) throws IOException {
-    final BufferedReader in = new BufferedReader(new FileReader(file.toFile()));
-    final StringBuilder sBuilder = new StringBuilder();
-    for (String line = in.readLine(); line != null; line = in.readLine()) {
-      if (whitespaces) {
-        sBuilder.append(line + CharsForSerializing.NEWLINE);
-      } else {
-        sBuilder.append(line.trim());
-      }
     }
 
-    // Remove last newline.
-    if (whitespaces) {
-      sBuilder.replace(sBuilder.length() - 1, sBuilder.length(), "");
+    /**
+     * Generating random bytes.
+     *
+     * @return the random bytes
+     */
+    public static final @Nonnull
+    byte[] generateRandomBytes(final int size) {
+        final byte[] returnVal = new byte[size];
+        random.nextBytes(returnVal);
+        return returnVal;
     }
-    in.close();
 
-    return sBuilder;
-  }
-
-  /**
-   * Creating a test document at {@link PATHS#PATH1}.
-   *
-   * @throws SirixException if anything went wrong
-   */
-  public static void createTestDocument() {
-    final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
-    try (final XmlResourceManager manager = database.openResourceManager(RESOURCE);
-        final XmlNodeTrx wtx = manager.beginNodeTrx()) {
-      XmlDocumentCreator.create(wtx);
-      wtx.commit();
+    /**
+     * Generating a single {@link DumbNode} with random values.
+     *
+     * @return a {@link DumbNode} with random values
+     */
+    public static final DataRecord generateOne() {
+        return new DumbNode(XmlTestHelper.random.nextInt(Integer.MAX_VALUE));
     }
-  }
-
-  /**
-   * Creating a test document with comments and processing instructions at {@link PATHS#PATH1}.
-   *
-   * @throws SirixException if anything went wrong
-   */
-  public static void createPICommentTestDocument() {
-    final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
-    try (final XmlResourceManager manager = database.openResourceManager(RESOURCE);
-        final XmlNodeTrx wtx = manager.beginNodeTrx()) {
-      XmlDocumentCreator.createCommentPI(wtx);
-      wtx.commit();
-    }
-  }
-
-  /**
-   * Generating random bytes.
-   *
-   * @return the random bytes
-   */
-  public static final @Nonnull byte[] generateRandomBytes(final int size) {
-    final byte[] returnVal = new byte[size];
-    random.nextBytes(returnVal);
-    return returnVal;
-  }
-
-  /**
-   * Generating a single {@link DumbNode} with random values.
-   *
-   * @return a {@link DumbNode} with random values
-   */
-  public static final DataRecord generateOne() {
-    return new DumbNode(XmlTestHelper.random.nextInt(Integer.MAX_VALUE));
-  }
 }

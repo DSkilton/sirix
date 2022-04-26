@@ -16,73 +16,77 @@ import org.sirix.axis.AbstractTemporalAxis;
  *
  */
 public final class TemporalXmlNodeReadFilterAxis<F extends Filter<XmlNodeReadOnlyTrx>>
-    extends AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> {
+        extends AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> {
 
-  /** Axis to test. */
-  private final AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> mAxis;
+    /**
+     * Axis to test.
+     */
+    private final AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> mAxis;
 
-  /** Test to apply to axis. */
-  private final List<F> mAxisFilter;
+    /**
+     * Test to apply to axis.
+     */
+    private final List<F> mAxisFilter;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param axis axis to iterate over
-   * @param firstAxisTest test to perform for each node found with axis
-   * @param axisTest tests to perform for each node found with axis
-   */
-  @SafeVarargs
-  public TemporalXmlNodeReadFilterAxis(final AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> axis,
-      final F firstAxisTest, final F... axisTest) {
-    checkNotNull(firstAxisTest);
-    mAxis = axis;
-    mAxisFilter = new ArrayList<F>();
-    mAxisFilter.add(firstAxisTest);
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param axis axis to iterate over
+     * @param firstAxisTest test to perform for each node found with axis
+     * @param axisTest tests to perform for each node found with axis
+     */
+    @SafeVarargs
+    public TemporalXmlNodeReadFilterAxis(final AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> axis,
+            final F firstAxisTest, final F... axisTest) {
+        checkNotNull(firstAxisTest);
+        mAxis = axis;
+        mAxisFilter = new ArrayList<F>();
+        mAxisFilter.add(firstAxisTest);
 
-    if (axisTest != null) {
-      for (int i = 0, length = axisTest.length; i < length; i++) {
-        mAxisFilter.add(axisTest[i]);
-      }
-    }
-  }
-
-  @Override
-  protected XmlNodeReadOnlyTrx computeNext() {
-    while (mAxis.hasNext()) {
-      final XmlNodeReadOnlyTrx rtx = mAxis.next();
-      final boolean filterResult = doFilter(rtx);
-      if (filterResult) {
-        return rtx;
-      }
-      rtx.close();
+        if (axisTest != null) {
+            for (int i = 0, length = axisTest.length; i < length; i++) {
+                mAxisFilter.add(axisTest[i]);
+            }
+        }
     }
 
-    return endOfData();
-  }
+    @Override
+    protected XmlNodeReadOnlyTrx computeNext() {
+        while (mAxis.hasNext()) {
+            final XmlNodeReadOnlyTrx rtx = mAxis.next();
+            final boolean filterResult = doFilter(rtx);
+            if (filterResult) {
+                return rtx;
+            }
+            rtx.close();
+        }
 
-  private boolean doFilter(final XmlNodeReadOnlyTrx rtx) {
-    boolean filterResult = true;
-    for (final F filter : mAxisFilter) {
-      filter.setTrx(rtx);
-      filterResult = filterResult && filter.filter();
-      if (!filterResult) {
-        break;
-      }
+        return endOfData();
     }
-    return filterResult;
-  }
 
-  /**
-   * Returns the inner axis.
-   *
-   * @return the axis
-   */
-  public AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> getAxis() {
-    return mAxis;
-  }
+    private boolean doFilter(final XmlNodeReadOnlyTrx rtx) {
+        boolean filterResult = true;
+        for (final F filter : mAxisFilter) {
+            filter.setTrx(rtx);
+            filterResult = filterResult && filter.filter();
+            if (!filterResult) {
+                break;
+            }
+        }
+        return filterResult;
+    }
 
-  @Override
-  public ResourceManager<XmlNodeReadOnlyTrx, XmlNodeTrx> getResourceManager() {
-    return mAxis.getResourceManager();
-  }
+    /**
+     * Returns the inner axis.
+     *
+     * @return the axis
+     */
+    public AbstractTemporalAxis<XmlNodeReadOnlyTrx, XmlNodeTrx> getAxis() {
+        return mAxis;
+    }
+
+    @Override
+    public ResourceManager<XmlNodeReadOnlyTrx, XmlNodeTrx> getResourceManager() {
+        return mAxis.getResourceManager();
+    }
 }

@@ -14,40 +14,42 @@ import org.sirix.node.interfaces.DataRecord;
  */
 public interface ImmutableNode extends DataRecord {
 
-  @Override
-  NodeKind getKind();
+    @Override
+    NodeKind getKind();
 
-  /**
-   * Determines if {@code pOther} is the same item.
-   *
-   * @param other the other node
-   * @return {@code true}, if it is the same item, {@code false} otherwise
-   */
-  boolean isSameItem(@Nullable Node other);
+    /**
+     * Determines if {@code pOther} is the same item.
+     *
+     * @param other the other node
+     * @return {@code true}, if it is the same item, {@code false} otherwise
+     */
+    boolean isSameItem(@Nullable Node other);
 
-  /**
-   * Getting the stored hash.
-   * @return the hash code
-   */
-  BigInteger getHash();
+    /**
+     * Getting the stored hash.
+     *
+     * @return the hash code
+     */
+    BigInteger getHash();
 
-  /**
-   * Compute the hash code.
-   * @return the computed hash code
-   */
-  BigInteger computeHash();
+    /**
+     * Compute the hash code.
+     *
+     * @return the computed hash code
+     */
+    BigInteger computeHash();
 
-  /**
-   * Gets key of the context item's parent.
-   *
-   * @return parent key
-   */
-  long getParentKey();
+    /**
+     * Gets key of the context item's parent.
+     *
+     * @return parent key
+     */
+    long getParentKey();
 
-  /**
-   * Declares, whether the item has a parent.
-   *
-   * @return {@code true}, if item has a parent, {@code false} otherwise
-   */
-  boolean hasParent();
+    /**
+     * Declares, whether the item has a parent.
+     *
+     * @return {@code true}, if item has a parent, {@code false} otherwise
+     */
+    boolean hasParent();
 }

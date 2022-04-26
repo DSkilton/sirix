@@ -18,11 +18,9 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /**
  * This package represent the use of a memory mapped backend using the Foreign Memory API.
- * 
+ *
  * @author Johannes Lichtenberger
  */
 package org.sirix.io.memorymapped;
-

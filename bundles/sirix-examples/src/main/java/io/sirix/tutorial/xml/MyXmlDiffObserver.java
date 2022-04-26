@@ -21,58 +21,58 @@ public class MyXmlDiffObserver implements DiffObserver {
     @Override
     public void diffListener(DiffType diffType, long newNodeKey, long oldNodeKey, DiffDepth depth) {
         switch (diffType) {
-        case INSERTED:
-            System.out.println("DiffType: " + diffType);
+            case INSERTED:
+                System.out.println("DiffType: " + diffType);
 
-            firstRtx.moveTo(newNodeKey);
-            printNode(firstRtx);
+                firstRtx.moveTo(newNodeKey);
+                printNode(firstRtx);
 
-            break;
-        case DELETED:
-            System.out.println("DiffType: " + diffType);
+                break;
+            case DELETED:
+                System.out.println("DiffType: " + diffType);
 
-            secondRtx.moveTo(oldNodeKey);
-            printNode(secondRtx);
+                secondRtx.moveTo(oldNodeKey);
+                printNode(secondRtx);
 
-            break;
-        case UPDATED:
-            System.out.println("DiffType: " + diffType);
+                break;
+            case UPDATED:
+                System.out.println("DiffType: " + diffType);
 
-            secondRtx.moveTo(oldNodeKey);
-            System.out.print("Old: ");
-            printNode(secondRtx);
+                secondRtx.moveTo(oldNodeKey);
+                System.out.print("Old: ");
+                printNode(secondRtx);
 
-            firstRtx.moveTo(newNodeKey);
-            System.out.print("New: ");
-            printNode(firstRtx);
+                firstRtx.moveTo(newNodeKey);
+                System.out.print("New: ");
+                printNode(firstRtx);
 
-            break;
-        default:
+                break;
+            default:
         }
     }
 
     private void printNode(final XmlNodeReadOnlyTrx rtx) {
         switch (rtx.getKind()) {
-        case ELEMENT:
-            System.out.println(rtx.getName());
-            break;
-        case TEXT:
-            System.out.println(rtx.getValue());
-            break;
-        case COMMENT:
-            System.out.println(rtx.getValue());
-            break;
-        case PROCESSING_INSTRUCTION:
-            System.out.println(rtx.getName());
-            break;
-        case ATTRIBUTE:
-            System.out.println(rtx.getName());
-            break;
-        case NAMESPACE:
-            System.out.println(rtx.getName());
-            break;
-        default:
-            throw new IllegalStateException("Kind not known.");
+            case ELEMENT:
+                System.out.println(rtx.getName());
+                break;
+            case TEXT:
+                System.out.println(rtx.getValue());
+                break;
+            case COMMENT:
+                System.out.println(rtx.getValue());
+                break;
+            case PROCESSING_INSTRUCTION:
+                System.out.println(rtx.getName());
+                break;
+            case ATTRIBUTE:
+                System.out.println(rtx.getName());
+                break;
+            case NAMESPACE:
+                System.out.println(rtx.getName());
+                break;
+            default:
+                throw new IllegalStateException("Kind not known.");
         }
     }
 

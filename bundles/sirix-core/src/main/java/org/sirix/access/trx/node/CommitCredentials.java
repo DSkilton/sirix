@@ -10,14 +10,14 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the <organization> nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *     * Neither the name of the <organization> nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -30,24 +30,26 @@ package org.sirix.access.trx.node;
 import org.sirix.access.User;
 
 /**
- * @author Johannes Lichtenberger <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
+ * @author Johannes Lichtenberger
+ * <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
  *
  */
 public final class CommitCredentials {
-  private final User user;
 
-  private final String commitMessage;
+    private final User user;
 
-  public CommitCredentials(final User user, final String commitMessage) {
-    this.user = user;
-    this.commitMessage = commitMessage;
-  }
+    private final String commitMessage;
 
-  public User getUser() {
-    return user;
-  }
+    public CommitCredentials(final User user, final String commitMessage) {
+        this.user = user;
+        this.commitMessage = commitMessage;
+    }
 
-  public String getMessage() {
-    return commitMessage;
-  }
+    public User getUser() {
+        return user;
+    }
+
+    public String getMessage() {
+        return commitMessage;
+    }
 }

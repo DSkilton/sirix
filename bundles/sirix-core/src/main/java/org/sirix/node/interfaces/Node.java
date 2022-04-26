@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.interfaces;
 
 import java.math.BigInteger;
@@ -32,42 +31,43 @@ import org.sirix.node.interfaces.immutable.ImmutableNode;
  * </p>
  */
 public interface Node extends ImmutableNode {
-  // 2^128-1.
-  BigInteger MAX_POSITIVE_VALUE_128_BIT = new BigInteger("340282366920938463463374607431768211455");
+    // 2^128-1.
 
-  @Override
-  NodeKind getKind();
+    BigInteger MAX_POSITIVE_VALUE_128_BIT = new BigInteger("340282366920938463463374607431768211455");
 
-  /**
-   * Set a new DeweyID (may only be necessary during moves.)
-   *
-   * @param id new dewey ID
-   */
-  void setDeweyID(SirixDeweyID id);
+    @Override
+    NodeKind getKind();
 
-  /**
-   * Set the type key.
-   *
-   * @param typeKey the type to set
-   */
-  void setTypeKey(int typeKey);
+    /**
+     * Set a new DeweyID (may only be necessary during moves.)
+     *
+     * @param id new dewey ID
+     */
+    void setDeweyID(SirixDeweyID id);
 
-  /**
-   * Set the actual hash of the structure. The hash of one node should have the entire integrity of
-   * the related subtree.
-   *
-   * @param hash hash for this node
-   */
-  void setHash(BigInteger hash);
+    /**
+     * Set the type key.
+     *
+     * @param typeKey the type to set
+     */
+    void setTypeKey(int typeKey);
 
-  /**
-   * Set the parent key.
-   *
-   * @param nodeKey the parent nodeKey
-   */
-  void setParentKey(long nodeKey);
+    /**
+     * Set the actual hash of the structure. The hash of one node should have
+     * the entire integrity of the related subtree.
+     *
+     * @param hash hash for this node
+     */
+    void setHash(BigInteger hash);
 
-  static BigInteger to128BitsAtMaximumBigInteger(BigInteger hash) {
-    return hash.mod(MAX_POSITIVE_VALUE_128_BIT);
-  }
+    /**
+     * Set the parent key.
+     *
+     * @param nodeKey the parent nodeKey
+     */
+    void setParentKey(long nodeKey);
+
+    static BigInteger to128BitsAtMaximumBigInteger(BigInteger hash) {
+        return hash.mod(MAX_POSITIVE_VALUE_128_BIT);
+    }
 }

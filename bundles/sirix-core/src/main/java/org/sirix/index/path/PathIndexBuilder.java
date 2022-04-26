@@ -19,41 +19,41 @@ import org.slf4j.LoggerFactory;
 
 public final class PathIndexBuilder {
 
-  private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(PathIndexBuilder.class));
+    private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(PathIndexBuilder.class));
 
-  private final Set<Path<QNm>> paths;
+    private final Set<Path<QNm>> paths;
 
-  private final PathSummaryReader pathSummaryReader;
+    private final PathSummaryReader pathSummaryReader;
 
-  private final RBTreeWriter<Long, NodeReferences> avlTreeWriter;
+    private final RBTreeWriter<Long, NodeReferences> avlTreeWriter;
 
-  public PathIndexBuilder(final RBTreeWriter<Long, NodeReferences> avlTreeWriter,
-      final PathSummaryReader pathSummaryReader, final Set<Path<QNm>> paths) {
-    this.pathSummaryReader = pathSummaryReader;
-    this.paths = paths;
-    this.avlTreeWriter = avlTreeWriter;
-  }
-
-  public VisitResult process(final ImmutableNode node, final long pathNodeKey) {
-    try {
-      final long PCR = pathNodeKey;
-      if (pathSummaryReader.getPCRsForPaths(paths, true).contains(PCR) || paths.isEmpty()) {
-        final Optional<NodeReferences> textReferences = avlTreeWriter.get(PCR, SearchMode.EQUAL);
-        if (textReferences.isPresent()) {
-          setNodeReferences(node, textReferences.get(), PCR);
-        } else {
-          setNodeReferences(node, new NodeReferences(), PCR);
-        }
-      }
-    } catch (final PathException | SirixIOException e) {
-      LOGGER.error(e.getMessage(), e);
+    public PathIndexBuilder(final RBTreeWriter<Long, NodeReferences> avlTreeWriter,
+            final PathSummaryReader pathSummaryReader, final Set<Path<QNm>> paths) {
+        this.pathSummaryReader = pathSummaryReader;
+        this.paths = paths;
+        this.avlTreeWriter = avlTreeWriter;
     }
-    return VisitResultType.CONTINUE;
-  }
 
-  private void setNodeReferences(final ImmutableNode node, final NodeReferences references, final long pathNodeKey)
-      throws SirixIOException {
-    avlTreeWriter.index(pathNodeKey, references.addNodeKey(node.getNodeKey()), MoveCursor.NO_MOVE);
-  }
+    public VisitResult process(final ImmutableNode node, final long pathNodeKey) {
+        try {
+            final long PCR = pathNodeKey;
+            if (pathSummaryReader.getPCRsForPaths(paths, true).contains(PCR) || paths.isEmpty()) {
+                final Optional<NodeReferences> textReferences = avlTreeWriter.get(PCR, SearchMode.EQUAL);
+                if (textReferences.isPresent()) {
+                    setNodeReferences(node, textReferences.get(), PCR);
+                } else {
+                    setNodeReferences(node, new NodeReferences(), PCR);
+                }
+            }
+        } catch (final PathException | SirixIOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return VisitResultType.CONTINUE;
+    }
+
+    private void setNodeReferences(final ImmutableNode node, final NodeReferences references, final long pathNodeKey)
+            throws SirixIOException {
+        avlTreeWriter.index(pathNodeKey, references.addNodeKey(node.getNodeKey()), MoveCursor.NO_MOVE);
+    }
 
 }

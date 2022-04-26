@@ -1,69 +1,69 @@
 {
-  "key": "tada",
-  "metadata": {
-    "nodeKey": 15
-  },
-  "value": {
+    "key": "tada",
     "metadata": {
-      "nodeKey": 16
+        "nodeKey": 15
     },
-    "value": [
-      {
+    "value": {
         "metadata": {
-          "nodeKey": 17
+            "nodeKey": 16
         },
         "value": [
-          {
-            "key": "foo",
-            "metadata": {
-              "nodeKey": 18
+            {
+                "metadata": {
+                    "nodeKey": 17
+                },
+                "value": [
+                    {
+                        "key": "foo",
+                        "metadata": {
+                            "nodeKey": 18
+                        },
+                        "value": {
+                            "metadata": {
+                                "nodeKey": 19
+                            },
+                            "value": "bar"
+                        }
+                    }
+                ]
             },
-            "value": {
-              "metadata": {
-                "nodeKey": 19
-              },
-              "value": "bar"
-            }
-          }
-        ]
-      },
-      {
-        "metadata": {
-          "nodeKey": 20
-        },
-        "value": [
-          {
-            "key": "baz",
-            "metadata": {
-              "nodeKey": 21
+            {
+                "metadata": {
+                    "nodeKey": 20
+                },
+                "value": [
+                    {
+                        "key": "baz",
+                        "metadata": {
+                            "nodeKey": 21
+                        },
+                        "value": {
+                            "metadata": {
+                                "nodeKey": 22
+                            },
+                            "value": false
+                        }
+                    }
+                ]
             },
-            "value": {
-              "metadata": {
-                "nodeKey": 22
-              },
-              "value": false
+            {
+                "metadata": {
+                    "nodeKey": 23
+                },
+                "value": "boo"
+            },
+            {
+                "metadata": {
+                    "nodeKey": 24
+                },
+                "value": {}
+            },
+            {
+                "metadata": {
+                    "nodeKey": 25
+                },
+                "value": []
             }
-          }
         ]
-      },
-      {
-        "metadata": {
-          "nodeKey": 23
-        },
-        "value": "boo"
-      },
-      {
-        "metadata": {
-          "nodeKey": 24
-        },
-        "value": {}
-      },
-      {
-        "metadata": {
-          "nodeKey": 25
-        },
-        "value": []
-      }
-    ]
-  }
+    }
 }

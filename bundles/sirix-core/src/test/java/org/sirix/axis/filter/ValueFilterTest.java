@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import org.junit.After;
@@ -32,34 +33,34 @@ import org.sirix.exception.SirixException;
 
 public class ValueFilterTest {
 
-  private Holder holder;
+    private Holder holder;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.deleteEverything();
-    XmlTestHelper.createTestDocument();
-    holder = Holder.generateRtx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.deleteEverything();
+        XmlTestHelper.createTestDocument();
+        holder = Holder.generateRtx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    holder.close();
-    XmlTestHelper.closeEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        holder.close();
+        XmlTestHelper.closeEverything();
+    }
 
-  @Test
-  public void testFilterConvetions() throws SirixException {
-    final XmlNodeReadOnlyTrx reader = holder.getXmlNodeReadTrx();
-    reader.moveTo(4L);
-    FilterTest.testFilterConventions(new ValueFilter(reader, "oops1"), true);
-    FilterTest.testFilterConventions(new ValueFilter(reader, "foo"), false);
+    @Test
+    public void testFilterConvetions() throws SirixException {
+        final XmlNodeReadOnlyTrx reader = holder.getXmlNodeReadTrx();
+        reader.moveTo(4L);
+        FilterTest.testFilterConventions(new ValueFilter(reader, "oops1"), true);
+        FilterTest.testFilterConventions(new ValueFilter(reader, "foo"), false);
 
-    reader.moveTo(1L);
-    reader.moveToAttribute(0);
-    FilterTest.testFilterConventions(new ValueFilter(reader, "j"), true);
+        reader.moveTo(1L);
+        reader.moveToAttribute(0);
+        FilterTest.testFilterConventions(new ValueFilter(reader, "j"), true);
 
-    reader.moveTo(3L);
-    FilterTest.testFilterConventions(new ValueFilter(reader, "j"), true);
-  }
+        reader.moveTo(3L);
+        FilterTest.testFilterConventions(new ValueFilter(reader, "j"), true);
+    }
 
 }

@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.xml;
 
 import com.google.common.base.MoreObjects;
@@ -47,170 +48,176 @@ import java.math.BigInteger;
  */
 public final class NamespaceNode extends AbstractForwardingNode implements NameNode, ImmutableXmlNode {
 
-  /** Delegate for name node information. */
-  private final NameNodeDelegate mNameDel;
+    /**
+     * Delegate for name node information.
+     */
+    private final NameNodeDelegate mNameDel;
 
-  /** {@link NodeDelegate} reference. */
-  private final NodeDelegate mNodeDel;
+    /**
+     * {@link NodeDelegate} reference.
+     */
+    private final NodeDelegate mNodeDel;
 
-  /** The qualified name. */
-  private final QNm mQNm;
+    /**
+     * The qualified name.
+     */
+    private final QNm mQNm;
 
-  private BigInteger mHash;
+    private BigInteger mHash;
 
-  /**
-   * Constructor.
-   *
-   * @param nodeDel {@link NodeDelegate} reference
-   * @param nameDel {@link NameNodeDelegate} reference
-   * @param qNm The qualified name.
-   */
-  public NamespaceNode(final NodeDelegate nodeDel, final NameNodeDelegate nameDel, final QNm qNm) {
-    assert nodeDel != null;
-    assert nameDel != null;
-    assert qNm != null;
-    mNodeDel = nodeDel;
-    mNameDel = nameDel;
-    mQNm = qNm;
-  }
-
-  /**
-   * Constructor.
-   *
-   * @param hashCode hash code
-   * @param nodeDel {@link NodeDelegate} reference
-   * @param nameDel {@link NameNodeDelegate} reference
-   * @param qNm The qualified name.
-   */
-  public NamespaceNode(final BigInteger hashCode, final NodeDelegate nodeDel, final NameNodeDelegate nameDel,
-      final QNm qNm) {
-    assert nodeDel != null;
-    assert nameDel != null;
-    assert qNm != null;
-    mHash = hashCode;
-    mNodeDel = nodeDel;
-    mNameDel = nameDel;
-    mQNm = qNm;
-  }
-
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.NAMESPACE;
-  }
-
-  @Override
-  public BigInteger computeHash() {
-    BigInteger result = BigInteger.ONE;
-
-    result = BigInteger.valueOf(31).multiply(result).add(mNodeDel.computeHash());
-    result = BigInteger.valueOf(31).multiply(result).add(mNameDel.computeHash());
-
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
-
-  @Override
-  public void setHash(final BigInteger hash) {
-    mHash = Node.to128BitsAtMaximumBigInteger(hash);
-  }
-
-  @Override
-  public BigInteger getHash() {
-    return mHash;
-  }
-
-  @Override
-  public int getPrefixKey() {
-    return mNameDel.getPrefixKey();
-  }
-
-  @Override
-  public int getLocalNameKey() {
-    return mNameDel.getLocalNameKey();
-  }
-
-  @Override
-  public int getURIKey() {
-    return mNameDel.getURIKey();
-  }
-
-  @Override
-  public void setPrefixKey(final int prefixKey) {
-    mHash = null;
-    mNameDel.setPrefixKey(prefixKey);
-  }
-
-  @Override
-  public void setLocalNameKey(final int localNameKey) {
-    mHash = null;
-    mNameDel.setLocalNameKey(localNameKey);
-  }
-
-  @Override
-  public void setURIKey(final int uriKey) {
-    mHash = null;
-    mNameDel.setURIKey(uriKey);
-  }
-
-  @Override
-  public VisitResult acceptVisitor(final XmlNodeVisitor visitor) {
-    return visitor.visit(ImmutableNamespace.of(this));
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(mNodeDel, mNameDel);
-  }
-
-  @Override
-  public boolean equals(final @Nullable Object obj) {
-    if (obj instanceof NamespaceNode) {
-      final NamespaceNode other = (NamespaceNode) obj;
-      return Objects.equal(mNodeDel, other.mNodeDel) && Objects.equal(mNameDel, other.mNameDel);
+    /**
+     * Constructor.
+     *
+     * @param nodeDel {@link NodeDelegate} reference
+     * @param nameDel {@link NameNodeDelegate} reference
+     * @param qNm The qualified name.
+     */
+    public NamespaceNode(final NodeDelegate nodeDel, final NameNodeDelegate nameDel, final QNm qNm) {
+        assert nodeDel != null;
+        assert nameDel != null;
+        assert qNm != null;
+        mNodeDel = nodeDel;
+        mNameDel = nameDel;
+        mQNm = qNm;
     }
-    return false;
-  }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this).add("nodeDel", mNodeDel).add("nameDel", mNameDel).toString();
-  }
+    /**
+     * Constructor.
+     *
+     * @param hashCode hash code
+     * @param nodeDel {@link NodeDelegate} reference
+     * @param nameDel {@link NameNodeDelegate} reference
+     * @param qNm The qualified name.
+     */
+    public NamespaceNode(final BigInteger hashCode, final NodeDelegate nodeDel, final NameNodeDelegate nameDel,
+            final QNm qNm) {
+        assert nodeDel != null;
+        assert nameDel != null;
+        assert qNm != null;
+        mHash = hashCode;
+        mNodeDel = nodeDel;
+        mNameDel = nameDel;
+        mQNm = qNm;
+    }
 
-  @Override
-  public void setPathNodeKey(final @Nonnegative long pathNodeKey) {
-    mNameDel.setPathNodeKey(pathNodeKey);
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.NAMESPACE;
+    }
 
-  @Override
-  public long getPathNodeKey() {
-    return mNameDel.getPathNodeKey();
-  }
+    @Override
+    public BigInteger computeHash() {
+        BigInteger result = BigInteger.ONE;
 
-  /**
-   * Getting the inlying {@link NameNodeDelegate}.
-   *
-   * @return {@link NameNodeDelegate} instance
-   */
-  public NameNodeDelegate getNameNodeDelegate() {
-    return mNameDel;
-  }
+        result = BigInteger.valueOf(31).multiply(result).add(mNodeDel.computeHash());
+        result = BigInteger.valueOf(31).multiply(result).add(mNameDel.computeHash());
 
-  @Override
-  protected NodeDelegate delegate() {
-    return mNodeDel;
-  }
+        return Node.to128BitsAtMaximumBigInteger(result);
+    }
 
-  @Override
-  public QNm getName() {
-    return mQNm;
-  }
+    @Override
+    public void setHash(final BigInteger hash) {
+        mHash = Node.to128BitsAtMaximumBigInteger(hash);
+    }
 
-  @Override
-  public SirixDeweyID getDeweyID() {
-    return mNodeDel.getDeweyID();
-  }
+    @Override
+    public BigInteger getHash() {
+        return mHash;
+    }
 
-  @Override
-  public int getTypeKey() {
-    return mNodeDel.getTypeKey();
-  }
+    @Override
+    public int getPrefixKey() {
+        return mNameDel.getPrefixKey();
+    }
+
+    @Override
+    public int getLocalNameKey() {
+        return mNameDel.getLocalNameKey();
+    }
+
+    @Override
+    public int getURIKey() {
+        return mNameDel.getURIKey();
+    }
+
+    @Override
+    public void setPrefixKey(final int prefixKey) {
+        mHash = null;
+        mNameDel.setPrefixKey(prefixKey);
+    }
+
+    @Override
+    public void setLocalNameKey(final int localNameKey) {
+        mHash = null;
+        mNameDel.setLocalNameKey(localNameKey);
+    }
+
+    @Override
+    public void setURIKey(final int uriKey) {
+        mHash = null;
+        mNameDel.setURIKey(uriKey);
+    }
+
+    @Override
+    public VisitResult acceptVisitor(final XmlNodeVisitor visitor) {
+        return visitor.visit(ImmutableNamespace.of(this));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(mNodeDel, mNameDel);
+    }
+
+    @Override
+    public boolean equals(final @Nullable Object obj) {
+        if (obj instanceof NamespaceNode) {
+            final NamespaceNode other = (NamespaceNode) obj;
+            return Objects.equal(mNodeDel, other.mNodeDel) && Objects.equal(mNameDel, other.mNameDel);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("nodeDel", mNodeDel).add("nameDel", mNameDel).toString();
+    }
+
+    @Override
+    public void setPathNodeKey(final @Nonnegative long pathNodeKey) {
+        mNameDel.setPathNodeKey(pathNodeKey);
+    }
+
+    @Override
+    public long getPathNodeKey() {
+        return mNameDel.getPathNodeKey();
+    }
+
+    /**
+     * Getting the inlying {@link NameNodeDelegate}.
+     *
+     * @return {@link NameNodeDelegate} instance
+     */
+    public NameNodeDelegate getNameNodeDelegate() {
+        return mNameDel;
+    }
+
+    @Override
+    protected NodeDelegate delegate() {
+        return mNodeDel;
+    }
+
+    @Override
+    public QNm getName() {
+        return mQNm;
+    }
+
+    @Override
+    public SirixDeweyID getDeweyID() {
+        return mNodeDel.getDeweyID();
+    }
+
+    @Override
+    public int getTypeKey() {
+        return mNodeDel.getTypeKey();
+    }
 }

@@ -6,11 +6,12 @@ import org.sirix.page.RevisionRootPage;
 import org.sirix.page.interfaces.Page;
 
 public interface BufferManager extends AutoCloseable {
-  Cache<PageReference, Page> getRecordPageCache();
 
-  Cache<PageReference, Page> getPageCache();
+    Cache<PageReference, Page> getRecordPageCache();
 
-  Cache<Integer, RevisionRootPage> getRevisionRootPageCache();
+    Cache<PageReference, Page> getPageCache();
 
-  Cache<RBIndexKey, RBNode<?, ?>> getIndexCache();
+    Cache<Integer, RevisionRootPage> getRevisionRootPageCache();
+
+    Cache<RBIndexKey, RBNode<?, ?>> getIndexCache();
 }

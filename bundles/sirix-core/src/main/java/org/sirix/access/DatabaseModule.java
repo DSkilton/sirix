@@ -19,7 +19,7 @@ import javax.inject.Singleton;
  *
  * @author Joao Sousa
  */
-@Module(subcomponents = { JsonLocalDatabaseComponent.class, XmlLocalDatabaseComponent.class})
+@Module(subcomponents = {JsonLocalDatabaseComponent.class, XmlLocalDatabaseComponent.class})
 public interface DatabaseModule {
 
     @Binds
@@ -41,7 +41,5 @@ public interface DatabaseModule {
     static PathBasedPool<ResourceManager<?, ?>> resourceManagers() {
         return new PathBasedPool<>();
     }
-
-
 
 }

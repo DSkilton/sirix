@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.xml;
 
 import com.google.common.hash.Hashing;
@@ -46,64 +47,68 @@ import static org.junit.Assert.assertEquals;
  */
 public class AttributeNodeTest {
 
-  /** {@link Holder} instance. */
-  private Holder mHolder;
+    /**
+     * {@link Holder} instance.
+     */
+    private Holder mHolder;
 
-  /** Sirix {@link PageReadOnlyTrx} instance. */
-  private PageReadOnlyTrx pageReadOnlyTrx;
+    /**
+     * Sirix {@link PageReadOnlyTrx} instance.
+     */
+    private PageReadOnlyTrx pageReadOnlyTrx;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-    mHolder = Holder.generateDeweyIDResourceMgr();
-    pageReadOnlyTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
+        mHolder = Holder.generateDeweyIDResourceMgr();
+        pageReadOnlyTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    pageReadOnlyTrx.close();
-    mHolder.close();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        pageReadOnlyTrx.close();
+        mHolder.close();
+    }
 
-  @Test
-  public void testAttributeNode() throws IOException {
-    final byte[] value = {(byte) 17, (byte) 18};
+    @Test
+    public void testAttributeNode() throws IOException {
+        final byte[] value = {(byte) 17, (byte) 18};
 
-    final NodeDelegate del = new NodeDelegate(99, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
-    final NameNodeDelegate nameDel = new NameNodeDelegate(del, 13, 14, 15, 1);
-    final ValueNodeDelegate valDel = new ValueNodeDelegate(del, value, false);
+        final NodeDelegate del = new NodeDelegate(99, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
+        final NameNodeDelegate nameDel = new NameNodeDelegate(del, 13, 14, 15, 1);
+        final ValueNodeDelegate valDel = new ValueNodeDelegate(del, value, false);
 
-    final AttributeNode node = new AttributeNode(del, nameDel, valDel, new QNm("ns", "a", "p"));
-    node.setHash(node.computeHash());
+        final AttributeNode node = new AttributeNode(del, nameDel, valDel, new QNm("ns", "a", "p"));
+        node.setHash(node.computeHash());
 
-    // Create empty node.
-    check(node);
+        // Create empty node.
+        check(node);
 
-    // Serialize and deserialize node.
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    node.getKind().serialize(new DataOutputStream(out), node, pageReadOnlyTrx);
-    final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-    final AttributeNode node2 = (AttributeNode) NodeKind.ATTRIBUTE.deserialize(new DataInputStream(in), node.getNodeKey(),
-                                                                               node.getDeweyID(), pageReadOnlyTrx);
-    check(node2);
-  }
+        // Serialize and deserialize node.
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        node.getKind().serialize(new DataOutputStream(out), node, pageReadOnlyTrx);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        final AttributeNode node2 = (AttributeNode) NodeKind.ATTRIBUTE.deserialize(new DataInputStream(in), node.getNodeKey(),
+                node.getDeweyID(), pageReadOnlyTrx);
+        check(node2);
+    }
 
-  private final void check(final AttributeNode node) {
-    // Now compare.
-    assertEquals(99L, node.getNodeKey());
-    assertEquals(13L, node.getParentKey());
+    private final void check(final AttributeNode node) {
+        // Now compare.
+        assertEquals(99L, node.getNodeKey());
+        assertEquals(13L, node.getParentKey());
 
-    assertEquals(13, node.getURIKey());
-    assertEquals(14, node.getPrefixKey());
-    assertEquals(15, node.getLocalNameKey());
+        assertEquals(13, node.getURIKey());
+        assertEquals(14, node.getPrefixKey());
+        assertEquals(15, node.getLocalNameKey());
 
-    assertEquals(NamePageHash.generateHashForString("xs:untyped"), node.getTypeKey());
-    assertEquals(2, node.getRawValue().length);
-    assertEquals(NodeKind.ATTRIBUTE, node.getKind());
-    assertEquals(true, node.hasParent());
-    assertEquals(NodeKind.ATTRIBUTE, node.getKind());
-    assertEquals(SirixDeweyID.newRootID(), node.getDeweyID());
-  }
+        assertEquals(NamePageHash.generateHashForString("xs:untyped"), node.getTypeKey());
+        assertEquals(2, node.getRawValue().length);
+        assertEquals(NodeKind.ATTRIBUTE, node.getKind());
+        assertEquals(true, node.hasParent());
+        assertEquals(NodeKind.ATTRIBUTE, node.getKind());
+        assertEquals(SirixDeweyID.newRootID(), node.getDeweyID());
+    }
 
 }

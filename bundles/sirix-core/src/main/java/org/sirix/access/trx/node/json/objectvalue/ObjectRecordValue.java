@@ -5,11 +5,13 @@ import org.sirix.node.NodeKind;
 /**
  * Marker interface.
  *
- * @author Johannes Lichtenberger <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
+ * @author Johannes Lichtenberger
+ * <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
  *
  */
 public interface ObjectRecordValue<T> {
-  NodeKind getKind();
 
-  T getValue();
+    NodeKind getKind();
+
+    T getValue();
 }

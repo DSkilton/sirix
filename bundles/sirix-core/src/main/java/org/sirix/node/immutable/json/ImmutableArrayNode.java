@@ -19,54 +19,56 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class ImmutableArrayNode extends AbstractImmutableJsonStructuralNode {
 
-  /** Mutable {@link ArrayNode}. */
-  private final ArrayNode node;
+    /**
+     * Mutable {@link ArrayNode}.
+     */
+    private final ArrayNode node;
 
-  /**
-   * Private constructor.
-   *
-   * @param node mutable {@link ElementNode}
-   */
-  private ImmutableArrayNode(final ArrayNode node) {
-    this.node = checkNotNull(node);
-  }
+    /**
+     * Private constructor.
+     *
+     * @param node mutable {@link ElementNode}
+     */
+    private ImmutableArrayNode(final ArrayNode node) {
+        this.node = checkNotNull(node);
+    }
 
-  /**
-   * Get a path node key.
-   *
-   * @return path node key
-   */
-  public long getPathNodeKey() {
-    return node.getPathNodeKey();
-  }
+    /**
+     * Get a path node key.
+     *
+     * @return path node key
+     */
+    public long getPathNodeKey() {
+        return node.getPathNodeKey();
+    }
 
-  @Override
-  public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
-    return visitor.visit(this);
-  }
+    @Override
+    public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
+        return visitor.visit(this);
+    }
 
-  /**
-   * Get an immutable JSON-array node instance.
-   *
-   * @param node the mutable {@link ImmutableArrayNode} to wrap
-   * @return immutable JSON-array node instance
-   */
-  public static ImmutableArrayNode of(final ArrayNode node) {
-    return new ImmutableArrayNode(node);
-  }
+    /**
+     * Get an immutable JSON-array node instance.
+     *
+     * @param node the mutable {@link ImmutableArrayNode} to wrap
+     * @return immutable JSON-array node instance
+     */
+    public static ImmutableArrayNode of(final ArrayNode node) {
+        return new ImmutableArrayNode(node);
+    }
 
-  @Override
-  public StructNode structDelegate() {
-    return node;
-  }
+    @Override
+    public StructNode structDelegate() {
+        return node;
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.ARRAY;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.ARRAY;
+    }
 
-  @Override
-  public BigInteger computeHash() {
-    return node.computeHash();
-  }
+    @Override
+    public BigInteger computeHash() {
+        return node.computeHash();
+    }
 }

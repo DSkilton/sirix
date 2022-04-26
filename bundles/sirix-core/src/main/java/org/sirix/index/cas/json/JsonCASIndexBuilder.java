@@ -15,71 +15,71 @@ import org.sirix.node.interfaces.immutable.ImmutableNode;
  */
 final class JsonCASIndexBuilder extends AbstractJsonNodeVisitor {
 
-  private final CASIndexBuilder mIndexBuilderDelegate;
+    private final CASIndexBuilder mIndexBuilderDelegate;
 
-  private final JsonNodeReadOnlyTrx mRtx;
+    private final JsonNodeReadOnlyTrx mRtx;
 
-  JsonCASIndexBuilder(final CASIndexBuilder indexBuilderDelegate, final JsonNodeReadOnlyTrx rtx) {
-    mIndexBuilderDelegate = indexBuilderDelegate;
-    mRtx = rtx;
-  }
-
-  @Override
-  public VisitResult visit(ImmutableStringNode node) {
-    final long PCR = getPathClassRecord(node);
-
-    return mIndexBuilderDelegate.process(node, PCR);
-  }
-
-  @Override
-  public VisitResult visit(ImmutableObjectStringNode node) {
-    final long PCR = getPathClassRecord(node);
-
-    return mIndexBuilderDelegate.process(node, PCR);
-  }
-
-  @Override
-  public VisitResult visit(ImmutableBooleanNode node) {
-    final long PCR = getPathClassRecord(node);
-
-    return mIndexBuilderDelegate.process(node, PCR);
-  }
-
-  @Override
-  public VisitResult visit(ImmutableObjectBooleanNode node) {
-    final long PCR = getPathClassRecord(node);
-
-    return mIndexBuilderDelegate.process(node, PCR);
-  }
-
-  @Override
-  public VisitResult visit(ImmutableNumberNode node) {
-    final long PCR = getPathClassRecord(node);
-
-    return mIndexBuilderDelegate.process(node, PCR);
-  }
-
-  @Override
-  public VisitResult visit(ImmutableObjectNumberNode node) {
-    final long PCR = getPathClassRecord(node);
-
-    return mIndexBuilderDelegate.process(node, PCR);
-  }
-
-  private long getPathClassRecord(ImmutableNode node) {
-    mRtx.moveTo(node.getParentKey());
-
-    final long pcr;
-
-    if (mRtx.isObjectKey()) {
-      pcr = ((ImmutableObjectKeyNode) mRtx.getNode()).getPathNodeKey();
-    } else if (mRtx.isArray()) {
-      pcr = ((ImmutableArrayNode) mRtx.getNode()).getPathNodeKey();
-    } else {
-      pcr = 0;
+    JsonCASIndexBuilder(final CASIndexBuilder indexBuilderDelegate, final JsonNodeReadOnlyTrx rtx) {
+        mIndexBuilderDelegate = indexBuilderDelegate;
+        mRtx = rtx;
     }
 
-    return pcr;
-  }
+    @Override
+    public VisitResult visit(ImmutableStringNode node) {
+        final long PCR = getPathClassRecord(node);
+
+        return mIndexBuilderDelegate.process(node, PCR);
+    }
+
+    @Override
+    public VisitResult visit(ImmutableObjectStringNode node) {
+        final long PCR = getPathClassRecord(node);
+
+        return mIndexBuilderDelegate.process(node, PCR);
+    }
+
+    @Override
+    public VisitResult visit(ImmutableBooleanNode node) {
+        final long PCR = getPathClassRecord(node);
+
+        return mIndexBuilderDelegate.process(node, PCR);
+    }
+
+    @Override
+    public VisitResult visit(ImmutableObjectBooleanNode node) {
+        final long PCR = getPathClassRecord(node);
+
+        return mIndexBuilderDelegate.process(node, PCR);
+    }
+
+    @Override
+    public VisitResult visit(ImmutableNumberNode node) {
+        final long PCR = getPathClassRecord(node);
+
+        return mIndexBuilderDelegate.process(node, PCR);
+    }
+
+    @Override
+    public VisitResult visit(ImmutableObjectNumberNode node) {
+        final long PCR = getPathClassRecord(node);
+
+        return mIndexBuilderDelegate.process(node, PCR);
+    }
+
+    private long getPathClassRecord(ImmutableNode node) {
+        mRtx.moveTo(node.getParentKey());
+
+        final long pcr;
+
+        if (mRtx.isObjectKey()) {
+            pcr = ((ImmutableObjectKeyNode) mRtx.getNode()).getPathNodeKey();
+        } else if (mRtx.isArray()) {
+            pcr = ((ImmutableArrayNode) mRtx.getNode()).getPathNodeKey();
+        } else {
+            pcr = 0;
+        }
+
+        return pcr;
+    }
 
 }

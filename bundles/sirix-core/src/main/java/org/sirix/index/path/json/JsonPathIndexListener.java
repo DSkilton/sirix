@@ -8,16 +8,16 @@ import org.sirix.node.interfaces.immutable.ImmutableNode;
 
 final class JsonPathIndexListener implements ChangeListener {
 
-  private final PathIndexListener pathIndexListener;
+    private final PathIndexListener pathIndexListener;
 
-  JsonPathIndexListener(final PathIndexListener pathIndexListenerDelegate) {
-    pathIndexListener = pathIndexListenerDelegate;
-  }
-
-  @Override
-  public void listen(final ChangeType type, final ImmutableNode node, final long pathNodeKey) {
-    if (node.getKind() == NodeKind.OBJECT_KEY || node.getKind() == NodeKind.ARRAY) {
-      pathIndexListener.listen(type, node, pathNodeKey);
+    JsonPathIndexListener(final PathIndexListener pathIndexListenerDelegate) {
+        pathIndexListener = pathIndexListenerDelegate;
     }
-  }
+
+    @Override
+    public void listen(final ChangeType type, final ImmutableNode node, final long pathNodeKey) {
+        if (node.getKind() == NodeKind.OBJECT_KEY || node.getKind() == NodeKind.ARRAY) {
+            pathIndexListener.listen(type, node, pathNodeKey);
+        }
+    }
 }

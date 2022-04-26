@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import java.util.ArrayDeque;
@@ -27,137 +28,141 @@ import org.sirix.api.NodeCursor;
 
 /**
  * <p>
- * Iterate over all following nodes of kind ELEMENT or TEXT starting at a given node. Self is not
- * included.
+ * Iterate over all following nodes of kind ELEMENT or TEXT starting at a given
+ * node. Self is not included.
  * </p>
  */
 public final class FollowingAxis extends AbstractAxis {
 
-  /** Determines if it's the first node. */
-  private boolean isFirst;
+    /**
+     * Determines if it's the first node.
+     */
+    private boolean isFirst;
 
-  /** {@link Deque} reference to save right sibling keys. */
-  private Deque<Long> rightSiblingStack;
+    /**
+     * {@link Deque} reference to save right sibling keys.
+     */
+    private Deque<Long> rightSiblingStack;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param cursor cursor to iterate with
-   */
-  public FollowingAxis(final NodeCursor cursor) {
-    super(cursor);
-    isFirst = true;
-    rightSiblingStack = new ArrayDeque<>();
-  }
-
-  @Override
-  public void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    isFirst = true;
-    rightSiblingStack = new ArrayDeque<>();
-  }
-
-  @Override
-  protected long nextKey() {
-    // Assure, that following is not evaluated on an attribute or a namespace.
-    if (isFirst) {
-      switch (getCursor().getKind()) {
-        case ATTRIBUTE:
-        case NAMESPACE:
-          return done();
-        // $CASES-OMITTED$
-        default:
-      }
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param cursor cursor to iterate with
+     */
+    public FollowingAxis(final NodeCursor cursor) {
+        super(cursor);
+        isFirst = true;
+        rightSiblingStack = new ArrayDeque<>();
     }
 
-    final NodeCursor cursor = getCursor();
-    final long currKey = cursor.getNodeKey();
+    @Override
+    public void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        isFirst = true;
+        rightSiblingStack = new ArrayDeque<>();
+    }
 
-    if (isFirst) {
-      isFirst = false;
+    @Override
+    protected long nextKey() {
+        // Assure, that following is not evaluated on an attribute or a namespace.
+        if (isFirst) {
+            switch (getCursor().getKind()) {
+                case ATTRIBUTE:
+                case NAMESPACE:
+                    return done();
+                // $CASES-OMITTED$
+                default:
+            }
+        }
 
-      /*
+        final NodeCursor cursor = getCursor();
+        final long currKey = cursor.getNodeKey();
+
+        if (isFirst) {
+            isFirst = false;
+
+            /*
        * The first following is either a right sibling, or the right sibling of the first ancestor
        * that has a right sibling. Note: ancestors and descendants are no following node!
-       */
-      if (cursor.hasRightSibling()) {
-        cursor.moveToRightSibling();
-        final long key = cursor.getNodeKey();
+             */
+            if (cursor.hasRightSibling()) {
+                cursor.moveToRightSibling();
+                final long key = cursor.getNodeKey();
 
-        if (cursor.hasRightSibling()) {
-          // Push right sibling on a stack to reduce path traversal.
-          rightSiblingStack.push(cursor.getRightSiblingKey());
+                if (cursor.hasRightSibling()) {
+                    // Push right sibling on a stack to reduce path traversal.
+                    rightSiblingStack.push(cursor.getRightSiblingKey());
+                }
+
+                cursor.moveTo(currKey);
+                return key;
+            }
+
+            // Try to find the right sibling of one of the ancestors.
+            while (cursor.hasParent()) {
+                cursor.moveToParent();
+                if (cursor.hasRightSibling()) {
+                    cursor.moveToRightSibling();
+                    final long key = cursor.getNodeKey();
+
+                    if (cursor.hasRightSibling()) {
+                        rightSiblingStack.push(cursor.getRightSiblingKey());
+                    }
+                    cursor.moveTo(currKey);
+                    return key;
+                }
+            }
+
+            // CurrentNode is last key in the document order.
+            return done();
         }
 
-        cursor.moveTo(currKey);
-        return key;
-      }
+        // Step down the tree in document order.
+        if (cursor.hasFirstChild()) {
+            cursor.moveToFirstChild();
+            final long key = cursor.getNodeKey();
 
-      // Try to find the right sibling of one of the ancestors.
-      while (cursor.hasParent()) {
-        cursor.moveToParent();
-        if (cursor.hasRightSibling()) {
-          cursor.moveToRightSibling();
-          final long key = cursor.getNodeKey();
+            if (cursor.hasRightSibling()) {
+                // Push right sibling on a stack to reduce path traversal.
+                rightSiblingStack.push(cursor.getRightSiblingKey());
+            }
 
-          if (cursor.hasRightSibling()) {
-            rightSiblingStack.push(cursor.getRightSiblingKey());
-          }
-          cursor.moveTo(currKey);
-          return key;
+            cursor.moveTo(currKey);
+            return key;
         }
-      }
 
-      // CurrentNode is last key in the document order.
-      return done();
-    }
+        if (rightSiblingStack.isEmpty()) {
+            // Try to find the right sibling of one of the ancestors.
+            while (cursor.hasParent()) {
+                cursor.moveToParent();
+                if (cursor.hasRightSibling()) {
+                    cursor.moveToRightSibling();
+                    final long key = cursor.getNodeKey();
 
-    // Step down the tree in document order.
-    if (cursor.hasFirstChild()) {
-      cursor.moveToFirstChild();
-      final long key = cursor.getNodeKey();
+                    if (cursor.hasRightSibling()) {
+                        // Push right sibling on a stack to reduce path
+                        // traversal.
+                        rightSiblingStack.push(cursor.getRightSiblingKey());
+                    }
 
-      if (cursor.hasRightSibling()) {
-        // Push right sibling on a stack to reduce path traversal.
-        rightSiblingStack.push(cursor.getRightSiblingKey());
-      }
+                    cursor.moveTo(currKey);
+                    return key;
+                }
+            }
+        } else {
+            // Get root key of sibling subtree.
+            cursor.moveTo(rightSiblingStack.pop());
+            final long key = cursor.getNodeKey();
 
-      cursor.moveTo(currKey);
-      return key;
-    }
+            if (cursor.hasRightSibling()) {
+                // Push right sibling on a stack to reduce path traversal.
+                rightSiblingStack.push(cursor.getRightSiblingKey());
+            }
 
-    if (rightSiblingStack.isEmpty()) {
-      // Try to find the right sibling of one of the ancestors.
-      while (cursor.hasParent()) {
-        cursor.moveToParent();
-        if (cursor.hasRightSibling()) {
-          cursor.moveToRightSibling();
-          final long key = cursor.getNodeKey();
-
-          if (cursor.hasRightSibling()) {
-            // Push right sibling on a stack to reduce path
-            // traversal.
-            rightSiblingStack.push(cursor.getRightSiblingKey());
-          }
-
-          cursor.moveTo(currKey);
-          return key;
+            cursor.moveTo(currKey);
+            return key;
         }
-      }
-    } else {
-      // Get root key of sibling subtree.
-      cursor.moveTo(rightSiblingStack.pop());
-      final long key = cursor.getNodeKey();
 
-      if (cursor.hasRightSibling()) {
-        // Push right sibling on a stack to reduce path traversal.
-        rightSiblingStack.push(cursor.getRightSiblingKey());
-      }
-
-      cursor.moveTo(currKey);
-      return key;
+        return done();
     }
-
-    return done();
-  }
 }

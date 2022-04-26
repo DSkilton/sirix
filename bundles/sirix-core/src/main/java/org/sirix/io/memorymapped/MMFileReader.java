@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.io.memorymapped;
 
 import com.google.common.hash.HashFunction;
@@ -50,153 +49,155 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class MMFileReader implements Reader {
 
-  /**
-   * Beacon of first references.
-   */
-  final static int FIRST_BEACON = 12;
+    /**
+     * Beacon of first references.
+     */
+    final static int FIRST_BEACON = 12;
 
-  /**
-   * Inflater to decompress.
-   */
-  final ByteHandler byteHandler;
+    /**
+     * Inflater to decompress.
+     */
+    final ByteHandler byteHandler;
 
-  /**
-   * The hash function used to hash pages/page fragments.
-   */
-  final HashFunction hashFunction;
+    /**
+     * The hash function used to hash pages/page fragments.
+     */
+    final HashFunction hashFunction;
 
-  /**
-   * The type of data to serialize.
-   */
-  private final SerializationType type;
+    /**
+     * The type of data to serialize.
+     */
+    private final SerializationType type;
 
-  /**
-   * Used to serialize/deserialze pages.
-   */
-  private final PagePersister pagePersiter;
+    /**
+     * Used to serialize/deserialze pages.
+     */
+    private final PagePersister pagePersiter;
 
-  private MemorySegment dataFileSegment;
+    private MemorySegment dataFileSegment;
 
-  private MemorySegment revisionFileSegment;
+    private MemorySegment revisionFileSegment;
 
-  /**
-   * Constructor.
-   *
-   * @param dataFile            the data file
-   * @param revisionsOffsetFile the file, which holds pointers to the revision root pages
-   * @param handler             {@link ByteHandler} instance
-   */
-  public MMFileReader(final Path dataFile, final Path revisionsOffsetFile, final ByteHandler handler,
-      final SerializationType type, final PagePersister pagePersistenter) throws IOException {
-    hashFunction = Hashing.sha256();
-    byteHandler = checkNotNull(handler);
-    this.type = checkNotNull(type);
-    pagePersiter = checkNotNull(pagePersistenter);
-    dataFileSegment =
-        MemorySegment.mapFile(checkNotNull(dataFile), 0, dataFile.toFile().length(), FileChannel.MapMode.READ_ONLY).share();
-    revisionFileSegment = MemorySegment.mapFile(revisionsOffsetFile, 0, revisionsOffsetFile.toFile().length(),
-        FileChannel.MapMode.READ_ONLY).share();
-  }
+    /**
+     * Constructor.
+     *
+     * @param dataFile the data file
+     * @param revisionsOffsetFile the file, which holds pointers to the revision
+     * root pages
+     * @param handler {@link ByteHandler} instance
+     */
+    public MMFileReader(final Path dataFile, final Path revisionsOffsetFile, final ByteHandler handler,
+            final SerializationType type, final PagePersister pagePersistenter) throws IOException {
+        hashFunction = Hashing.sha256();
+        byteHandler = checkNotNull(handler);
+        this.type = checkNotNull(type);
+        pagePersiter = checkNotNull(pagePersistenter);
+        dataFileSegment
+                = MemorySegment.mapFile(checkNotNull(dataFile), 0, dataFile.toFile().length(), FileChannel.MapMode.READ_ONLY).share();
+        revisionFileSegment = MemorySegment.mapFile(revisionsOffsetFile, 0, revisionsOffsetFile.toFile().length(),
+                FileChannel.MapMode.READ_ONLY).share();
+    }
 
-  /**
-   * Constructor.
-   *
-   * @param handler {@link ByteHandler} instance
-   */
-  public MMFileReader(final MemorySegment dataFileSegment, final MemorySegment revisionFileSegment,
-      final ByteHandler handler, final SerializationType type, final PagePersister pagePersistenter) {
-    hashFunction = Hashing.sha256();
-    byteHandler = checkNotNull(handler);
-    this.type = checkNotNull(type);
-    pagePersiter = checkNotNull(pagePersistenter);
-    this.dataFileSegment = dataFileSegment;
-    this.revisionFileSegment = revisionFileSegment;
-  }
+    /**
+     * Constructor.
+     *
+     * @param handler {@link ByteHandler} instance
+     */
+    public MMFileReader(final MemorySegment dataFileSegment, final MemorySegment revisionFileSegment,
+            final ByteHandler handler, final SerializationType type, final PagePersister pagePersistenter) {
+        hashFunction = Hashing.sha256();
+        byteHandler = checkNotNull(handler);
+        this.type = checkNotNull(type);
+        pagePersiter = checkNotNull(pagePersistenter);
+        this.dataFileSegment = dataFileSegment;
+        this.revisionFileSegment = revisionFileSegment;
+    }
 
-  @Override
-  public Page read(final @Nonnull PageReference reference, final @Nullable PageReadOnlyTrx pageReadTrx) {
-    try {
-      long offset;
+    @Override
+    public Page read(final @Nonnull PageReference reference, final @Nullable PageReadOnlyTrx pageReadTrx) {
+        try {
+            long offset;
 
-      final int dataLength = switch (type) {
-        case DATA -> {
-          if (reference.getKey() < 0) {
-            throw new SirixIOException("Reference key is not valid: " + reference.getKey());
-          }
-          offset = reference.getKey() + 4;
-          yield MemoryAccess.getIntAtOffset(dataFileSegment, reference.getKey());
+            final int dataLength = switch (type) {
+                case DATA -> {
+                    if (reference.getKey() < 0) {
+                        throw new SirixIOException("Reference key is not valid: " + reference.getKey());
+                    }
+                    offset = reference.getKey() + 4;
+                    yield MemoryAccess.getIntAtOffset(dataFileSegment, reference.getKey());
+                }
+                case TRANSACTION_INTENT_LOG -> {
+                    if (reference.getLogKey() < 0) {
+                        throw new SirixIOException("Reference log key is not valid: " + reference.getPersistentLogKey());
+                    }
+                    offset = reference.getPersistentLogKey() + 4;
+                    yield MemoryAccess.getIntAtOffset(dataFileSegment, reference.getPersistentLogKey());
+                }
+                default ->
+                    throw new AssertionError();
+            };
+
+            //      reference.setLength(dataLength + MMFileReader.OTHER_BEACON);
+            final byte[] page = new byte[dataLength];
+
+            for (int i = 0; i < dataLength; i++) {
+                page[i] = MemoryAccess.getByteAtOffset(dataFileSegment, offset + (long) i);
+            }
+
+            return deserialize(pageReadTrx, page);
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
         }
-        case TRANSACTION_INTENT_LOG -> {
-          if (reference.getLogKey() < 0) {
-            throw new SirixIOException("Reference log key is not valid: " + reference.getPersistentLogKey());
-          }
-          offset = reference.getPersistentLogKey() + 4;
-          yield MemoryAccess.getIntAtOffset(dataFileSegment, reference.getPersistentLogKey());
+    }
+
+    @Override
+    public PageReference readUberPageReference() {
+        final PageReference uberPageReference = new PageReference();
+
+        uberPageReference.setKey(MemoryAccess.getLong(dataFileSegment));
+
+        final UberPage page = (UberPage) read(uberPageReference, null);
+        uberPageReference.setPage(page);
+        return uberPageReference;
+    }
+
+    @Override
+    public RevisionRootPage readRevisionRootPage(final int revision, final PageReadOnlyTrx pageReadTrx) {
+        try {
+            final long dataFileOffset = MemoryAccess.getLongAtOffset(revisionFileSegment, revision * 8);
+            final int dataLength = MemoryAccess.getIntAtOffset(dataFileSegment, dataFileOffset);
+
+            final byte[] page = new byte[dataLength];
+
+            for (int i = 0; i < dataLength; i++) {
+                page[i] = MemoryAccess.getByteAtOffset(dataFileSegment, dataFileOffset + 4L + (long) i);
+            }
+
+            return (RevisionRootPage) deserialize(pageReadTrx, page);
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
         }
-        default -> throw new AssertionError();
-      };
-
-      //      reference.setLength(dataLength + MMFileReader.OTHER_BEACON);
-      final byte[] page = new byte[dataLength];
-
-      for (int i = 0; i < dataLength; i++) {
-        page[i] = MemoryAccess.getByteAtOffset(dataFileSegment, offset + (long)i);
-      }
-
-      return deserialize(pageReadTrx, page);
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
     }
-  }
 
-  @Override
-  public PageReference readUberPageReference() {
-    final PageReference uberPageReference = new PageReference();
+    private Page deserialize(PageReadOnlyTrx pageReadTrx, byte[] page) throws IOException {
+        // perform byte operations
+        final DataInputStream input = new DataInputStream(byteHandler.deserialize(new ByteArrayInputStream(page)));
 
-    uberPageReference.setKey(MemoryAccess.getLong(dataFileSegment));
-
-    final UberPage page = (UberPage) read(uberPageReference, null);
-    uberPageReference.setPage(page);
-    return uberPageReference;
-  }
-
-  @Override
-  public RevisionRootPage readRevisionRootPage(final int revision, final PageReadOnlyTrx pageReadTrx) {
-    try {
-      final long dataFileOffset = MemoryAccess.getLongAtOffset(revisionFileSegment, revision * 8);
-      final int dataLength = MemoryAccess.getIntAtOffset(dataFileSegment, dataFileOffset);
-
-      final byte[] page = new byte[dataLength];
-
-      for (int i = 0; i < dataLength; i++) {
-        page[i] = MemoryAccess.getByteAtOffset(dataFileSegment, dataFileOffset + 4L + (long)i);
-      }
-
-      return (RevisionRootPage) deserialize(pageReadTrx, page);
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
+        // return deserialized page
+        return pagePersiter.deserializePage(input, pageReadTrx, type);
     }
-  }
 
-  private Page deserialize(PageReadOnlyTrx pageReadTrx, byte[] page) throws IOException {
-    // perform byte operations
-    final DataInputStream input = new DataInputStream(byteHandler.deserialize(new ByteArrayInputStream(page)));
-
-    // return deserialized page
-    return pagePersiter.deserializePage(input, pageReadTrx, type);
-  }
-
-  @Override
-  public void close() {
-    if (dataFileSegment != null && dataFileSegment.isAlive()) {
-      dataFileSegment.close();
+    @Override
+    public void close() {
+        if (dataFileSegment != null && dataFileSegment.isAlive()) {
+            dataFileSegment.close();
+        }
+        if (revisionFileSegment != null && revisionFileSegment.isAlive()) {
+            revisionFileSegment.close();
+        }
     }
-    if (revisionFileSegment != null && revisionFileSegment.isAlive()) {
-      revisionFileSegment.close();
-    }
-  }
 
-  public void setDataSegment(MemorySegment dataSegment) {
-    this.dataFileSegment = dataSegment;
-  }
+    public void setDataSegment(MemorySegment dataSegment) {
+        this.dataFileSegment = dataSegment;
+    }
 }

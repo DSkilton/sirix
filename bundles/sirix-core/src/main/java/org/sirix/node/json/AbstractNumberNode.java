@@ -14,70 +14,70 @@ import java.math.BigInteger;
 
 public abstract class AbstractNumberNode extends AbstractStructForwardingNode implements ImmutableJsonNode {
 
-  private StructNodeDelegate structNodeDelegate;
-  private Number number;
+    private StructNodeDelegate structNodeDelegate;
+    private Number number;
 
-  private BigInteger hashCode;
+    private BigInteger hashCode;
 
-  public AbstractNumberNode(StructNodeDelegate structNodeDel, Number number) {
-    this.structNodeDelegate = structNodeDel;
-    this.number = number;
-  }
-
-  @Override
-  public BigInteger computeHash() {
-    final HashCode valueHashCode = structNodeDelegate.getNodeDelegate().getHashFunction().hashInt(number.hashCode());
-
-    BigInteger result = BigInteger.ONE;
-
-    result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
-
-    if (structNodeDelegate.isNotEmpty()) {
-      result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+    public AbstractNumberNode(StructNodeDelegate structNodeDel, Number number) {
+        this.structNodeDelegate = structNodeDel;
+        this.number = number;
     }
 
-    result = BigInteger.valueOf(31).multiply(result).add(new BigInteger(1, valueHashCode.asBytes()));
+    @Override
+    public BigInteger computeHash() {
+        final HashCode valueHashCode = structNodeDelegate.getNodeDelegate().getHashFunction().hashInt(number.hashCode());
 
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
+        BigInteger result = BigInteger.ONE;
 
-  @Override
-  public void setHash(final BigInteger hash) {
-    if (hash != null) {
-      hashCode = Node.to128BitsAtMaximumBigInteger(hash);
-    } else {
-      hashCode = null;
+        result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
+
+        if (structNodeDelegate.isNotEmpty()) {
+            result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+        }
+
+        result = BigInteger.valueOf(31).multiply(result).add(new BigInteger(1, valueHashCode.asBytes()));
+
+        return Node.to128BitsAtMaximumBigInteger(result);
     }
-  }
 
-  @Override
-  public BigInteger getHash() {
-    if (hashCode == null) {
-      hashCode = computeHash();
+    @Override
+    public void setHash(final BigInteger hash) {
+        if (hash != null) {
+            hashCode = Node.to128BitsAtMaximumBigInteger(hash);
+        } else {
+            hashCode = null;
+        }
     }
-    return hashCode;
-  }
 
-  public void setValue(final Number number) {
-    this.number = number;
-  }
+    @Override
+    public BigInteger getHash() {
+        if (hashCode == null) {
+            hashCode = computeHash();
+        }
+        return hashCode;
+    }
 
-  public Number getValue() {
-    return number;
-  }
+    public void setValue(final Number number) {
+        this.number = number;
+    }
 
-  @Override
-  public StructNodeDelegate getStructNodeDelegate() {
-    return structNodeDelegate;
-  }
+    public Number getValue() {
+        return number;
+    }
 
-  @Override
-  protected StructNodeDelegate structDelegate() {
-    return structNodeDelegate;
-  }
+    @Override
+    public StructNodeDelegate getStructNodeDelegate() {
+        return structNodeDelegate;
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return structNodeDelegate.getNodeDelegate();
-  }
+    @Override
+    protected StructNodeDelegate structDelegate() {
+        return structNodeDelegate;
+    }
+
+    @Override
+    protected NodeDelegate delegate() {
+        return structNodeDelegate.getNodeDelegate();
+    }
 }

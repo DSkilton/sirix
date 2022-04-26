@@ -34,43 +34,43 @@ import org.sirix.page.UnorderedKeyValuePage;
  */
 public class CacheTestHelper {
 
-  /**
-   * Page reading transaction.
-   */
-  public static PageReadOnlyTrx PAGE_READ_TRX;
+    /**
+     * Page reading transaction.
+     */
+    public static PageReadOnlyTrx PAGE_READ_TRX;
 
-  /**
-   * Unordered record pages.
-   */
-  protected static UnorderedKeyValuePage[][] PAGES;
+    /**
+     * Unordered record pages.
+     */
+    protected static UnorderedKeyValuePage[][] PAGES;
 
-  private static final int VERSIONSTORESTORE = 3;
+    private static final int VERSIONSTORESTORE = 3;
 
-  /**
-   * Setup the cache.
-   *
-   * @param cache cache to fill
-   * @throws SirixException if setting up Sirix session fails
-   */
-  public static void setUp(final Cache<Long, PageContainer> cache) throws SirixException {
-    PAGE_READ_TRX = Holder.openResourceManager().getResourceManager().beginPageReadOnlyTrx();
-    PAGES = new UnorderedKeyValuePage[LRUCache.CACHE_CAPACITY + 1][VERSIONSTORESTORE + 1];
-    for (int i = 0; i < PAGES.length; i++) {
-      final UnorderedKeyValuePage page = new UnorderedKeyValuePage(i, IndexType.DOCUMENT, PAGE_READ_TRX);
-      final UnorderedKeyValuePage[] revs = new UnorderedKeyValuePage[VERSIONSTORESTORE];
+    /**
+     * Setup the cache.
+     *
+     * @param cache cache to fill
+     * @throws SirixException if setting up Sirix session fails
+     */
+    public static void setUp(final Cache<Long, PageContainer> cache) throws SirixException {
+        PAGE_READ_TRX = Holder.openResourceManager().getResourceManager().beginPageReadOnlyTrx();
+        PAGES = new UnorderedKeyValuePage[LRUCache.CACHE_CAPACITY + 1][VERSIONSTORESTORE + 1];
+        for (int i = 0; i < PAGES.length; i++) {
+            final UnorderedKeyValuePage page = new UnorderedKeyValuePage(i, IndexType.DOCUMENT, PAGE_READ_TRX);
+            final UnorderedKeyValuePage[] revs = new UnorderedKeyValuePage[VERSIONSTORESTORE];
 
-      for (int j = 0; j < VERSIONSTORESTORE; j++) {
-        PAGES[i][j + 1] = new UnorderedKeyValuePage(i, IndexType.DOCUMENT, PAGE_READ_TRX);
-        revs[j] = PAGES[i][j + 1];
-      }
-      PAGES[i][0] = page;
-      cache.put((long) i, PageContainer.getInstance(page, page));
+            for (int j = 0; j < VERSIONSTORESTORE; j++) {
+                PAGES[i][j + 1] = new UnorderedKeyValuePage(i, IndexType.DOCUMENT, PAGE_READ_TRX);
+                revs[j] = PAGES[i][j + 1];
+            }
+            PAGES[i][0] = page;
+            cache.put((long) i, PageContainer.getInstance(page, page));
+        }
     }
-  }
 
-  @Test
-  public void dummy() {
-    // Only for dummy purposes.
-  }
+    @Test
+    public void dummy() {
+        // Only for dummy purposes.
+    }
 
 }

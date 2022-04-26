@@ -15,7 +15,7 @@ import java.nio.file.Path;
 public interface ResourceManagerFactory<R extends ResourceManager<? extends NodeReadOnlyTrx, ? extends NodeTrx>> {
 
     R create(ResourceConfiguration resourceConfig,
-             BufferManager bufferManager,
-             Path resourceFile);
+            BufferManager bufferManager,
+            Path resourceFile);
 
 }

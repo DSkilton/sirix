@@ -19,13 +19,13 @@
                 "summary": "Consolidated Screening List API",
                 "description": "The Consolidated Screening List API consolidates eleven export screening lists of the Departments of Commerce, State and the Treasury into a single data feed as an aid to industry in conducting electronic screens of potential parties to regulated transactions.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "sources",
                         "in": "query",
@@ -150,13 +150,13 @@
                 "summary": "Trade Events API",
                 "description": "The Trade Events API provides data on events for U.S. businesses interested in selling their products and services overseas. These events include industry conferences, webinars, lectures, and trade missions organized by ITA and other trade agencies.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the registration_title, description, event_name, industries, city, venues.city, venues.state, venues.country, contacts.first_name, contacts.last_name, and contacts.person_title fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the registration_title, description, event_name, industries, city, venues.city, venues.state, venues.country, contacts.first_name, contacts.last_name, and contacts.person_title fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "industries",
                         "in": "query",
@@ -258,13 +258,13 @@
                 "summary": "Trade Leads API",
                 "description": "The Trade Leads API provides contract opportunities for U.S. businesses selling their products and services overseas. These leads come from a variety of sources.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the title, description, topic, tags, industry, ita_industries, and procurement_organization fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the title, description, topic, tags, industry, ita_industries, and procurement_organization fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "industries",
                         "in": "query",
@@ -373,13 +373,13 @@
                 "summary": "Tariff Rates API",
                 "description": "The Tariff Rates API provides data about each country with whom the United States has a Free Trade Agreement (FTA). When the U.S. enters into an FTA with a foreign government, it negotiates lower tariff rates with that government for a wide variety of products. A tariff is a tax that a company must pay a foreign country when shipping a product to that country. Typically the FTA tariffs rates decline over several years.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the subheading_description, tariff_rate_quota_note, rule_text, and tariff_line fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the subheading_description, tariff_rate_quota_note, rule_text, and tariff_line fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "sources",
                         "in": "query",
@@ -456,13 +456,13 @@
                 "summary": "FAQs on Exporting API",
                 "description": "The Frequently Asked Questions (FAQs) API includes more than 200 commonly asked questions about exporting. The answers provided are from government experts that specialize in unique aspects of trade.\n",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the question and answer fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the question and answer fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "topics",
                         "in": "query",
@@ -561,13 +561,13 @@
                 "summary": "ITA Offices & Centers API",
                 "description": "The ITA Offices & Centers API provides contact and address information for all of ITA's domestic and international export assistance centers. There are almost 200 ITA centers worldwide whose locations are managed by ITA's internal office management system.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Returns office locations for a match within the post or office name fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Returns office locations for a match within the post or office name fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "city",
                         "in": "query",
@@ -634,13 +634,13 @@
                 "summary": "Trade News & Articles API",
                 "description": "The Trade News & Articles API provides in-depth news and articles written by Trade Specialists working in the Federal government. The authors include staff from ITA as well as other Trade Promotion Coordinating Committee (TPCC) agencies.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the title, short_title, summary, content, and keyword fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the title, short_title, summary, content, and keyword fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "export_phases",
                         "in": "query",
@@ -788,13 +788,13 @@
                 "summary": "Zip Code to USEAC API",
                 "description": "The Zip Code to USEAC API provides direct access to the U.S. Export Assistance Centers (USEACs) that have been assigned to all of the 40,000+ zip codes in the United States.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Returns zip code entries for a match within the post, office_name or zip_city fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Returns zip code entries for a match within the post, office_name or zip_city fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "zip_codes",
                         "in": "query",
@@ -842,13 +842,13 @@
                 "summary": "Business Service Providers API",
                 "description": "The Business Service Providers (BSP) API is a directory of U.S. and foreign-based businesses providing services that many small and medium sized exporters require to succeed in foreign markets Parameters.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Returns business service providers for a match in the company_name, company_description, or contact_name fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Returns business service providers for a match in the company_name, company_description, or contact_name fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "ita_offices",
                         "in": "query",
@@ -904,13 +904,13 @@
                 "summary": "Ita Taxonomies API",
                 "description": "The ITA Taxonomies API gives developers direct access to the exporting, trade, and investment terms that ITA uses to tag the content and data in its other APIs.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Returns taxonomy terms for a match within label field.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Returns taxonomy terms for a match within label field.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "types",
                         "in": "query",
@@ -961,15 +961,15 @@
         "/de_minimis/search": {
             "get": {
                 "summary": "De Minimis API",
-                "description": "The De Minimis API provides data about the De Minimis amount and the Value Added Tax (VAT) amount that products may be subject to when exported to foreign countries.  “De Minimis” is the threshold for a product’s value below which no duty or tax is charged.  Furthermore, products below the De Minimis undergo minimal clearance procedures, such as customs and paperwork requirements.  Similarly, the value of the exported products must exceed the VAT amount before it is subject to VAT.",
+                "description": "The De Minimis API provides data about the De Minimis amount and the Value Added Tax (VAT) amount that products may be subject to when exported to foreign countries.  “De Minimis�? is the threshold for a product’s value below which no duty or tax is charged.  Furthermore, products below the De Minimis undergo minimal clearance procedures, such as customs and paperwork requirements.  Similarly, the value of the exported products must exceed the VAT amount before it is subject to VAT.",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Returns de minimis rates for a match in the country or notes fields.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Returns de minimis rates for a match in the country or notes fields.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "countries",
                         "in": "query",
@@ -1019,13 +1019,13 @@
                 "summary": "Market Intelligence API",
                 "description": "",
                 "parameters": [{
-                    "name": "keyword",
-                    "in": "query",
-                    "description": "Searches for a match within the atom, references, section, summary, and title fields.  Note:  the atom field is searchable, but not returned in the JSON results.",
-                    "required": false,
-                    "type": "string",
-                    "format": "string"
-                },
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Searches for a match within the atom, references, section, summary, and title fields.  Note:  the atom field is searchable, but not returned in the JSON results.",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
                     {
                         "name": "industries",
                         "in": "query",
@@ -1592,7 +1592,7 @@
         "Rate": {
             "properties": {
                 "source": {
-                    "description": "Two letter code for the “reporter” country with whom the U.S. has the Free Trade Agreement.",
+                    "description": "Two letter code for the “reporter�? country with whom the U.S. has the Free Trade Agreement.",
                     "type": "string"
                 },
                 "source_id": {
@@ -1632,7 +1632,7 @@
                     "type": "string"
                 },
                 "tariff_eliminated": {
-                    "description": "Flag noting whether or not the tariff is eventually eliminated. “False”= not eliminated.",
+                    "description": "Flag noting whether or not the tariff is eventually eliminated. “False�?= not eliminated.",
                     "type": "string"
                 },
                 "partner_name": {
@@ -1832,7 +1832,7 @@
                     "type": "string"
                 },
                 "evergreen": {
-                    "description": "Flag to designate “timeless” articles, always topically relevant.",
+                    "description": "Flag to designate “timeless�? articles, always topically relevant.",
                     "type": "string"
                 },
                 "content": {

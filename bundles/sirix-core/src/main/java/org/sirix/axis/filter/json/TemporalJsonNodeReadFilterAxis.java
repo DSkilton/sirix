@@ -16,73 +16,77 @@ import org.sirix.axis.AbstractTemporalAxis;
  *
  */
 public final class TemporalJsonNodeReadFilterAxis<F extends Filter<JsonNodeReadOnlyTrx>>
-    extends AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> {
+        extends AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> {
 
-  /** Axis to test. */
-  private final AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> mAxis;
+    /**
+     * Axis to test.
+     */
+    private final AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> mAxis;
 
-  /** Test to apply to axis. */
-  private final List<F> mAxisFilter;
+    /**
+     * Test to apply to axis.
+     */
+    private final List<F> mAxisFilter;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param axis axis to iterate over
-   * @param firstAxisTest test to perform for each node found with axis
-   * @param axisTest tests to perform for each node found with axis
-   */
-  @SafeVarargs
-  public TemporalJsonNodeReadFilterAxis(final AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> axis,
-      final F firstAxisTest, final F... axisTest) {
-    checkNotNull(firstAxisTest);
-    mAxis = axis;
-    mAxisFilter = new ArrayList<F>();
-    mAxisFilter.add(firstAxisTest);
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param axis axis to iterate over
+     * @param firstAxisTest test to perform for each node found with axis
+     * @param axisTest tests to perform for each node found with axis
+     */
+    @SafeVarargs
+    public TemporalJsonNodeReadFilterAxis(final AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> axis,
+            final F firstAxisTest, final F... axisTest) {
+        checkNotNull(firstAxisTest);
+        mAxis = axis;
+        mAxisFilter = new ArrayList<F>();
+        mAxisFilter.add(firstAxisTest);
 
-    if (axisTest != null) {
-      for (int i = 0, length = axisTest.length; i < length; i++) {
-        mAxisFilter.add(axisTest[i]);
-      }
+        if (axisTest != null) {
+            for (int i = 0, length = axisTest.length; i < length; i++) {
+                mAxisFilter.add(axisTest[i]);
+            }
+        }
     }
-  }
 
-  @Override
-  protected JsonNodeReadOnlyTrx computeNext() {
-    while (mAxis.hasNext()) {
-      final JsonNodeReadOnlyTrx rtx = mAxis.next();
-      final boolean filterResult = doFilter(rtx);
-      if (filterResult) {
-        return rtx;
-      }
+    @Override
+    protected JsonNodeReadOnlyTrx computeNext() {
+        while (mAxis.hasNext()) {
+            final JsonNodeReadOnlyTrx rtx = mAxis.next();
+            final boolean filterResult = doFilter(rtx);
+            if (filterResult) {
+                return rtx;
+            }
 
-      rtx.close();
+            rtx.close();
+        }
+        return endOfData();
     }
-    return endOfData();
-  }
 
-  private boolean doFilter(final JsonNodeReadOnlyTrx rtx) {
-    boolean filterResult = true;
-    for (final F filter : mAxisFilter) {
-      filter.setTrx(rtx);
-      filterResult = filterResult && filter.filter();
-      if (!filterResult) {
-        break;
-      }
+    private boolean doFilter(final JsonNodeReadOnlyTrx rtx) {
+        boolean filterResult = true;
+        for (final F filter : mAxisFilter) {
+            filter.setTrx(rtx);
+            filterResult = filterResult && filter.filter();
+            if (!filterResult) {
+                break;
+            }
+        }
+        return filterResult;
     }
-    return filterResult;
-  }
 
-  /**
-   * Returns the inner axis.
-   *
-   * @return the axis
-   */
-  public AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> getAxis() {
-    return mAxis;
-  }
+    /**
+     * Returns the inner axis.
+     *
+     * @return the axis
+     */
+    public AbstractTemporalAxis<JsonNodeReadOnlyTrx, JsonNodeTrx> getAxis() {
+        return mAxis;
+    }
 
-  @Override
-  public ResourceManager<JsonNodeReadOnlyTrx, JsonNodeTrx> getResourceManager() {
-    return mAxis.getResourceManager();
-  }
+    @Override
+    public ResourceManager<JsonNodeReadOnlyTrx, JsonNodeTrx> getResourceManager() {
+        return mAxis.getResourceManager();
+    }
 }

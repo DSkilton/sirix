@@ -15,91 +15,91 @@ import org.sirix.node.interfaces.immutable.ImmutableStructNode;
 
 public final class XmlMaxLevelVisitor implements XmlNodeVisitor {
 
-  private final long maxLevel;
+    private final long maxLevel;
 
-  private XmlNodeReadOnlyTrx rtx;
+    private XmlNodeReadOnlyTrx rtx;
 
-  private long currentLevel;
+    private long currentLevel;
 
-  private VisitResultType lastVisitResultType;
+    private VisitResultType lastVisitResultType;
 
-  public XmlMaxLevelVisitor(final long maxLevel) {
-    this.maxLevel = maxLevel;
-  }
-
-  public XmlMaxLevelVisitor setTrx(final XmlNodeReadOnlyTrx rtx) {
-    this.rtx = rtx;
-    return this;
-  }
-
-  public VisitResultType getLastVisitResultType() {
-    return lastVisitResultType;
-  }
-
-  public long getCurrentLevel() {
-    return currentLevel;
-  }
-
-  public long getMaxLevel() {
-    return maxLevel;
-  }
-
-  private void adaptLevel(ImmutableStructNode node) {
-    if (node.hasFirstChild())
-      currentLevel++;
-    else if (!node.hasRightSibling()) {
-      do {
-        rtx.moveToParent();
-        currentLevel--;
-      } while (!rtx.hasRightSibling() && currentLevel > 0);
+    public XmlMaxLevelVisitor(final long maxLevel) {
+        this.maxLevel = maxLevel;
     }
-  }
 
-  private VisitResult getVisitResultType() {
-    if (currentLevel >= maxLevel) {
-      currentLevel--;
-      lastVisitResultType = VisitResultType.SKIPSUBTREE;
-      return lastVisitResultType;
+    public XmlMaxLevelVisitor setTrx(final XmlNodeReadOnlyTrx rtx) {
+        this.rtx = rtx;
+        return this;
     }
-    lastVisitResultType = VisitResultType.CONTINUE;
-    return lastVisitResultType;
-  }
 
-  @Override
-  public VisitResult visit(ImmutablePI node) {
-    return getVisitResultType();
-  }
+    public VisitResultType getLastVisitResultType() {
+        return lastVisitResultType;
+    }
 
-  @Override
-  public VisitResult visit(ImmutableComment node) {
-    return getVisitResultType();
-  }
+    public long getCurrentLevel() {
+        return currentLevel;
+    }
 
-  @Override
-  public VisitResult visit(ImmutableElement node) {
-    adaptLevel(node);
-    final var visitResult = getVisitResultType();
-    return visitResult;
-  }
+    public long getMaxLevel() {
+        return maxLevel;
+    }
 
-  @Override
-  public VisitResult visit(ImmutableAttributeNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    private void adaptLevel(ImmutableStructNode node) {
+        if (node.hasFirstChild()) {
+            currentLevel++;
+        } else if (!node.hasRightSibling()) {
+            do {
+                rtx.moveToParent();
+                currentLevel--;
+            } while (!rtx.hasRightSibling() && currentLevel > 0);
+        }
+    }
 
-  @Override
-  public VisitResult visit(ImmutableNamespace node) {
-    return VisitResultType.CONTINUE;
-  }
+    private VisitResult getVisitResultType() {
+        if (currentLevel >= maxLevel) {
+            currentLevel--;
+            lastVisitResultType = VisitResultType.SKIPSUBTREE;
+            return lastVisitResultType;
+        }
+        lastVisitResultType = VisitResultType.CONTINUE;
+        return lastVisitResultType;
+    }
 
-  @Override
-  public VisitResult visit(ImmutableText node) {
-    return getVisitResultType();
-  }
+    @Override
+    public VisitResult visit(ImmutablePI node) {
+        return getVisitResultType();
+    }
 
-  @Override
-  public VisitResult visit(ImmutableXmlDocumentRootNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    @Override
+    public VisitResult visit(ImmutableComment node) {
+        return getVisitResultType();
+    }
+
+    @Override
+    public VisitResult visit(ImmutableElement node) {
+        adaptLevel(node);
+        final var visitResult = getVisitResultType();
+        return visitResult;
+    }
+
+    @Override
+    public VisitResult visit(ImmutableAttributeNode node) {
+        return VisitResultType.CONTINUE;
+    }
+
+    @Override
+    public VisitResult visit(ImmutableNamespace node) {
+        return VisitResultType.CONTINUE;
+    }
+
+    @Override
+    public VisitResult visit(ImmutableText node) {
+        return getVisitResultType();
+    }
+
+    @Override
+    public VisitResult visit(ImmutableXmlDocumentRootNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
 }

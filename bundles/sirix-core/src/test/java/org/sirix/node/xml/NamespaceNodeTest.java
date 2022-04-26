@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.xml;
 
 import com.google.common.hash.Hashing;
@@ -44,54 +45,58 @@ import static org.junit.Assert.assertEquals;
  */
 public class NamespaceNodeTest {
 
-  /** {@link Holder} instance. */
-  private Holder mHolder;
+    /**
+     * {@link Holder} instance.
+     */
+    private Holder mHolder;
 
-  /** Sirix {@link PageReadOnlyTrx} instance. */
-  private PageReadOnlyTrx mPageReadTrx;
+    /**
+     * Sirix {@link PageReadOnlyTrx} instance.
+     */
+    private PageReadOnlyTrx mPageReadTrx;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-    mHolder = Holder.generateDeweyIDResourceMgr();
-    mPageReadTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
+        mHolder = Holder.generateDeweyIDResourceMgr();
+        mPageReadTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    mPageReadTrx.close();
-    mHolder.close();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        mPageReadTrx.close();
+        mHolder.close();
+    }
 
-  @Test
-  public void testNamespaceNode() throws IOException {
-    final NodeDelegate nodeDel = new NodeDelegate(99, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
-    final NameNodeDelegate nameDel = new NameNodeDelegate(nodeDel, 13, 14, 15, 1);
+    @Test
+    public void testNamespaceNode() throws IOException {
+        final NodeDelegate nodeDel = new NodeDelegate(99, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
+        final NameNodeDelegate nameDel = new NameNodeDelegate(nodeDel, 13, 14, 15, 1);
 
-    // Create empty node.
-    final NamespaceNode node = new NamespaceNode(nodeDel, nameDel, new QNm("ns", "a", "p"));
-    node.setHash(node.computeHash());
+        // Create empty node.
+        final NamespaceNode node = new NamespaceNode(nodeDel, nameDel, new QNm("ns", "a", "p"));
+        node.setHash(node.computeHash());
 
-    // Serialize and deserialize node.
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    node.getKind().serialize(new DataOutputStream(out), node, mPageReadTrx);
-    final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-    final NamespaceNode node2 = (NamespaceNode) NodeKind.NAMESPACE.deserialize(new DataInputStream(in), node.getNodeKey(),
-        node.getDeweyID(), mPageReadTrx);
-    check(node2);
-  }
+        // Serialize and deserialize node.
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        node.getKind().serialize(new DataOutputStream(out), node, mPageReadTrx);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        final NamespaceNode node2 = (NamespaceNode) NodeKind.NAMESPACE.deserialize(new DataInputStream(in), node.getNodeKey(),
+                node.getDeweyID(), mPageReadTrx);
+        check(node2);
+    }
 
-  private final void check(final NamespaceNode node) {
-    // Now compare.
-    assertEquals(99L, node.getNodeKey());
-    assertEquals(13L, node.getParentKey());
+    private final void check(final NamespaceNode node) {
+        // Now compare.
+        assertEquals(99L, node.getNodeKey());
+        assertEquals(13L, node.getParentKey());
 
-    assertEquals(13, node.getURIKey());
-    assertEquals(14, node.getPrefixKey());
-    assertEquals(15, node.getLocalNameKey());
-    assertEquals(NodeKind.NAMESPACE, node.getKind());
-    assertEquals(true, node.hasParent());
-  }
+        assertEquals(13, node.getURIKey());
+        assertEquals(14, node.getPrefixKey());
+        assertEquals(15, node.getLocalNameKey());
+        assertEquals(NodeKind.NAMESPACE, node.getKind());
+        assertEquals(true, node.hasParent());
+    }
 
 }

@@ -9,49 +9,50 @@ import org.sirix.node.xml.AbstractStructForwardingNode;
 import java.math.BigInteger;
 
 public abstract class AbstractNullNode extends AbstractStructForwardingNode implements ImmutableJsonNode {
-  private StructNodeDelegate structNodeDelegate;
 
-  private BigInteger hashCode;
+    private StructNodeDelegate structNodeDelegate;
 
-  public AbstractNullNode(StructNodeDelegate mStructNodeDel) {
-    this.structNodeDelegate = mStructNodeDel;
-  }
+    private BigInteger hashCode;
 
-  @Override
-  public BigInteger computeHash() {
-    BigInteger result = BigInteger.ONE;
-
-    result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
-    if (structNodeDelegate.isNotEmpty()) {
-      result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+    public AbstractNullNode(StructNodeDelegate mStructNodeDel) {
+        this.structNodeDelegate = mStructNodeDel;
     }
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
 
-  @Override
-  public void setHash(final BigInteger hash) {
-    if (hash != null) {
-      hashCode = Node.to128BitsAtMaximumBigInteger(hash);
-    } else {
-      hashCode = null;
+    @Override
+    public BigInteger computeHash() {
+        BigInteger result = BigInteger.ONE;
+
+        result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
+        if (structNodeDelegate.isNotEmpty()) {
+            result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+        }
+        return Node.to128BitsAtMaximumBigInteger(result);
     }
-  }
 
-  @Override
-  public BigInteger getHash() {
-    if (hashCode == null) {
-      hashCode = computeHash();
+    @Override
+    public void setHash(final BigInteger hash) {
+        if (hash != null) {
+            hashCode = Node.to128BitsAtMaximumBigInteger(hash);
+        } else {
+            hashCode = null;
+        }
     }
-    return hashCode;
-  }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return structNodeDelegate.getNodeDelegate();
-  }
+    @Override
+    public BigInteger getHash() {
+        if (hashCode == null) {
+            hashCode = computeHash();
+        }
+        return hashCode;
+    }
 
-  @Override
-  protected StructNodeDelegate structDelegate() {
-    return structNodeDelegate;
-  }
+    @Override
+    protected NodeDelegate delegate() {
+        return structNodeDelegate.getNodeDelegate();
+    }
+
+    @Override
+    protected StructNodeDelegate structDelegate() {
+        return structNodeDelegate;
+    }
 }

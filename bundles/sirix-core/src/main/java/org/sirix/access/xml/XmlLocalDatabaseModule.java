@@ -38,11 +38,11 @@ public interface XmlLocalDatabaseModule {
     @DatabaseScope
     @Provides
     static Database<XmlResourceManager> xmlDatabase(final TransactionManager transactionManager,
-                                                    final DatabaseConfiguration dbConfig,
-                                                    final PathBasedPool<Database<?>> sessions,
-                                                    final ResourceStore<XmlResourceManager> resourceStore,
-                                                    final WriteLocksRegistry writeLocks,
-                                                    final PathBasedPool<ResourceManager<?, ?>> resourceManagers) {
+            final DatabaseConfiguration dbConfig,
+            final PathBasedPool<Database<?>> sessions,
+            final ResourceStore<XmlResourceManager> resourceStore,
+            final WriteLocksRegistry writeLocks,
+            final PathBasedPool<ResourceManager<?, ?>> resourceManagers) {
 
         return new LocalDatabase<>(
                 transactionManager,

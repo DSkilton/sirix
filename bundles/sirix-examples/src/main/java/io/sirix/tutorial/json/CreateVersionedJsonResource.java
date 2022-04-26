@@ -18,18 +18,18 @@ public final class CreateVersionedJsonResource {
     static void createJsonDatabaseWithVersionedResource() {
         final var databaseFile = Constants.SIRIX_DATA_LOCATION.resolve("json-database-versioned");
 
-        if (Files.exists(databaseFile))
+        if (Files.exists(databaseFile)) {
             Databases.removeDatabase(databaseFile);
+        }
 
         final var dbConfig = new DatabaseConfiguration(databaseFile);
         Databases.createJsonDatabase(dbConfig);
         try (final var database = Databases.openJsonDatabase(databaseFile)) {
             database.createResource(ResourceConfiguration.newBuilder("resource")
-                                                         .useTextCompression(false)
-                                                         .useDeweyIDs(true)
-                                                         .build());
-            try (final var manager = database.openResourceManager("resource");
-                 final var wtx = manager.beginNodeTrx()) {
+                    .useTextCompression(false)
+                    .useDeweyIDs(true)
+                    .build());
+            try (final var manager = database.openResourceManager("resource"); final var wtx = manager.beginNodeTrx()) {
                 // Create sample document.
                 JsonDocumentCreator.create(wtx);
                 wtx.commit();

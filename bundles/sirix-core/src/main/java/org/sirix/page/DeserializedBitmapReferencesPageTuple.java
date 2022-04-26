@@ -10,14 +10,14 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the <organization> nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ *     * Neither the name of the <organization> nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -33,42 +33,48 @@ import java.util.List;
 /**
  * Simple immutable data/value/bean class.
  *
- * @author Johannes Lichtenberger <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
+ * @author Johannes Lichtenberger
+ * <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
  *
  */
 public final class DeserializedBitmapReferencesPageTuple {
-  /** The page references. */
-  private final List<PageReference> references;
 
-  /** The bitmap. */
-  private final BitSet bitmap;
+    /**
+     * The page references.
+     */
+    private final List<PageReference> references;
 
-  /**
-   * Constructor.
-   *
-   * @param references the references
-   * @param bitmap the bitmap
-   */
-  public DeserializedBitmapReferencesPageTuple(final List<PageReference> references, final BitSet bitmap) {
-    this.references = references;
-    this.bitmap = bitmap;
-  }
+    /**
+     * The bitmap.
+     */
+    private final BitSet bitmap;
 
-  /**
-   * Get the bitmap.
-   *
-   * @return the bitmap
-   */
-  public BitSet getBitmap() {
-    return bitmap;
-  }
+    /**
+     * Constructor.
+     *
+     * @param references the references
+     * @param bitmap the bitmap
+     */
+    public DeserializedBitmapReferencesPageTuple(final List<PageReference> references, final BitSet bitmap) {
+        this.references = references;
+        this.bitmap = bitmap;
+    }
 
-  /**
-   * Get the references.
-   *
-   * @return the references
-   */
-  public List<PageReference> getReferences() {
-    return references;
-  }
+    /**
+     * Get the bitmap.
+     *
+     * @return the bitmap
+     */
+    public BitSet getBitmap() {
+        return bitmap;
+    }
+
+    /**
+     * Get the references.
+     *
+     * @return the references
+     */
+    public List<PageReference> getReferences() {
+        return references;
+    }
 }

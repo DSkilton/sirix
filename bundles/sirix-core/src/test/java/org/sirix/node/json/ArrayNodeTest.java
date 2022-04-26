@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.json;
 
 import static org.junit.Assert.assertEquals;
@@ -50,52 +49,52 @@ import com.google.common.hash.Hashing;
  */
 public class ArrayNodeTest {
 
-  private PageTrx pageTrx;
+    private PageTrx pageTrx;
 
-  private Database<JsonResourceManager> database;
+    private Database<JsonResourceManager> database;
 
-  @Before
-  public void setUp() throws SirixException {
-    JsonTestHelper.deleteEverything();
-    database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-    pageTrx = database.openResourceManager(JsonTestHelper.RESOURCE).beginPageTrx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        JsonTestHelper.deleteEverything();
+        database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
+        pageTrx = database.openResourceManager(JsonTestHelper.RESOURCE).beginPageTrx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    JsonTestHelper.closeEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        JsonTestHelper.closeEverything();
+    }
 
-  @Test
-  public void testNode() throws IOException {
-    final NodeDelegate del = new NodeDelegate(13, 14, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
-    final StructNodeDelegate strucDel =
-        new StructNodeDelegate(del, Fixed.NULL_NODE_KEY.getStandardProperty(), 16L, 15L, 0L, 0L);
-    final ArrayNode node = new ArrayNode(strucDel, 18);
-    node.setHash(node.computeHash());
-    check(node);
+    @Test
+    public void testNode() throws IOException {
+        final NodeDelegate del = new NodeDelegate(13, 14, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
+        final StructNodeDelegate strucDel
+                = new StructNodeDelegate(del, Fixed.NULL_NODE_KEY.getStandardProperty(), 16L, 15L, 0L, 0L);
+        final ArrayNode node = new ArrayNode(strucDel, 18);
+        node.setHash(node.computeHash());
+        check(node);
 
-    // Serialize and deserialize node.
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    node.getKind().serialize(new DataOutputStream(out), node, pageTrx);
-    final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-    final ArrayNode node2 =
-        (ArrayNode) NodeKind.ARRAY.deserialize(new DataInputStream(in), node.getNodeKey(), null, pageTrx);
-    check(node2);
-  }
+        // Serialize and deserialize node.
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        node.getKind().serialize(new DataOutputStream(out), node, pageTrx);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        final ArrayNode node2
+                = (ArrayNode) NodeKind.ARRAY.deserialize(new DataInputStream(in), node.getNodeKey(), null, pageTrx);
+        check(node2);
+    }
 
-  private void check(final ArrayNode node) {
-    // Now compare.
-    assertEquals(13L, node.getNodeKey());
-    assertEquals(14L, node.getParentKey());
-    assertEquals(Fixed.NULL_NODE_KEY.getStandardProperty(), node.getFirstChildKey());
-    assertEquals(16L, node.getRightSiblingKey());
-    assertEquals(18L, node.getPathNodeKey());
+    private void check(final ArrayNode node) {
+        // Now compare.
+        assertEquals(13L, node.getNodeKey());
+        assertEquals(14L, node.getParentKey());
+        assertEquals(Fixed.NULL_NODE_KEY.getStandardProperty(), node.getFirstChildKey());
+        assertEquals(16L, node.getRightSiblingKey());
+        assertEquals(18L, node.getPathNodeKey());
 
-    assertEquals(NodeKind.ARRAY, node.getKind());
-    assertFalse(node.hasFirstChild());
-    assertTrue(node.hasParent());
-    assertTrue(node.hasRightSibling());
-  }
+        assertEquals(NodeKind.ARRAY, node.getKind());
+        assertFalse(node.hasFirstChild());
+        assertTrue(node.hasParent());
+        assertTrue(node.hasRightSibling());
+    }
 
 }

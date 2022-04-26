@@ -23,8 +23,9 @@ public final class CreateJsonDatabase {
         final var pathToJsonFile = JSON.resolve("complex1.json");
         final var databaseFile = Constants.SIRIX_DATA_LOCATION.resolve("json-database");
 
-        if (Files.exists(databaseFile))
+        if (Files.exists(databaseFile)) {
             Databases.removeDatabase(databaseFile);
+        }
 
         final var dbConfig = new DatabaseConfiguration(databaseFile);
         Databases.createJsonDatabase(dbConfig);
@@ -33,8 +34,7 @@ public final class CreateJsonDatabase {
                     .useTextCompression(false)
                     .useDeweyIDs(true)
                     .build());
-            try (final var manager = database.openResourceManager("resource");
-                 final var wtx = manager.beginNodeTrx()) {
+            try (final var manager = database.openResourceManager("resource"); final var wtx = manager.beginNodeTrx()) {
                 wtx.insertSubtreeAsFirstChild(JsonShredder.createFileReader(pathToJsonFile));
                 wtx.commit();
             }

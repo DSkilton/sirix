@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.page.delegates;
 
 import com.google.common.base.MoreObjects;
@@ -40,116 +39,116 @@ import java.util.List;
  */
 public final class FullReferencesPage implements Page {
 
-  /**
-   * Page references.
-   */
-  private final PageReference[] references;
+    /**
+     * Page references.
+     */
+    private final PageReference[] references;
 
-  /**
-   * Constructor to initialize instance.
-   */
-  public FullReferencesPage() {
-    references = new PageReference[Constants.INP_REFERENCE_COUNT];
-  }
-
-  /**
-   * Constructor to read from durable storage.
-   *
-   * @param in   input stream to read from
-   * @param type the serialization type
-   */
-  public FullReferencesPage(final DataInput in, final SerializationType type) {
-    references = type.deserializeFullReferencesPage(in);
-  }
-
-  /**
-   * Constructor to copy data from a {@link BitmapReferencesPage}.
-   *
-   * @param pageToClone committed page
-   */
-  public FullReferencesPage(final BitmapReferencesPage pageToClone) {
-    references = new PageReference[Constants.INP_REFERENCE_COUNT];
-    final BitSet bitSet = pageToClone.getBitmap();
-
-    for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i + 1)) {
-      final var pageReferenceToClone = pageToClone.getReferences().get(i);
-      final var newPageReference = new PageReference(pageReferenceToClone);
-      references[i] = newPageReference;
+    /**
+     * Constructor to initialize instance.
+     */
+    public FullReferencesPage() {
+        references = new PageReference[Constants.INP_REFERENCE_COUNT];
     }
-  }
 
-  /**
-   * Copy constructor.
-   *
-   * @param pageToClone committed page
-   */
-  public FullReferencesPage(final FullReferencesPage pageToClone) {
-    references = pageToClone.references;
-  }
-
-  @Override
-  public List<PageReference> getReferences() {
-    return List.of(references);
-  }
-
-  /**
-   * Get page reference of given offset.
-   *
-   * @param offset offset of page reference
-   * @return {@link PageReference} at given offset
-   */
-  @Override
-  public PageReference getOrCreateReference(final @Nonnegative int offset) {
-    final var pageReference = references[offset];
-    if (pageReference != null) {
-      return pageReference;
+    /**
+     * Constructor to read from durable storage.
+     *
+     * @param in input stream to read from
+     * @param type the serialization type
+     */
+    public FullReferencesPage(final DataInput in, final SerializationType type) {
+        references = type.deserializeFullReferencesPage(in);
     }
-    final var newPageReference = new PageReference();
-    references[offset] = newPageReference;
-    return newPageReference;
-  }
 
-  @Override
-  public boolean setOrCreateReference(final int offset, final PageReference pageReference) {
-    references[offset] = pageReference;
-    return false;
-  }
+    /**
+     * Constructor to copy data from a {@link BitmapReferencesPage}.
+     *
+     * @param pageToClone committed page
+     */
+    public FullReferencesPage(final BitmapReferencesPage pageToClone) {
+        references = new PageReference[Constants.INP_REFERENCE_COUNT];
+        final BitSet bitSet = pageToClone.getBitmap();
 
-  /**
-   * Recursively call commit on all referenced pages.
-   *
-   * @param pageWriteTrx the page write transaction
-   */
-  @Override
-  public final void commit(@Nonnull final PageTrx pageWriteTrx) {
-    for (final PageReference reference : references) {
-      if (reference != null && (reference.getLogKey() != Constants.NULL_ID_INT
-          || reference.getPersistentLogKey() != Constants.NULL_ID_LONG)) {
-        pageWriteTrx.commit(reference);
-      }
+        for (int i = bitSet.nextSetBit(0); i >= 0; i = bitSet.nextSetBit(i + 1)) {
+            final var pageReferenceToClone = pageToClone.getReferences().get(i);
+            final var newPageReference = new PageReference(pageReferenceToClone);
+            references[i] = newPageReference;
+        }
     }
-  }
 
-  /**
-   * Serialize page references into output.
-   *
-   * @param out  output stream
-   * @param type the type to serialize (transaction intent log or the data file
-   *             itself).
-   */
-  @Override
-  public void serialize(final DataOutput out, final SerializationType type) {
-    assert out != null;
-    assert type != null;
-    type.serializeFullReferencesPage(out, references);
-  }
-
-  @Override
-  public String toString() {
-    final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
-    for (final PageReference ref : references) {
-      helper.add("reference", ref);
+    /**
+     * Copy constructor.
+     *
+     * @param pageToClone committed page
+     */
+    public FullReferencesPage(final FullReferencesPage pageToClone) {
+        references = pageToClone.references;
     }
-    return helper.toString();
-  }
+
+    @Override
+    public List<PageReference> getReferences() {
+        return List.of(references);
+    }
+
+    /**
+     * Get page reference of given offset.
+     *
+     * @param offset offset of page reference
+     * @return {@link PageReference} at given offset
+     */
+    @Override
+    public PageReference getOrCreateReference(final @Nonnegative int offset) {
+        final var pageReference = references[offset];
+        if (pageReference != null) {
+            return pageReference;
+        }
+        final var newPageReference = new PageReference();
+        references[offset] = newPageReference;
+        return newPageReference;
+    }
+
+    @Override
+    public boolean setOrCreateReference(final int offset, final PageReference pageReference) {
+        references[offset] = pageReference;
+        return false;
+    }
+
+    /**
+     * Recursively call commit on all referenced pages.
+     *
+     * @param pageWriteTrx the page write transaction
+     */
+    @Override
+    public final void commit(@Nonnull final PageTrx pageWriteTrx) {
+        for (final PageReference reference : references) {
+            if (reference != null && (reference.getLogKey() != Constants.NULL_ID_INT
+                    || reference.getPersistentLogKey() != Constants.NULL_ID_LONG)) {
+                pageWriteTrx.commit(reference);
+            }
+        }
+    }
+
+    /**
+     * Serialize page references into output.
+     *
+     * @param out output stream
+     * @param type the type to serialize (transaction intent log or the data
+     * file itself).
+     */
+    @Override
+    public void serialize(final DataOutput out, final SerializationType type) {
+        assert out != null;
+        assert type != null;
+        type.serializeFullReferencesPage(out, references);
+    }
+
+    @Override
+    public String toString() {
+        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
+        for (final PageReference ref : references) {
+            helper.add("reference", ref);
+        }
+        return helper.toString();
+    }
 }

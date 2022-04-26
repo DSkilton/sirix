@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import java.util.ArrayList;
@@ -34,28 +35,30 @@ import org.sirix.api.xml.XmlNodeReadOnlyTrx;
  */
 public final class NestedFilter extends AbstractFilter<XmlNodeReadOnlyTrx> {
 
-  /** Tests to apply. */
-  private final List<Filter<XmlNodeReadOnlyTrx>> mFilter;
+    /**
+     * Tests to apply.
+     */
+    private final List<Filter<XmlNodeReadOnlyTrx>> mFilter;
 
-  /**
-   * Default constructor.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} this filter is bound to
-   * @param axisTest test to perform for each node found with axis
-   */
-  public NestedFilter(final XmlNodeReadOnlyTrx rtx, final @Nonnull List<Filter<XmlNodeReadOnlyTrx>> axisTest) {
-    super(rtx);
-    mFilter = new ArrayList<>(axisTest);
-  }
-
-  @Override
-  public final boolean filter() {
-    boolean filterResult = true;
-
-    for (final Filter<XmlNodeReadOnlyTrx> filter : mFilter) {
-      filterResult = filterResult && filter.filter();
+    /**
+     * Default constructor.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} this filter is bound to
+     * @param axisTest test to perform for each node found with axis
+     */
+    public NestedFilter(final XmlNodeReadOnlyTrx rtx, final @Nonnull List<Filter<XmlNodeReadOnlyTrx>> axisTest) {
+        super(rtx);
+        mFilter = new ArrayList<>(axisTest);
     }
 
-    return filterResult;
-  }
+    @Override
+    public final boolean filter() {
+        boolean filterResult = true;
+
+        for (final Filter<XmlNodeReadOnlyTrx> filter : mFilter) {
+            filterResult = filterResult && filter.filter();
+        }
+
+        return filterResult;
+    }
 }

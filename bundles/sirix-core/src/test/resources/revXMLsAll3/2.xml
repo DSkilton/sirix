@@ -1,7 +1,9 @@
 <root>
-  <page>
-    <id><bla/></id>
-    <lalala/>
-  </page>
-  <bla></bla>
+    <page>
+        <id>
+            <bla/>
+        </id>
+        <lalala/>
+    </page>
+    <bla></bla>
 </root>

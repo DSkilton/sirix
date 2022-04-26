@@ -54,752 +54,751 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Holds the settings for a resource which acts as a base for session that can not change. This
- * includes all settings which are persistent. Each {@link ResourceConfiguration} is furthermore
- * bound to one fixed database denoted by a related {@link DatabaseConfiguration}.
+ * Holds the settings for a resource which acts as a base for session that can
+ * not change. This includes all settings which are persistent. Each
+ * {@link ResourceConfiguration} is furthermore bound to one fixed database
+ * denoted by a related {@link DatabaseConfiguration}.
  *
  * @author Sebastian Graf, University of Konstanz
  * @author Johannes Lichtenberger
  */
 public final class ResourceConfiguration {
 
-  /**
-   * Paths in a resource. Each resource has the same folder layout.
-   */
-  public enum ResourcePaths {
-
     /**
-     * Folder for storage of data.
+     * Paths in a resource. Each resource has the same folder layout.
      */
-    DATA(Paths.get("data"), true),
+    public enum ResourcePaths {
 
-    /**
-     * Folder for the transaction log.
-     */
-    TRANSACTION_INTENT_LOG(Paths.get("log"), true),
+        /**
+         * Folder for storage of data.
+         */
+        DATA(Paths.get("data"), true),
+        /**
+         * Folder for the transaction log.
+         */
+        TRANSACTION_INTENT_LOG(Paths.get("log"), true),
+        /**
+         * File to store the resource settings.
+         */
+        CONFIG_BINARY(Paths.get("ressetting.obj"), false),
+        /**
+         * File to store index definitions.
+         */
+        INDEXES(Paths.get("indexes"), true),
+        /**
+         * Folder to store the encryption key.
+         */
+        ENCRYPTION_KEY(Paths.get("encryption"), true),
+        /**
+         * Folder to store the update operations.
+         */
+        UPDATE_OPERATIONS(Paths.get("update-operations"), true);
 
-    /**
-     * File to store the resource settings.
-     */
-    CONFIG_BINARY(Paths.get("ressetting.obj"), false),
+        /**
+         * Location of the file.
+         */
+        private final Path path;
 
-    /**
-     * File to store index definitions.
-     */
-    INDEXES(Paths.get("indexes"), true),
+        /**
+         * Is the location a folder or no?
+         */
+        private final boolean isFolder;
 
-    /**
-     * Folder to store the encryption key.
-     */
-    ENCRYPTION_KEY(Paths.get("encryption"), true),
-
-    /**
-     * Folder to store the update operations.
-     */
-    UPDATE_OPERATIONS(Paths.get("update-operations"), true);
-
-    /**
-     * Location of the file.
-     */
-    private final Path path;
-
-    /**
-     * Is the location a folder or no?
-     */
-    private final boolean isFolder;
-
-    /**
-     * Constructor.
-     *
-     * @param path     the path
-     * @param isFolder determines if the path denotes a filer or not
-     */
-    ResourcePaths(final Path path, final boolean isFolder) {
-      this.path = path;
-      this.isFolder = isFolder;
-    }
-
-    /**
-     * Getting the path.
-     *
-     * @return the path
-     */
-    public Path getPath() {
-      return path;
-    }
-
-    /**
-     * Check if file is denoted as folder or not.
-     *
-     * @return {@code true} if file is a folder, {@code false} otherwise
-     */
-    public boolean isFolder() {
-      return isFolder;
-    }
-
-    /**
-     * Checking a structure in a folder to be equal with the data in this enum.
-     *
-     * @param file to be checked
-     * @return -1 if less folders are there, 0 if the structure is equal to the one expected, 1 if the
-     * structure has more folders
-     * @throws NullPointerException if {@code file} is {@code null}
-     */
-    public static int compareStructure(final Path file) {
-      int existing = 0;
-      for (final ResourcePaths paths : values()) {
-        final Path currentFile = file.resolve(paths.getPath());
-        if (Files.exists(currentFile)) {
-          existing++;
+        /**
+         * Constructor.
+         *
+         * @param path the path
+         * @param isFolder determines if the path denotes a filer or not
+         */
+        ResourcePaths(final Path path, final boolean isFolder) {
+            this.path = path;
+            this.isFolder = isFolder;
         }
-      }
-      return existing - values().length;
-    }
-  }
 
-  // FIXED STANDARD FIELDS
-  /**
-   * Standard storage.
-   */
-  private static final StorageType STORAGE =
-      OS.isWindows() ? StorageType.FILE : OS.is64Bit() ? StorageType.MEMORY_MAPPED : StorageType.FILE;
+        /**
+         * Getting the path.
+         *
+         * @return the path
+         */
+        public Path getPath() {
+            return path;
+        }
 
-  /**
-   * Standard versioning approach.
-   */
-  private static final VersioningType VERSIONING = VersioningType.SLIDING_SNAPSHOT;
+        /**
+         * Check if file is denoted as folder or not.
+         *
+         * @return {@code true} if file is a folder, {@code false} otherwise
+         */
+        public boolean isFolder() {
+            return isFolder;
+        }
 
-  /**
-   * Type of hashing.
-   */
-  private static final HashType HASHKIND = HashType.ROLLING;
-
-  /**
-   * Versions to restore.
-   */
-  private static final int VERSIONS_TO_RESTORE = 3;
-
-  /**
-   * Serializer for records.
-   */
-  private static final RecordSerializer NODE_SERIALIZER = new NodeSerializerImpl();
-
-  // END FIXED STANDARD FIELDS
-
-  // MEMBERS FOR FIXED FIELDS
-  /**
-   * Type of Storage (File, BerkeleyDB).
-   */
-  public final StorageType storageType;
-
-  /**
-   * Kind of revisioning (Full, Incremental, Differential).
-   */
-  public final VersioningType revisioningType;
-
-  /**
-   * Kind of integrity hash (rolling, postorder).
-   */
-  public final HashType hashType;
-
-  /**
-   * Number of revisions to restore a complete set of data.
-   */
-  public final int numberOfRevisionsToRestore;
-
-  /**
-   * Byte handler pipeline.
-   */
-  public final ByteHandlePipeline byteHandlePipeline;
-
-  /**
-   * Path for the resource to be associated.
-   */
-  public Path resourcePath;
-
-  /**
-   * DatabaseConfiguration for this {@link ResourceConfiguration}.
-   */
-  private DatabaseConfiguration databaseConfig;
-
-  /**
-   * Determines if text-compression should be used or not (default is true).
-   */
-  public final boolean useTextCompression;
-
-  /**
-   * Determines if a path summary should be build and kept up to date or not.
-   */
-  public final boolean withPathSummary;
-
-  /**
-   * Persistents records / commonly nodes.
-   */
-  public final RecordSerializer recordPersister;
-
-  /**
-   * Unique ID.
-   */
-  private long id;
-
-  /**
-   * Determines if dewey IDs are generated and stored or not.
-   */
-  public final boolean areDeweyIDsStored;
-
-  /**
-   * The hash function used for hashing nodes.
-   */
-  public final HashFunction nodeHashFunction;
-
-  /**
-   * The name of the resource.
-   */
-  private String resourceName;
-
-  /**
-   * Determines whether resource child count should be tracked
-   */
-  private boolean storeChildCount;
-
-  /**
-   * Determines if diffs are going to be stored or not.
-   */
-  private final boolean storeDiffs;
-
-  // END MEMBERS FOR FIXED FIELDS
-
-  /**
-   * Get a new builder instance.
-   *
-   * @param resource the name of the resource
-   * @return {@link Builder} instance
-   * @throws NullPointerException if {@code resource} or {@code config} is {@code null}
-   */
-  public static Builder newBuilder(final String resource) {
-    return new Builder(resource);
-  }
-
-  /**
-   * Convenience constructor using the standard settings.
-   *
-   * @param builder {@link Builder} reference
-   */
-  private ResourceConfiguration(final ResourceConfiguration.Builder builder) {
-    storageType = builder.type;
-    byteHandlePipeline = builder.byteHandler;
-    revisioningType = builder.revisionKind;
-    hashType = builder.hashKind;
-    numberOfRevisionsToRestore = builder.revisionsToRestore;
-    useTextCompression = builder.useTextCompression;
-    withPathSummary = builder.pathSummary;
-    areDeweyIDsStored = builder.useDeweyIDs;
-    recordPersister = builder.persistenter;
-    resourceName = builder.resource;
-    nodeHashFunction = builder.hashFunction;
-    storeChildCount = builder.storeChildCount;
-    storeDiffs = builder.storeDiffs;
-  }
-
-  ResourceConfiguration setDatabaseConfiguration(final DatabaseConfiguration config) {
-    databaseConfig = checkNotNull(config);
-    resourcePath = databaseConfig.getDatabaseFile()
-                                 .resolve(DatabaseConfiguration.DatabasePaths.DATA.getFile())
-                                 .resolve(resourceName);
-    return this;
-  }
-
-  /**
-   * Set a unique ID.
-   *
-   * @param id the ID to set
-   * @return this instance
-   */
-  public ResourceConfiguration setID(final @Nonnegative long id) {
-    checkArgument(id >= 0, "The ID must be >= 0!");
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Get the storage type.
-   *
-   * @return The storage type.
-   */
-  public StorageType getStorageType() {
-    return storageType;
-  }
-
-  /**
-   * Get the unique ID.
-   *
-   * @return the unique resource ID
-   */
-  public long getID() {
-    return id;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(storageType, revisioningType, hashType, resourcePath, databaseConfig);
-  }
-
-  @Override
-  public final boolean equals(final Object obj) {
-    if (!(obj instanceof ResourceConfiguration))
-      return false;
-
-    final ResourceConfiguration other = (ResourceConfiguration) obj;
-    return Objects.equals(storageType, other.storageType) && Objects.equals(revisioningType, other.revisioningType)
-        && Objects.equals(hashType, other.hashType) && Objects.equals(resourcePath, other.resourcePath)
-        && Objects.equals(databaseConfig, other.databaseConfig);
-  }
-
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-                      .add("Resource", resourcePath)
-                      .add("Type", storageType)
-                      .add("Revision", revisioningType)
-                      .add("HashKind", hashType)
-                      .toString();
-  }
-
-  /**
-   * Get the resource.
-   *
-   * @return the resource
-   */
-  public Path getResource() {
-    return resourcePath;
-  }
-
-  /**
-   * Get the resource name.
-   *
-   * @return the resource name
-   */
-  public String getName() {
-    return resourceName;
-  }
-
-  /**
-   * Get the resource name.
-   *
-   * @return the resource name
-   */
-  public String getResourceName() {
-    return resourceName;
-  }
-
-  public boolean storeDiffs() {
-    return storeDiffs;
-  }
-
-  /**
-   * Get the configuration file.
-   *
-   * @return configuration file
-   */
-  public Path getConfigFile() {
-    return resourcePath.resolve(ResourcePaths.CONFIG_BINARY.getPath());
-  }
-
-  public boolean getStoreChildCount() {
-    return storeChildCount;
-  }
-
-  /**
-   * JSON names.
-   */
-  private static final String[] JSONNAMES =
-      { "revisioning", "revisioningClass", "numbersOfRevisiontoRestore", "byteHandlerClasses", "storageKind",
-          "hashKind", "hashFunction", "compression", "pathSummary", "resourceID", "deweyIDsStored", "persistenter",
-          "storeDiffs" };
-
-  /**
-   * Serialize the configuration.
-   *
-   * @param config configuration to serialize
-   * @throws SirixIOException if an I/O error occurs
-   */
-  public static void serialize(final ResourceConfiguration config) throws SirixIOException {
-    final Path configFile = config.getConfigFile();
-    try (final FileWriter fileWriter = new FileWriter(configFile.toFile());
-         final JsonWriter jsonWriter = new JsonWriter(fileWriter)) {
-      jsonWriter.beginObject();
-      // Versioning.
-      jsonWriter.name(JSONNAMES[0]);
-      jsonWriter.beginObject();
-      jsonWriter.name(JSONNAMES[1]).value(config.revisioningType.name());
-      jsonWriter.name(JSONNAMES[2]).value(config.numberOfRevisionsToRestore);
-      jsonWriter.endObject();
-      // ByteHandlers.
-      jsonWriter.name(JSONNAMES[3]);
-      jsonWriter.beginArray();
-      for (final ByteHandler handler : config.byteHandlePipeline.getComponents()) {
-        ByteHandlerKind.getKind(handler.getClass()).serialize(handler, jsonWriter);
-      }
-      jsonWriter.endArray();
-      // Storage type.
-      jsonWriter.name(JSONNAMES[4]).value(config.storageType.name());
-      // Hashing type.
-      jsonWriter.name(JSONNAMES[5]).value(config.hashType.name());
-      // Hash function.
-      jsonWriter.name(JSONNAMES[6]).value(config.nodeHashFunction.toString());
-      // Text compression.
-      jsonWriter.name(JSONNAMES[7]).value(config.useTextCompression);
-      // Path summary.
-      jsonWriter.name(JSONNAMES[8]).value(config.withPathSummary);
-      // ID.
-      jsonWriter.name(JSONNAMES[9]).value(config.id);
-      // Dewey IDs stored or not.
-      jsonWriter.name(JSONNAMES[10]).value(config.areDeweyIDsStored);
-      // Persistenter.
-      jsonWriter.name(JSONNAMES[11]).value(config.recordPersister.getClass().getName());
-      // Diffs.
-      jsonWriter.name(JSONNAMES[12]).value(config.storeDiffs);
-      jsonWriter.endObject();
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
+        /**
+         * Checking a structure in a folder to be equal with the data in this
+         * enum.
+         *
+         * @param file to be checked
+         * @return -1 if less folders are there, 0 if the structure is equal to
+         * the one expected, 1 if the structure has more folders
+         * @throws NullPointerException if {@code file} is {@code null}
+         */
+        public static int compareStructure(final Path file) {
+            int existing = 0;
+            for (final ResourcePaths paths : values()) {
+                final Path currentFile = file.resolve(paths.getPath());
+                if (Files.exists(currentFile)) {
+                    existing++;
+                }
+            }
+            return existing - values().length;
+        }
     }
 
-    // Database config.
-    DatabaseConfiguration.serialize(config.databaseConfig);
-  }
-
-  /**
-   * Deserializing a Resource configuration from a JSON-file from the persistent storage.
-   * //todo add track child count parameter here
-   *
-   * @param file where the resource lies in.
-   * @return a complete {@link ResourceConfiguration} instance
-   * @throws SirixIOException if an I/O error occurs
-   */
-  public static ResourceConfiguration deserialize(final Path file) throws SirixIOException {
-    try {
-      final Path configFile = file.resolve(ResourcePaths.CONFIG_BINARY.getPath());
-      final FileReader fileReader = new FileReader(configFile.toFile());
-      final JsonReader jsonReader = new JsonReader(fileReader);
-      jsonReader.beginObject();
-      // Versioning.
-      String name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[0]);
-      jsonReader.beginObject();
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[1]);
-      final VersioningType revisioning = VersioningType.valueOf(jsonReader.nextString());
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[2]);
-      final int revisionToRestore = jsonReader.nextInt();
-      jsonReader.endObject();
-      // ByteHandlers.
-      final List<ByteHandler> handlerList = new ArrayList<>();
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[3]);
-      jsonReader.beginArray();
-      while (jsonReader.hasNext()) {
-        jsonReader.beginObject();
-        @SuppressWarnings("unchecked")
-        final Class<ByteHandler> clazzName = (Class<ByteHandler>) Class.forName(jsonReader.nextName());
-        handlerList.add(ByteHandlerKind.getKind(clazzName).deserialize(jsonReader));
-        jsonReader.endObject();
-      }
-      jsonReader.endArray();
-      final ByteHandlePipeline pipeline = new ByteHandlePipeline(handlerList.toArray(new ByteHandler[0]));
-      // Storage type.
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[4]);
-      final StorageType storage = StorageType.valueOf(jsonReader.nextString());
-      // Hashing type.
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[5]);
-      final HashType hashing = HashType.valueOf(jsonReader.nextString());
-      // Hashing function.
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[6]);
-
-      final HashFunction hashFunction;
-      switch (jsonReader.nextString()) {
-        case "Hashing.sha256()":
-          break;
-        default:
-          throw new IllegalStateException("Hashing function not supported.");
-      }
-      // Text compression.
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[7]);
-      final boolean compression = jsonReader.nextBoolean();
-      // Path summary.
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[8]);
-      final boolean pathSummary = jsonReader.nextBoolean();
-      // Unique ID.
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[9]);
-      final int ID = jsonReader.nextInt();
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[10]);
-      final boolean deweyIDsStored = jsonReader.nextBoolean();
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[11]);
-      final Class<?> persistenterClazz = Class.forName(jsonReader.nextString());
-      final Constructor<?> persistenterConstr = persistenterClazz.getConstructors()[0];
-      final RecordSerializer serializer = (RecordSerializer) persistenterConstr.newInstance();
-      name = jsonReader.nextName();
-      assert name.equals(JSONNAMES[12]);
-      final boolean storeDiffs = jsonReader.nextBoolean();
-
-      jsonReader.endObject();
-      jsonReader.close();
-      fileReader.close();
-
-      // Deserialize database config.
-      final DatabaseConfiguration dbConfig = DatabaseConfiguration.deserialize(file.getParent().getParent());
-
-      // Builder.
-      final ResourceConfiguration.Builder builder = ResourceConfiguration.newBuilder(file.getFileName().toString());
-      builder.byteHandlerPipeline(pipeline)
-             .hashKind(hashing)
-             .versioningApproach(revisioning)
-             .revisionsToRestore(revisionToRestore)
-             .storageType(storage)
-             .persistenter(serializer)
-             .useTextCompression(compression)
-             .buildPathSummary(pathSummary)
-             .useDeweyIDs(deweyIDsStored)
-             .storeDiffs(storeDiffs);
-
-      // Deserialized instance.
-      final ResourceConfiguration config = new ResourceConfiguration(builder);
-      config.setDatabaseConfiguration(dbConfig);
-      return config.setID(ID);
-    } catch (IOException | ClassNotFoundException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      throw new SirixIOException(e);
-    }
-  }
-
-  /**
-   * Builder class for generating new {@link ResourceConfiguration} instance.
-   */
-  public static final class Builder {
+    // FIXED STANDARD FIELDS
+    /**
+     * Standard storage.
+     */
+    private static final StorageType STORAGE
+            = OS.isWindows() ? StorageType.FILE : OS.is64Bit() ? StorageType.MEMORY_MAPPED : StorageType.FILE;
 
     /**
-     * Determines if diffs should be stored or not.
+     * Standard versioning approach.
      */
-    public boolean storeDiffs = true;
+    private static final VersioningType VERSIONING = VersioningType.SLIDING_SNAPSHOT;
 
     /**
-     * Hashing function for hashing nodes.
+     * Type of hashing.
      */
-    private HashFunction hashFunction = Hashing.sha256();
+    private static final HashType HASHKIND = HashType.ROLLING;
 
     /**
-     * Type of Storage (File, Berkeley).
+     * Versions to restore.
      */
-    private StorageType type = STORAGE;
+    private static final int VERSIONS_TO_RESTORE = 3;
 
     /**
-     * Kind of revisioning (Incremental, Differential).
+     * Serializer for records.
      */
-    private VersioningType revisionKind = VERSIONING;
+    private static final RecordSerializer NODE_SERIALIZER = new NodeSerializerImpl();
+
+    // END FIXED STANDARD FIELDS
+    // MEMBERS FOR FIXED FIELDS
+    /**
+     * Type of Storage (File, BerkeleyDB).
+     */
+    public final StorageType storageType;
+
+    /**
+     * Kind of revisioning (Full, Incremental, Differential).
+     */
+    public final VersioningType revisioningType;
 
     /**
      * Kind of integrity hash (rolling, postorder).
      */
-    private HashType hashKind = HASHKIND;
+    public final HashType hashType;
 
     /**
      * Number of revisions to restore a complete set of data.
      */
-    private int revisionsToRestore = VERSIONS_TO_RESTORE;
-
-    /**
-     * Record/Node persistenter.
-     */
-    private RecordSerializer persistenter = NODE_SERIALIZER;
-
-    /**
-     * Resource for this session.
-     */
-    private final String resource;
-
-    /**
-     * Determines if text-compression should be used or not (default is true).
-     */
-    private boolean useTextCompression;
+    public final int numberOfRevisionsToRestore;
 
     /**
      * Byte handler pipeline.
      */
-    private ByteHandlePipeline byteHandler;
+    public final ByteHandlePipeline byteHandlePipeline;
 
     /**
-     * Determines if DeweyIDs should be used or not.
+     * Path for the resource to be associated.
      */
-    private boolean useDeweyIDs;
+    public Path resourcePath;
 
     /**
-     * Determines if a path summary should be build or not.
+     * DatabaseConfiguration for this {@link ResourceConfiguration}.
      */
-    private boolean pathSummary;
+    private DatabaseConfiguration databaseConfig;
 
     /**
-     * Determines whether child count should be tracked or not.
+     * Determines if text-compression should be used or not (default is true).
+     */
+    public final boolean useTextCompression;
+
+    /**
+     * Determines if a path summary should be build and kept up to date or not.
+     */
+    public final boolean withPathSummary;
+
+    /**
+     * Persistents records / commonly nodes.
+     */
+    public final RecordSerializer recordPersister;
+
+    /**
+     * Unique ID.
+     */
+    private long id;
+
+    /**
+     * Determines if dewey IDs are generated and stored or not.
+     */
+    public final boolean areDeweyIDsStored;
+
+    /**
+     * The hash function used for hashing nodes.
+     */
+    public final HashFunction nodeHashFunction;
+
+    /**
+     * The name of the resource.
+     */
+    private String resourceName;
+
+    /**
+     * Determines whether resource child count should be tracked
      */
     private boolean storeChildCount;
 
     /**
-     * Constructor, setting the mandatory fields.
+     * Determines if diffs are going to be stored or not.
+     */
+    private final boolean storeDiffs;
+
+    // END MEMBERS FOR FIXED FIELDS
+    /**
+     * Get a new builder instance.
      *
      * @param resource the name of the resource
-     * @throws NullPointerException if {@code resource} or {@code config} is {@code null}
+     * @return {@link Builder} instance
+     * @throws NullPointerException if {@code resource} or {@code config} is
+     * {@code null}
      */
-    public Builder(final String resource) {
-      this.resource = checkNotNull(resource);
-      pathSummary = true;
-      storeChildCount = true;
-      // final Path path =
-      // mDBConfig.getFile().resolve(DatabaseConfiguration.DatabasePaths.DATA.getFile()).resolve(mResource);
-
-      byteHandler = new ByteHandlePipeline(new SnappyCompressor());// new Encryptor(path));
+    public static Builder newBuilder(final String resource) {
+        return new Builder(resource);
     }
 
     /**
-     * Set the storage type.
+     * Convenience constructor using the standard settings.
      *
-     * @param type storage type to use
-     * @return reference to the builder object
+     * @param builder {@link Builder} reference
      */
-    public Builder storageType(final StorageType type) {
-      this.type = checkNotNull(type);
-      return this;
+    private ResourceConfiguration(final ResourceConfiguration.Builder builder) {
+        storageType = builder.type;
+        byteHandlePipeline = builder.byteHandler;
+        revisioningType = builder.revisionKind;
+        hashType = builder.hashKind;
+        numberOfRevisionsToRestore = builder.revisionsToRestore;
+        useTextCompression = builder.useTextCompression;
+        withPathSummary = builder.pathSummary;
+        areDeweyIDsStored = builder.useDeweyIDs;
+        recordPersister = builder.persistenter;
+        resourceName = builder.resource;
+        nodeHashFunction = builder.hashFunction;
+        storeChildCount = builder.storeChildCount;
+        storeDiffs = builder.storeDiffs;
+    }
+
+    ResourceConfiguration setDatabaseConfiguration(final DatabaseConfiguration config) {
+        databaseConfig = checkNotNull(config);
+        resourcePath = databaseConfig.getDatabaseFile()
+                .resolve(DatabaseConfiguration.DatabasePaths.DATA.getFile())
+                .resolve(resourceName);
+        return this;
     }
 
     /**
-     * Set the record persistenter.
+     * Set a unique ID.
      *
-     * @param persistenter the record persistenter
-     * @return reference to the builder object
+     * @param id the ID to set
+     * @return this instance
      */
-    public Builder persistenter(final RecordSerializer persistenter) {
-      this.persistenter = checkNotNull(persistenter);
-      return this;
+    public ResourceConfiguration setID(final @Nonnegative long id) {
+        checkArgument(id >= 0, "The ID must be >= 0!");
+        this.id = id;
+        return this;
     }
 
     /**
-     * Set to {@code false} if no diffs should be stored.
+     * Get the storage type.
      *
-     * @param storeDiffs {code true}, if diffs should be stored, {@code false} if not
-     * @return reference to the builder object
+     * @return The storage type.
      */
-    public Builder storeDiffs(final boolean storeDiffs) {
-      this.storeDiffs = storeDiffs;
-      return this;
+    public StorageType getStorageType() {
+        return storageType;
     }
 
     /**
-     * Set the versioning algorithm to use.
+     * Get the unique ID.
      *
-     * @param versioning versioning algorithm to use
-     * @return reference to the builder object
+     * @return the unique resource ID
      */
-    public Builder versioningApproach(final VersioningType versioning) {
-      revisionKind = checkNotNull(versioning);
-      return this;
+    public long getID() {
+        return id;
     }
 
-    /**
-     * Set the hash kind to use for the nodes.
-     *
-     * @param hashKind hash kind to use
-     * @return reference to the builder object
-     */
-    public Builder hashKind(final HashType hashKind) {
-      this.hashKind = checkNotNull(hashKind);
-      return this;
+    @Override
+    public int hashCode() {
+        return Objects.hash(storageType, revisioningType, hashType, resourcePath, databaseConfig);
     }
 
-    /**
-     * Set the byte handler pipeline.
-     *
-     * @param byteHandler byte handler pipeline
-     * @return reference to the builder object
-     */
-    public Builder byteHandlerPipeline(final ByteHandlePipeline byteHandler) {
-      this.byteHandler = checkNotNull(byteHandler);
-      return this;
-    }
+    @Override
+    public final boolean equals(final Object obj) {
+        if (!(obj instanceof ResourceConfiguration)) {
+            return false;
+        }
 
-    /**
-     * Set the number of revisions to restore after the last full dump.
-     *
-     * @param revisionsToRestore number of versions to restore
-     * @return reference to the builder object
-     */
-    public Builder revisionsToRestore(final @Nonnegative int revisionsToRestore) {
-      checkArgument(revisionsToRestore > 0, "revisionsToRestore must be > 0!");
-      this.revisionsToRestore = revisionsToRestore;
-      return this;
-    }
-
-    /**
-     * Determines if DeweyIDs should be stored or not.
-     *
-     * @param useDeweyIDs flag whihc represents to use the deweyIds
-     * @return reference to the builder object
-     */
-    public Builder useDeweyIDs(final boolean useDeweyIDs) {
-      this.useDeweyIDs = useDeweyIDs;
-      return this;
-    }
-
-    /**
-     * Determines if text-compression should be used or not.
-     *
-     * @param useTextCompression use text compression or not (default: yes)
-     * @return reference to the builder object
-     */
-    public Builder useTextCompression(final boolean useTextCompression) {
-      this.useTextCompression = useTextCompression;
-      return this;
-    }
-
-    /**
-     * Determines if a path summary should be build.
-     *
-     * @return reference to the builder object
-     */
-    public Builder buildPathSummary(final boolean buildPathSummary) {
-      pathSummary = buildPathSummary;
-      return this;
-    }
-
-    public Builder storeChildCount(final boolean storeChildCount) {
-      this.storeChildCount = storeChildCount;
-      return this;
+        final ResourceConfiguration other = (ResourceConfiguration) obj;
+        return Objects.equals(storageType, other.storageType) && Objects.equals(revisioningType, other.revisioningType)
+                && Objects.equals(hashType, other.hashType) && Objects.equals(resourcePath, other.resourcePath)
+                && Objects.equals(databaseConfig, other.databaseConfig);
     }
 
     @Override
     public String toString() {
-      return MoreObjects.toStringHelper(this)
-                        .add("Type", type)
-                        .add("RevisionKind", revisionKind)
-                        .add("HashKind", hashKind)
-                        .add("HashFunction", hashFunction)
-                        .add("PathSummary", pathSummary)
-                        .add("TextCompression", useTextCompression)
-                        .add("Store diffs", storeDiffs)
-                        .toString();
+        return MoreObjects.toStringHelper(this)
+                .add("Resource", resourcePath)
+                .add("Type", storageType)
+                .add("Revision", revisioningType)
+                .add("HashKind", hashType)
+                .toString();
     }
 
     /**
-     * Building a new {@link ResourceConfiguration} with immutable fields.
+     * Get the resource.
      *
-     * @return a new {@link ResourceConfiguration} instance
+     * @return the resource
      */
-    public ResourceConfiguration build() {
-      return new ResourceConfiguration(this);
+    public Path getResource() {
+        return resourcePath;
     }
-  }
+
+    /**
+     * Get the resource name.
+     *
+     * @return the resource name
+     */
+    public String getName() {
+        return resourceName;
+    }
+
+    /**
+     * Get the resource name.
+     *
+     * @return the resource name
+     */
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public boolean storeDiffs() {
+        return storeDiffs;
+    }
+
+    /**
+     * Get the configuration file.
+     *
+     * @return configuration file
+     */
+    public Path getConfigFile() {
+        return resourcePath.resolve(ResourcePaths.CONFIG_BINARY.getPath());
+    }
+
+    public boolean getStoreChildCount() {
+        return storeChildCount;
+    }
+
+    /**
+     * JSON names.
+     */
+    private static final String[] JSONNAMES
+            = {"revisioning", "revisioningClass", "numbersOfRevisiontoRestore", "byteHandlerClasses", "storageKind",
+                "hashKind", "hashFunction", "compression", "pathSummary", "resourceID", "deweyIDsStored", "persistenter",
+                "storeDiffs"};
+
+    /**
+     * Serialize the configuration.
+     *
+     * @param config configuration to serialize
+     * @throws SirixIOException if an I/O error occurs
+     */
+    public static void serialize(final ResourceConfiguration config) throws SirixIOException {
+        final Path configFile = config.getConfigFile();
+        try (final FileWriter fileWriter = new FileWriter(configFile.toFile()); final JsonWriter jsonWriter = new JsonWriter(fileWriter)) {
+            jsonWriter.beginObject();
+            // Versioning.
+            jsonWriter.name(JSONNAMES[0]);
+            jsonWriter.beginObject();
+            jsonWriter.name(JSONNAMES[1]).value(config.revisioningType.name());
+            jsonWriter.name(JSONNAMES[2]).value(config.numberOfRevisionsToRestore);
+            jsonWriter.endObject();
+            // ByteHandlers.
+            jsonWriter.name(JSONNAMES[3]);
+            jsonWriter.beginArray();
+            for (final ByteHandler handler : config.byteHandlePipeline.getComponents()) {
+                ByteHandlerKind.getKind(handler.getClass()).serialize(handler, jsonWriter);
+            }
+            jsonWriter.endArray();
+            // Storage type.
+            jsonWriter.name(JSONNAMES[4]).value(config.storageType.name());
+            // Hashing type.
+            jsonWriter.name(JSONNAMES[5]).value(config.hashType.name());
+            // Hash function.
+            jsonWriter.name(JSONNAMES[6]).value(config.nodeHashFunction.toString());
+            // Text compression.
+            jsonWriter.name(JSONNAMES[7]).value(config.useTextCompression);
+            // Path summary.
+            jsonWriter.name(JSONNAMES[8]).value(config.withPathSummary);
+            // ID.
+            jsonWriter.name(JSONNAMES[9]).value(config.id);
+            // Dewey IDs stored or not.
+            jsonWriter.name(JSONNAMES[10]).value(config.areDeweyIDsStored);
+            // Persistenter.
+            jsonWriter.name(JSONNAMES[11]).value(config.recordPersister.getClass().getName());
+            // Diffs.
+            jsonWriter.name(JSONNAMES[12]).value(config.storeDiffs);
+            jsonWriter.endObject();
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
+        }
+
+        // Database config.
+        DatabaseConfiguration.serialize(config.databaseConfig);
+    }
+
+    /**
+     * Deserializing a Resource configuration from a JSON-file from the
+     * persistent storage. //todo add track child count parameter here
+     *
+     * @param file where the resource lies in.
+     * @return a complete {@link ResourceConfiguration} instance
+     * @throws SirixIOException if an I/O error occurs
+     */
+    public static ResourceConfiguration deserialize(final Path file) throws SirixIOException {
+        try {
+            final Path configFile = file.resolve(ResourcePaths.CONFIG_BINARY.getPath());
+            final FileReader fileReader = new FileReader(configFile.toFile());
+            final JsonReader jsonReader = new JsonReader(fileReader);
+            jsonReader.beginObject();
+            // Versioning.
+            String name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[0]);
+            jsonReader.beginObject();
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[1]);
+            final VersioningType revisioning = VersioningType.valueOf(jsonReader.nextString());
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[2]);
+            final int revisionToRestore = jsonReader.nextInt();
+            jsonReader.endObject();
+            // ByteHandlers.
+            final List<ByteHandler> handlerList = new ArrayList<>();
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[3]);
+            jsonReader.beginArray();
+            while (jsonReader.hasNext()) {
+                jsonReader.beginObject();
+                @SuppressWarnings("unchecked")
+                final Class<ByteHandler> clazzName = (Class<ByteHandler>) Class.forName(jsonReader.nextName());
+                handlerList.add(ByteHandlerKind.getKind(clazzName).deserialize(jsonReader));
+                jsonReader.endObject();
+            }
+            jsonReader.endArray();
+            final ByteHandlePipeline pipeline = new ByteHandlePipeline(handlerList.toArray(new ByteHandler[0]));
+            // Storage type.
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[4]);
+            final StorageType storage = StorageType.valueOf(jsonReader.nextString());
+            // Hashing type.
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[5]);
+            final HashType hashing = HashType.valueOf(jsonReader.nextString());
+            // Hashing function.
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[6]);
+
+            final HashFunction hashFunction;
+            switch (jsonReader.nextString()) {
+                case "Hashing.sha256()":
+                    break;
+                default:
+                    throw new IllegalStateException("Hashing function not supported.");
+            }
+            // Text compression.
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[7]);
+            final boolean compression = jsonReader.nextBoolean();
+            // Path summary.
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[8]);
+            final boolean pathSummary = jsonReader.nextBoolean();
+            // Unique ID.
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[9]);
+            final int ID = jsonReader.nextInt();
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[10]);
+            final boolean deweyIDsStored = jsonReader.nextBoolean();
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[11]);
+            final Class<?> persistenterClazz = Class.forName(jsonReader.nextString());
+            final Constructor<?> persistenterConstr = persistenterClazz.getConstructors()[0];
+            final RecordSerializer serializer = (RecordSerializer) persistenterConstr.newInstance();
+            name = jsonReader.nextName();
+            assert name.equals(JSONNAMES[12]);
+            final boolean storeDiffs = jsonReader.nextBoolean();
+
+            jsonReader.endObject();
+            jsonReader.close();
+            fileReader.close();
+
+            // Deserialize database config.
+            final DatabaseConfiguration dbConfig = DatabaseConfiguration.deserialize(file.getParent().getParent());
+
+            // Builder.
+            final ResourceConfiguration.Builder builder = ResourceConfiguration.newBuilder(file.getFileName().toString());
+            builder.byteHandlerPipeline(pipeline)
+                    .hashKind(hashing)
+                    .versioningApproach(revisioning)
+                    .revisionsToRestore(revisionToRestore)
+                    .storageType(storage)
+                    .persistenter(serializer)
+                    .useTextCompression(compression)
+                    .buildPathSummary(pathSummary)
+                    .useDeweyIDs(deweyIDsStored)
+                    .storeDiffs(storeDiffs);
+
+            // Deserialized instance.
+            final ResourceConfiguration config = new ResourceConfiguration(builder);
+            config.setDatabaseConfiguration(dbConfig);
+            return config.setID(ID);
+        } catch (IOException | ClassNotFoundException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new SirixIOException(e);
+        }
+    }
+
+    /**
+     * Builder class for generating new {@link ResourceConfiguration} instance.
+     */
+    public static final class Builder {
+
+        /**
+         * Determines if diffs should be stored or not.
+         */
+        public boolean storeDiffs = true;
+
+        /**
+         * Hashing function for hashing nodes.
+         */
+        private HashFunction hashFunction = Hashing.sha256();
+
+        /**
+         * Type of Storage (File, Berkeley).
+         */
+        private StorageType type = STORAGE;
+
+        /**
+         * Kind of revisioning (Incremental, Differential).
+         */
+        private VersioningType revisionKind = VERSIONING;
+
+        /**
+         * Kind of integrity hash (rolling, postorder).
+         */
+        private HashType hashKind = HASHKIND;
+
+        /**
+         * Number of revisions to restore a complete set of data.
+         */
+        private int revisionsToRestore = VERSIONS_TO_RESTORE;
+
+        /**
+         * Record/Node persistenter.
+         */
+        private RecordSerializer persistenter = NODE_SERIALIZER;
+
+        /**
+         * Resource for this session.
+         */
+        private final String resource;
+
+        /**
+         * Determines if text-compression should be used or not (default is
+         * true).
+         */
+        private boolean useTextCompression;
+
+        /**
+         * Byte handler pipeline.
+         */
+        private ByteHandlePipeline byteHandler;
+
+        /**
+         * Determines if DeweyIDs should be used or not.
+         */
+        private boolean useDeweyIDs;
+
+        /**
+         * Determines if a path summary should be build or not.
+         */
+        private boolean pathSummary;
+
+        /**
+         * Determines whether child count should be tracked or not.
+         */
+        private boolean storeChildCount;
+
+        /**
+         * Constructor, setting the mandatory fields.
+         *
+         * @param resource the name of the resource
+         * @throws NullPointerException if {@code resource} or {@code config} is
+         * {@code null}
+         */
+        public Builder(final String resource) {
+            this.resource = checkNotNull(resource);
+            pathSummary = true;
+            storeChildCount = true;
+            // final Path path =
+            // mDBConfig.getFile().resolve(DatabaseConfiguration.DatabasePaths.DATA.getFile()).resolve(mResource);
+
+            byteHandler = new ByteHandlePipeline(new SnappyCompressor());// new Encryptor(path));
+        }
+
+        /**
+         * Set the storage type.
+         *
+         * @param type storage type to use
+         * @return reference to the builder object
+         */
+        public Builder storageType(final StorageType type) {
+            this.type = checkNotNull(type);
+            return this;
+        }
+
+        /**
+         * Set the record persistenter.
+         *
+         * @param persistenter the record persistenter
+         * @return reference to the builder object
+         */
+        public Builder persistenter(final RecordSerializer persistenter) {
+            this.persistenter = checkNotNull(persistenter);
+            return this;
+        }
+
+        /**
+         * Set to {@code false} if no diffs should be stored.
+         *
+         * @param storeDiffs {code true}, if diffs should be stored,
+         * {@code false} if not
+         * @return reference to the builder object
+         */
+        public Builder storeDiffs(final boolean storeDiffs) {
+            this.storeDiffs = storeDiffs;
+            return this;
+        }
+
+        /**
+         * Set the versioning algorithm to use.
+         *
+         * @param versioning versioning algorithm to use
+         * @return reference to the builder object
+         */
+        public Builder versioningApproach(final VersioningType versioning) {
+            revisionKind = checkNotNull(versioning);
+            return this;
+        }
+
+        /**
+         * Set the hash kind to use for the nodes.
+         *
+         * @param hashKind hash kind to use
+         * @return reference to the builder object
+         */
+        public Builder hashKind(final HashType hashKind) {
+            this.hashKind = checkNotNull(hashKind);
+            return this;
+        }
+
+        /**
+         * Set the byte handler pipeline.
+         *
+         * @param byteHandler byte handler pipeline
+         * @return reference to the builder object
+         */
+        public Builder byteHandlerPipeline(final ByteHandlePipeline byteHandler) {
+            this.byteHandler = checkNotNull(byteHandler);
+            return this;
+        }
+
+        /**
+         * Set the number of revisions to restore after the last full dump.
+         *
+         * @param revisionsToRestore number of versions to restore
+         * @return reference to the builder object
+         */
+        public Builder revisionsToRestore(final @Nonnegative int revisionsToRestore) {
+            checkArgument(revisionsToRestore > 0, "revisionsToRestore must be > 0!");
+            this.revisionsToRestore = revisionsToRestore;
+            return this;
+        }
+
+        /**
+         * Determines if DeweyIDs should be stored or not.
+         *
+         * @param useDeweyIDs flag whihc represents to use the deweyIds
+         * @return reference to the builder object
+         */
+        public Builder useDeweyIDs(final boolean useDeweyIDs) {
+            this.useDeweyIDs = useDeweyIDs;
+            return this;
+        }
+
+        /**
+         * Determines if text-compression should be used or not.
+         *
+         * @param useTextCompression use text compression or not (default: yes)
+         * @return reference to the builder object
+         */
+        public Builder useTextCompression(final boolean useTextCompression) {
+            this.useTextCompression = useTextCompression;
+            return this;
+        }
+
+        /**
+         * Determines if a path summary should be build.
+         *
+         * @return reference to the builder object
+         */
+        public Builder buildPathSummary(final boolean buildPathSummary) {
+            pathSummary = buildPathSummary;
+            return this;
+        }
+
+        public Builder storeChildCount(final boolean storeChildCount) {
+            this.storeChildCount = storeChildCount;
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .add("Type", type)
+                    .add("RevisionKind", revisionKind)
+                    .add("HashKind", hashKind)
+                    .add("HashFunction", hashFunction)
+                    .add("PathSummary", pathSummary)
+                    .add("TextCompression", useTextCompression)
+                    .add("Store diffs", storeDiffs)
+                    .toString();
+        }
+
+        /**
+         * Building a new {@link ResourceConfiguration} with immutable fields.
+         *
+         * @return a new {@link ResourceConfiguration} instance
+         */
+        public ResourceConfiguration build() {
+            return new ResourceConfiguration(this);
+        }
+    }
 }

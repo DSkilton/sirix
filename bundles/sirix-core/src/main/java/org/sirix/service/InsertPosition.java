@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.service;
 
 /**
@@ -28,21 +29,22 @@ package org.sirix.service;
  *
  */
 public enum InsertPosition {
-  /** Subtree should be added as first child of the current node. */
-  AS_FIRST_CHILD,
-
-  /** Subtree should be added as last child of the current node. */
-  AS_LAST_CHILD,
-
-  /**
-   * Subtree should be added as a right sibling of the current node. This is not possible when the
-   * {@code IWriteTransaction} is on root node.
-   */
-  AS_RIGHT_SIBLING,
-
-  /**
-   * Subtree should be added as a left sibling of the current node. This is not possible when the
-   * {@code IWriteTransaction} is on root node.
-   */
-  AS_LEFT_SIBLING,
+    /**
+     * Subtree should be added as first child of the current node.
+     */
+    AS_FIRST_CHILD,
+    /**
+     * Subtree should be added as last child of the current node.
+     */
+    AS_LAST_CHILD,
+    /**
+     * Subtree should be added as a right sibling of the current node. This is
+     * not possible when the {@code IWriteTransaction} is on root node.
+     */
+    AS_RIGHT_SIBLING,
+    /**
+     * Subtree should be added as a left sibling of the current node. This is
+     * not possible when the {@code IWriteTransaction} is on root node.
+     */
+    AS_LEFT_SIBLING,
 }

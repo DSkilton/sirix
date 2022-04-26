@@ -7,7 +7,8 @@ import org.sirix.cache.BufferManager;
 import java.nio.file.Path;
 
 /**
- * An interface that aggregates all the common logic between {@link ResourceManager} subcomponents.
+ * An interface that aggregates all the common logic between
+ * {@link ResourceManager} subcomponents.
  *
  * @author Joao Sousa
  */
@@ -15,9 +16,7 @@ public interface GenericResourceManagerComponent<R extends ResourceManager<?, ?>
 
     R resourceManager();
 
-    interface Builder<B extends GenericResourceManagerComponent.Builder<B, R, C>,
-            R extends ResourceManager<?, ?>,
-            C extends GenericResourceManagerComponent<R>> {
+    interface Builder<B extends GenericResourceManagerComponent.Builder<B, R, C>, R extends ResourceManager<?, ?>, C extends GenericResourceManagerComponent<R>> {
 
         @BindsInstance
         B resourceConfig(ResourceConfiguration resourceConfiguration);

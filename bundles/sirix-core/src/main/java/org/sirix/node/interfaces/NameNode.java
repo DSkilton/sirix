@@ -11,12 +11,14 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.sirix.node.interfaces;
 
@@ -30,63 +32,64 @@ import org.sirix.node.interfaces.immutable.ImmutableNameNode;
  *
  */
 public interface NameNode extends ImmutableNameNode {
-  /**
-   * Gets key of prefix.
-   *
-   * @return key of prefix of the qualified name
-   */
-  @Override
-  int getPrefixKey();
 
-  /**
-   * Gets key of local name.
-   *
-   * @return key of local name of the qualified name
-   */
-  @Override
-  int getLocalNameKey();
+    /**
+     * Gets key of prefix.
+     *
+     * @return key of prefix of the qualified name
+     */
+    @Override
+    int getPrefixKey();
 
-  /**
-   * Gets key of the URI.
-   *
-   * @return URI key
-   */
-  @Override
-  int getURIKey();
+    /**
+     * Gets key of local name.
+     *
+     * @return key of local name of the qualified name
+     */
+    @Override
+    int getLocalNameKey();
 
-  /**
-   * Get a path node key.
-   *
-   * @return path node key
-   */
-  @Override
-  long getPathNodeKey();
+    /**
+     * Gets key of the URI.
+     *
+     * @return URI key
+     */
+    @Override
+    int getURIKey();
 
-  /**
-   * Setting the prefix key.
-   *
-   * @param prefixKey the prefix key to be set
-   */
-  void setPrefixKey(int prefixKey);
+    /**
+     * Get a path node key.
+     *
+     * @return path node key
+     */
+    @Override
+    long getPathNodeKey();
 
-  /**
-   * Setting the local name key.
-   *
-   * @param localNameKey the local name key to be set
-   */
-  void setLocalNameKey(int localNameKey);
+    /**
+     * Setting the prefix key.
+     *
+     * @param prefixKey the prefix key to be set
+     */
+    void setPrefixKey(int prefixKey);
 
-  /**
-   * Setting the uri key.
-   *
-   * @param uriKey the urikey to be set
-   */
-  void setURIKey(int uriKey);
+    /**
+     * Setting the local name key.
+     *
+     * @param localNameKey the local name key to be set
+     */
+    void setLocalNameKey(int localNameKey);
 
-  /**
-   * Set a path node key.
-   *
-   * @param nodeKey
-   */
-  void setPathNodeKey(long nodeKey);
+    /**
+     * Setting the uri key.
+     *
+     * @param uriKey the urikey to be set
+     */
+    void setURIKey(int uriKey);
+
+    /**
+     * Set a path node key.
+     *
+     * @param nodeKey
+     */
+    void setPathNodeKey(long nodeKey);
 }

@@ -16,24 +16,27 @@ import javax.annotation.Nullable;
  */
 public abstract class AbstractForwardingReader extends ForwardingObject implements Reader {
 
-  /** Constructor for use by subclasses. */
-  protected AbstractForwardingReader() {}
+    /**
+     * Constructor for use by subclasses.
+     */
+    protected AbstractForwardingReader() {
+    }
 
-  @Override
-  public Page read(PageReference reference, @Nullable PageReadOnlyTrx pageReadTrx) {
-    return delegate().read(reference, pageReadTrx);
-  }
+    @Override
+    public Page read(PageReference reference, @Nullable PageReadOnlyTrx pageReadTrx) {
+        return delegate().read(reference, pageReadTrx);
+    }
 
-  @Override
-  public PageReference readUberPageReference() {
-    return delegate().readUberPageReference();
-  }
+    @Override
+    public PageReference readUberPageReference() {
+        return delegate().readUberPageReference();
+    }
 
-  @Override
-  public RevisionRootPage readRevisionRootPage(int revision, PageReadOnlyTrx pageReadTrx) {
-    return delegate().readRevisionRootPage(revision, pageReadTrx);
-  }
+    @Override
+    public RevisionRootPage readRevisionRootPage(int revision, PageReadOnlyTrx pageReadTrx) {
+        return delegate().readRevisionRootPage(revision, pageReadTrx);
+    }
 
-  @Override
-  protected abstract Reader delegate();
+    @Override
+    protected abstract Reader delegate();
 }

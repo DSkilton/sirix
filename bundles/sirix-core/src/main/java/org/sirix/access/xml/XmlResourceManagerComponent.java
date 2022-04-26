@@ -7,7 +7,8 @@ import org.sirix.api.xml.XmlResourceManager;
 import org.sirix.dagger.ResourceManagerScope;
 
 /**
- * A {@link Subcomponent dagger subcomponent} that manages the lifecycle of a {@link XmlResourceManager}.
+ * A {@link Subcomponent dagger subcomponent} that manages the lifecycle of a
+ * {@link XmlResourceManager}.
  *
  * @author Joao Sousa
  */
@@ -16,8 +17,7 @@ import org.sirix.dagger.ResourceManagerScope;
 public interface XmlResourceManagerComponent extends GenericResourceManagerComponent<XmlResourceManager> {
 
     @Subcomponent.Builder
-    interface Builder extends GenericResourceManagerComponent.Builder<Builder, XmlResourceManager,
-            XmlResourceManagerComponent> {
+    interface Builder extends GenericResourceManagerComponent.Builder<Builder, XmlResourceManager, XmlResourceManagerComponent> {
 
     }
 }

@@ -13,73 +13,74 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertNotEquals;
 
 public final class NamesTest {
-  @Test
-  public void whenIndexExistsForAnotherString_createNewIndex() {
-    final PageTrx pageTrx = createPageTrxMock("FB");
 
-    final var names = Names.getInstance(0);
+    @Test
+    public void whenIndexExistsForAnotherString_createNewIndex() {
+        final PageTrx pageTrx = createPageTrxMock("FB");
 
-    final var fbIndex = names.setName("FB", pageTrx);
-    final var EaIndex = names.setName("Ea", pageTrx);
+        final var names = Names.getInstance(0);
 
-    assertNotEquals(fbIndex, EaIndex);
-  }
+        final var fbIndex = names.setName("FB", pageTrx);
+        final var EaIndex = names.setName("Ea", pageTrx);
 
-  private PageTrx createPageTrxMock(String name) {
-    final var hashEntryNode = new HashEntryNode(2, 12, name);
-    final var hashCountEntryNode = new HashCountEntryNode(3, 1);
+        assertNotEquals(fbIndex, EaIndex);
+    }
 
-    @SuppressWarnings("unchecked")
-    final PageTrx pageTrx = mock(PageTrx.class);
-    when(pageTrx.createRecord(anyLong(), any(HashEntryNode.class), eq(IndexType.NAME), eq(0))).thenReturn(
-        hashEntryNode);
-    when(pageTrx.createRecord(anyLong(), any(HashCountEntryNode.class), eq(IndexType.NAME), eq(0))).thenReturn(
-        hashCountEntryNode);
-    when(pageTrx.prepareRecordForModification(2L, IndexType.NAME, 0)).thenReturn(hashCountEntryNode);
-    return pageTrx;
-  }
+    private PageTrx createPageTrxMock(String name) {
+        final var hashEntryNode = new HashEntryNode(2, 12, name);
+        final var hashCountEntryNode = new HashCountEntryNode(3, 1);
 
-  @Test
-  public void whenIndexExistsForSameString_createNoNewIndex() {
-    final PageTrx pageTrx = createPageTrxMock("FB");
+        @SuppressWarnings("unchecked")
+        final PageTrx pageTrx = mock(PageTrx.class);
+        when(pageTrx.createRecord(anyLong(), any(HashEntryNode.class), eq(IndexType.NAME), eq(0))).thenReturn(
+                hashEntryNode);
+        when(pageTrx.createRecord(anyLong(), any(HashCountEntryNode.class), eq(IndexType.NAME), eq(0))).thenReturn(
+                hashCountEntryNode);
+        when(pageTrx.prepareRecordForModification(2L, IndexType.NAME, 0)).thenReturn(hashCountEntryNode);
+        return pageTrx;
+    }
 
-    final var names = Names.getInstance(0);
+    @Test
+    public void whenIndexExistsForSameString_createNoNewIndex() {
+        final PageTrx pageTrx = createPageTrxMock("FB");
 
-    final var fbIndex = names.setName("FB", pageTrx);
-    final var EaIndex = names.setName("FB", pageTrx);
+        final var names = Names.getInstance(0);
 
-    assertEquals(fbIndex, EaIndex);
-  }
+        final var fbIndex = names.setName("FB", pageTrx);
+        final var EaIndex = names.setName("FB", pageTrx);
 
-  @Test
-  public void whenIndexExistsForSameString_increaseCounter() {
-    final PageTrx pageTrx = createPageTrxMock("FB");
+        assertEquals(fbIndex, EaIndex);
+    }
 
-    final var names = Names.getInstance(0);
+    @Test
+    public void whenIndexExistsForSameString_increaseCounter() {
+        final PageTrx pageTrx = createPageTrxMock("FB");
 
-    final var index = names.setName("FB", pageTrx);
-    names.setName("FB", pageTrx);
+        final var names = Names.getInstance(0);
 
-    assertEquals(2, names.getCount(index));
-  }
+        final var index = names.setName("FB", pageTrx);
+        names.setName("FB", pageTrx);
 
-  @Test
-  public void whenIndexDoesNotExistsForString_counterIsZero() {
-    final var names = Names.getInstance(0);
+        assertEquals(2, names.getCount(index));
+    }
 
-    assertEquals(0, names.getCount(5));
-  }
+    @Test
+    public void whenIndexDoesNotExistsForString_counterIsZero() {
+        final var names = Names.getInstance(0);
 
-  @Test
-  public void whenNameIsSet_getNameReturnsName() {
-    final var testName = "FB";
+        assertEquals(0, names.getCount(5));
+    }
 
-    final PageTrx pageTrx = createPageTrxMock(testName);
+    @Test
+    public void whenNameIsSet_getNameReturnsName() {
+        final var testName = "FB";
 
-    final var names = Names.getInstance(0);
-    final var index = names.setName(testName, pageTrx);
-    final var name = names.getName(index);
+        final PageTrx pageTrx = createPageTrxMock(testName);
 
-    assertEquals(testName, name);
-  }
+        final var names = Names.getInstance(0);
+        final var index = names.setName(testName, pageTrx);
+        final var name = names.getName(index);
+
+        assertEquals(testName, name);
+    }
 }

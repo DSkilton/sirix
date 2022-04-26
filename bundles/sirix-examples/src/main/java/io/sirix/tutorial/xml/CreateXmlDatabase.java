@@ -26,19 +26,18 @@ public final class CreateXmlDatabase {
         final var pathToXmlFile = XML.resolve("orga.xml");
         final var databaseFile = Constants.SIRIX_DATA_LOCATION.resolve("xml-database");
 
-        if (Files.exists(databaseFile))
+        if (Files.exists(databaseFile)) {
             Databases.removeDatabase(databaseFile);
+        }
 
         final var dbConfig = new DatabaseConfiguration(databaseFile);
         Databases.createXmlDatabase(dbConfig);
         try (final var database = Databases.openXmlDatabase(databaseFile)) {
             database.createResource(ResourceConfiguration.newBuilder("resource")
-                                                         .useTextCompression(false)
-                                                         .useDeweyIDs(true)
-                                                         .build());
-            try (final var manager = database.openResourceManager("resource");
-                 final var wtx = manager.beginNodeTrx();
-                 final var fis = new FileInputStream(pathToXmlFile.toFile())) {
+                    .useTextCompression(false)
+                    .useDeweyIDs(true)
+                    .build());
+            try (final var manager = database.openResourceManager("resource"); final var wtx = manager.beginNodeTrx(); final var fis = new FileInputStream(pathToXmlFile.toFile())) {
                 wtx.insertSubtreeAsFirstChild(XmlShredder.createFileReader(fis));
                 wtx.commit();
             }

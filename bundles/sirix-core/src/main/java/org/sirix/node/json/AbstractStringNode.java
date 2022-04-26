@@ -13,78 +13,78 @@ import java.math.BigInteger;
 
 public abstract class AbstractStringNode extends AbstractStructForwardingNode implements ValueNode, ImmutableJsonNode {
 
-  private final ValueNodeDelegate valueNodeDelegate;
+    private final ValueNodeDelegate valueNodeDelegate;
 
-  private final StructNodeDelegate structNodeDelegate;
+    private final StructNodeDelegate structNodeDelegate;
 
-  private BigInteger hashCode;
+    private BigInteger hashCode;
 
-  public AbstractStringNode(ValueNodeDelegate valueNodeDelegate, StructNodeDelegate structNodeDelegate) {
-    this.valueNodeDelegate = valueNodeDelegate;
-    this.structNodeDelegate = structNodeDelegate;
-  }
-
-  @Override
-  public BigInteger computeHash() {
-    BigInteger result = BigInteger.ONE;
-
-    result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
-    if (structNodeDelegate.isNotEmpty()) {
-      result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+    public AbstractStringNode(ValueNodeDelegate valueNodeDelegate, StructNodeDelegate structNodeDelegate) {
+        this.valueNodeDelegate = valueNodeDelegate;
+        this.structNodeDelegate = structNodeDelegate;
     }
-    result = BigInteger.valueOf(31).multiply(result).add(valueNodeDelegate.computeHash());
 
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
+    @Override
+    public BigInteger computeHash() {
+        BigInteger result = BigInteger.ONE;
 
-  @Override
-  public void setHash(final BigInteger hash) {
-    if (hash != null) {
-      hashCode = Node.to128BitsAtMaximumBigInteger(hash);
-    } else {
-      hashCode = null;
+        result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
+        if (structNodeDelegate.isNotEmpty()) {
+            result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+        }
+        result = BigInteger.valueOf(31).multiply(result).add(valueNodeDelegate.computeHash());
+
+        return Node.to128BitsAtMaximumBigInteger(result);
     }
-  }
 
-  @Override
-  public BigInteger getHash() {
-    if (hashCode == null) {
-      hashCode = computeHash();
+    @Override
+    public void setHash(final BigInteger hash) {
+        if (hash != null) {
+            hashCode = Node.to128BitsAtMaximumBigInteger(hash);
+        } else {
+            hashCode = null;
+        }
     }
-    return hashCode;
-  }
 
-  @Override
-  public byte[] getRawValue() {
-    return valueNodeDelegate.getRawValue();
-  }
+    @Override
+    public BigInteger getHash() {
+        if (hashCode == null) {
+            hashCode = computeHash();
+        }
+        return hashCode;
+    }
 
-  @Override
-  public void setValue(final byte[] value) {
-    valueNodeDelegate.setValue(value);
-  }
+    @Override
+    public byte[] getRawValue() {
+        return valueNodeDelegate.getRawValue();
+    }
 
-  @Override
-  public String getValue() {
-    return new String(valueNodeDelegate.getRawValue(), Constants.DEFAULT_ENCODING);
-  }
+    @Override
+    public void setValue(final byte[] value) {
+        valueNodeDelegate.setValue(value);
+    }
 
-  @Override
-  public StructNodeDelegate getStructNodeDelegate() {
-    return structNodeDelegate;
-  }
+    @Override
+    public String getValue() {
+        return new String(valueNodeDelegate.getRawValue(), Constants.DEFAULT_ENCODING);
+    }
 
-  public ValueNodeDelegate getValNodeDelegate() {
-    return valueNodeDelegate;
-  }
+    @Override
+    public StructNodeDelegate getStructNodeDelegate() {
+        return structNodeDelegate;
+    }
 
-  @Override
-  protected StructNodeDelegate structDelegate() {
-    return structNodeDelegate;
-  }
+    public ValueNodeDelegate getValNodeDelegate() {
+        return valueNodeDelegate;
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return structNodeDelegate.getNodeDelegate();
-  }
+    @Override
+    protected StructNodeDelegate structDelegate() {
+        return structNodeDelegate;
+    }
+
+    @Override
+    protected NodeDelegate delegate() {
+        return structNodeDelegate.getNodeDelegate();
+    }
 }

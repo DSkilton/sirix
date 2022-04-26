@@ -17,49 +17,52 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 public final class ImmutableNumberNode extends AbstractImmutableJsonStructuralNode {
-  /** Mutable {@link NumberNode}. */
-  private final NumberNode node;
 
-  /**
-   * Private constructor.
-   *
-   * @param node {@link NumberNode} to wrap
-   */
-  private ImmutableNumberNode(final NumberNode node) {
-    this.node = checkNotNull(node);
-  }
+    /**
+     * Mutable {@link NumberNode}.
+     */
+    private final NumberNode node;
 
-  /**
-   * Get an immutable text node instance.
-   *
-   * @param node the mutable {@link NumberNode} to wrap
-   * @return immutable text node instance
-   */
-  public static ImmutableNumberNode of(final NumberNode node) {
-    return new ImmutableNumberNode(node);
-  }
+    /**
+     * Private constructor.
+     *
+     * @param node {@link NumberNode} to wrap
+     */
+    private ImmutableNumberNode(final NumberNode node) {
+        this.node = checkNotNull(node);
+    }
 
-  @Override
-  public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
-    return visitor.visit(this);
-  }
+    /**
+     * Get an immutable text node instance.
+     *
+     * @param node the mutable {@link NumberNode} to wrap
+     * @return immutable text node instance
+     */
+    public static ImmutableNumberNode of(final NumberNode node) {
+        return new ImmutableNumberNode(node);
+    }
 
-  @Override
-  public StructNode structDelegate() {
-    return node.getStructNodeDelegate();
-  }
+    @Override
+    public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
+        return visitor.visit(this);
+    }
 
-  public Number getValue() {
-    return node.getValue();
-  }
+    @Override
+    public StructNode structDelegate() {
+        return node.getStructNodeDelegate();
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.BOOLEAN_VALUE;
-  }
+    public Number getValue() {
+        return node.getValue();
+    }
 
-  @Override
-  public BigInteger computeHash() {
-    return node.computeHash();
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.BOOLEAN_VALUE;
+    }
+
+    @Override
+    public BigInteger computeHash() {
+        return node.computeHash();
+    }
 }

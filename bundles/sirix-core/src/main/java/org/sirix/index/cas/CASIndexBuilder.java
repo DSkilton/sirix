@@ -29,69 +29,71 @@ import java.util.Optional;
 import java.util.Set;
 
 public final class CASIndexBuilder {
-  private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(CASIndexBuilder.class));
 
-  private final RBTreeWriter<CASValue, NodeReferences> avlTreeWriter;
+    private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(CASIndexBuilder.class));
 
-  private final PathSummaryReader pathSummaryReader;
+    private final RBTreeWriter<CASValue, NodeReferences> avlTreeWriter;
 
-  private final Set<Path<QNm>> paths;
+    private final PathSummaryReader pathSummaryReader;
 
-  private final Type type;
+    private final Set<Path<QNm>> paths;
 
-  public CASIndexBuilder(final RBTreeWriter<CASValue, NodeReferences> avlTreeWriter,
-      final PathSummaryReader pathSummaryReader, final Set<Path<QNm>> paths, final Type type) {
-    this.pathSummaryReader = pathSummaryReader;
-    this.paths = paths;
-    this.avlTreeWriter = avlTreeWriter;
-    this.type = type;
-  }
+    private final Type type;
 
-  public VisitResult process(final ImmutableNode node, final long pathNodeKey) {
-    try {
-      if (paths.isEmpty() || pathSummaryReader.getPCRsForPaths(paths, true).contains(pathNodeKey)) {
-        final Str strValue;
-
-        if (node instanceof ImmutableValueNode) {
-          strValue = new Str(((ImmutableValueNode) node).getValue());
-        } else if (node instanceof ImmutableObjectNumberNode) {
-          strValue = new Str(String.valueOf(((ImmutableObjectNumberNode) node).getValue()));
-        } else if (node instanceof ImmutableNumberNode) {
-          strValue = new Str(String.valueOf(((ImmutableNumberNode) node).getValue()));
-        } else if (node instanceof ImmutableObjectBooleanNode) {
-          strValue = new Str(String.valueOf(((ImmutableObjectBooleanNode) node).getValue()));
-        } else if (node instanceof ImmutableBooleanNode) {
-          strValue = new Str(String.valueOf(((ImmutableBooleanNode) node).getValue()));
-        } else {
-          throw new IllegalStateException("Value not supported.");
-        }
-
-        boolean isOfType = false;
-        try {
-          if (type != Type.STR)
-            AtomicUtil.toType(strValue, type);
-          isOfType = true;
-        } catch (final SirixRuntimeException e) {
-        }
-
-        if (isOfType) {
-          final CASValue value = new CASValue(strValue, type, pathNodeKey);
-          final Optional<NodeReferences> textReferences = avlTreeWriter.get(value, SearchMode.EQUAL);
-          if (textReferences.isPresent()) {
-            setNodeReferences(node, textReferences.get(), value);
-          } else {
-            setNodeReferences(node, new NodeReferences(), value);
-          }
-        }
-      }
-    } catch (final PathException | SirixIOException e) {
-      LOGGER.error(e.getMessage(), e);
+    public CASIndexBuilder(final RBTreeWriter<CASValue, NodeReferences> avlTreeWriter,
+            final PathSummaryReader pathSummaryReader, final Set<Path<QNm>> paths, final Type type) {
+        this.pathSummaryReader = pathSummaryReader;
+        this.paths = paths;
+        this.avlTreeWriter = avlTreeWriter;
+        this.type = type;
     }
-    return VisitResultType.CONTINUE;
-  }
 
-  private void setNodeReferences(final ImmutableNode node, final NodeReferences references, final CASValue value)
-      throws SirixIOException {
-    avlTreeWriter.index(value, references.addNodeKey(node.getNodeKey()), MoveCursor.NO_MOVE);
-  }
+    public VisitResult process(final ImmutableNode node, final long pathNodeKey) {
+        try {
+            if (paths.isEmpty() || pathSummaryReader.getPCRsForPaths(paths, true).contains(pathNodeKey)) {
+                final Str strValue;
+
+                if (node instanceof ImmutableValueNode) {
+                    strValue = new Str(((ImmutableValueNode) node).getValue());
+                } else if (node instanceof ImmutableObjectNumberNode) {
+                    strValue = new Str(String.valueOf(((ImmutableObjectNumberNode) node).getValue()));
+                } else if (node instanceof ImmutableNumberNode) {
+                    strValue = new Str(String.valueOf(((ImmutableNumberNode) node).getValue()));
+                } else if (node instanceof ImmutableObjectBooleanNode) {
+                    strValue = new Str(String.valueOf(((ImmutableObjectBooleanNode) node).getValue()));
+                } else if (node instanceof ImmutableBooleanNode) {
+                    strValue = new Str(String.valueOf(((ImmutableBooleanNode) node).getValue()));
+                } else {
+                    throw new IllegalStateException("Value not supported.");
+                }
+
+                boolean isOfType = false;
+                try {
+                    if (type != Type.STR) {
+                        AtomicUtil.toType(strValue, type);
+                    }
+                    isOfType = true;
+                } catch (final SirixRuntimeException e) {
+                }
+
+                if (isOfType) {
+                    final CASValue value = new CASValue(strValue, type, pathNodeKey);
+                    final Optional<NodeReferences> textReferences = avlTreeWriter.get(value, SearchMode.EQUAL);
+                    if (textReferences.isPresent()) {
+                        setNodeReferences(node, textReferences.get(), value);
+                    } else {
+                        setNodeReferences(node, new NodeReferences(), value);
+                    }
+                }
+            }
+        } catch (final PathException | SirixIOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return VisitResultType.CONTINUE;
+    }
+
+    private void setNodeReferences(final ImmutableNode node, final NodeReferences references, final CASValue value)
+            throws SirixIOException {
+        avlTreeWriter.index(value, references.addNodeKey(node.getNodeKey()), MoveCursor.NO_MOVE);
+    }
 }

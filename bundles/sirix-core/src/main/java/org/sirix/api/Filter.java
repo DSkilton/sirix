@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.api;
 
 /**
@@ -33,9 +34,11 @@ package org.sirix.api;
  *
  *
  * <ol>
- * <li><strong>Precondition</strong> before each call to <code>Filter.filter()</code>:
+ * <li><strong>Precondition</strong> before each call to
+ * <code>Filter.filter()</code>:
  * <code>NodeReadTrx.getNodeKey() == n</code>.</li>
- * <li><strong>Postcondition</strong> after each call to <code>Filter.filter()</code>:
+ * <li><strong>Postcondition</strong> after each call to
+ * <code>Filter.filter()</code>:
  * <code>NodeReadTrx.getNodeKey() == n</code>.</li>
  * </ol>
  *
@@ -70,25 +73,25 @@ package org.sirix.api;
  */
 public interface Filter<R> {
 
-  /**
-   * Apply filter on current node of transaction.
-   *
-   * @return {@code true} if node passes filter, {@code false} otherwise
-   */
-  boolean filter();
+    /**
+     * Apply filter on current node of transaction.
+     *
+     * @return {@code true} if node passes filter, {@code false} otherwise
+     */
+    boolean filter();
 
-  /**
-   * Getting the transaction of this filter.
-   *
-   * @return the transaction of this filter
-   */
-  R getTrx();
+    /**
+     * Getting the transaction of this filter.
+     *
+     * @return the transaction of this filter
+     */
+    R getTrx();
 
-  /**
-   * Setting the transaction of this filter.
-   *
-   * @param rtx the transaction of this filter
-   */
-  void setTrx(R rtx);
+    /**
+     * Setting the transaction of this filter.
+     *
+     * @param rtx the transaction of this filter
+     */
+    void setTrx(R rtx);
 
 }

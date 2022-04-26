@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import static org.junit.Assert.assertEquals;
@@ -32,30 +33,30 @@ import org.sirix.exception.SirixException;
 
 public class FilterTest {
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.deleteEverything();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.deleteEverything();
+    }
 
-  public static void testFilterConventions(final Filter<? extends NodeReadOnlyTrx> filter, final boolean expected) {
-    final NodeReadOnlyTrx rtx = ((AbstractFilter<? extends NodeReadOnlyTrx>) filter).getTrx();
+    public static void testFilterConventions(final Filter<? extends NodeReadOnlyTrx> filter, final boolean expected) {
+        final NodeReadOnlyTrx rtx = ((AbstractFilter<? extends NodeReadOnlyTrx>) filter).getTrx();
 
-    // Filter Convention 1.
-    final long startKey = rtx.getNodeKey();
+        // Filter Convention 1.
+        final long startKey = rtx.getNodeKey();
 
-    assertEquals(expected, filter.filter());
+        assertEquals(expected, filter.filter());
 
-    // Axis Convention 2.
-    assertEquals(startKey, rtx.getNodeKey());
-  }
+        // Axis Convention 2.
+        assertEquals(startKey, rtx.getNodeKey());
+    }
 
-  @Test
-  public void testFilterExample() {
-    // Do nothing. This class is only used with other test cases.
-  }
+    @Test
+    public void testFilterExample() {
+        // Do nothing. This class is only used with other test cases.
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    XmlTestHelper.closeEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        XmlTestHelper.closeEverything();
+    }
 }

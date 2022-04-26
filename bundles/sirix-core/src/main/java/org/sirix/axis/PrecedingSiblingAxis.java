@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import org.sirix.api.NodeCursor;
@@ -27,65 +28,67 @@ import org.sirix.settings.Fixed;
 
 /**
  * <p>
- * Iterate over all preceding siblings of kind ELEMENT or TEXT starting at a given node. Self is not
- * included. Note that the axis conforms to the XPath specification and returns nodes in document
- * order.
+ * Iterate over all preceding siblings of kind ELEMENT or TEXT starting at a
+ * given node. Self is not included. Note that the axis conforms to the XPath
+ * specification and returns nodes in document order.
  * </p>
  *
  * @author Johannes Lichtenberger, University of Konstanz
  */
 public final class PrecedingSiblingAxis extends AbstractAxis {
 
-  /** Determines if it's the first call. */
-  private boolean mIsFirst;
+    /**
+     * Determines if it's the first call.
+     */
+    private boolean mIsFirst;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param cursor cursor to iterate with
-   */
-  public PrecedingSiblingAxis(final NodeCursor cursor) {
-    super(cursor);
-  }
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param cursor cursor to iterate with
+     */
+    public PrecedingSiblingAxis(final NodeCursor cursor) {
+        super(cursor);
+    }
 
-  @Override
-  public void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    mIsFirst = true;
-  }
+    @Override
+    public void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        mIsFirst = true;
+    }
 
-  @Override
-  protected long nextKey() {
-    final NodeCursor cursor = getCursor();
+    @Override
+    protected long nextKey() {
+        final NodeCursor cursor = getCursor();
 
-    if (mIsFirst) {
-      mIsFirst = false;
+        if (mIsFirst) {
+            mIsFirst = false;
 
-      final NodeKind kind = cursor.getKind();
-      if (kind == NodeKind.ATTRIBUTE || kind == NodeKind.NAMESPACE) {
-        // If the context node is an attribute or namespace node, the following-sibling axis is empty.
-        return done();
-      } else {
-        if (cursor.hasParent()) {
-          final long startNodeKey = cursor.getNodeKey();
-          cursor.moveToParent();
-          cursor.moveToFirstChild();
+            final NodeKind kind = cursor.getKind();
+            if (kind == NodeKind.ATTRIBUTE || kind == NodeKind.NAMESPACE) {
+                // If the context node is an attribute or namespace node, the following-sibling axis is empty.
+                return done();
+            } else {
+                if (cursor.hasParent()) {
+                    final long startNodeKey = cursor.getNodeKey();
+                    cursor.moveToParent();
+                    cursor.moveToFirstChild();
 
-          if (cursor.getNodeKey() == startNodeKey) {
-            return Fixed.NULL_NODE_KEY.getStandardProperty();
-          } else {
-            final long key = cursor.getNodeKey();
-            cursor.moveTo(startNodeKey);
-            return key;
-          }
+                    if (cursor.getNodeKey() == startNodeKey) {
+                        return Fixed.NULL_NODE_KEY.getStandardProperty();
+                    } else {
+                        final long key = cursor.getNodeKey();
+                        cursor.moveTo(startNodeKey);
+                        return key;
+                    }
+                }
+            }
         }
-      }
-    }
 
-    if (cursor.hasRightSibling() && cursor.getRightSiblingKey() != getStartKey()) {
-      return cursor.getRightSiblingKey();
-    }
+        if (cursor.hasRightSibling() && cursor.getRightSiblingKey() != getStartKey()) {
+            return cursor.getRightSiblingKey();
+        }
 
-    return done();
-  }
+        return done();
+    }
 }

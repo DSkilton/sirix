@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.service.xml.shredder;
 
 import static org.junit.Assert.assertEquals;
@@ -49,57 +50,61 @@ import org.sirix.service.xml.shredder.WikipediaImport.DateBy;
  */
 public class WikipediaImportTest {
 
-  /** Wikipedia file. */
-  public static final Path WIKIPEDIA = Paths.get("src", "test", "resources", "testWikipedia.xml");
+    /**
+     * Wikipedia file.
+     */
+    public static final Path WIKIPEDIA = Paths.get("src", "test", "resources", "testWikipedia.xml");
 
-  /** Wikipedia expected file. */
-  public static final Path EXPECTED =
-      Paths.get("src", "test", "resources", "testWikipediaExpected.xml");
+    /**
+     * Wikipedia expected file.
+     */
+    public static final Path EXPECTED
+            = Paths.get("src", "test", "resources", "testWikipediaExpected.xml");
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.deleteEverything();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.deleteEverything();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    XmlTestHelper.closeEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        XmlTestHelper.closeEverything();
+    }
 
-  @Test
-  public void testWikipediaImport() throws Exception {
-    Databases.removeDatabase(PATHS.PATH2.getFile());
+    @Test
+    public void testWikipediaImport() throws Exception {
+        Databases.removeDatabase(PATHS.PATH2.getFile());
 
-    // Create necessary element nodes.
-    final String NSP_URI = "";
-    final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-    final StartElement timestamp = eventFactory.createStartElement(
-        new QName(NSP_URI, "timestamp", XMLConstants.DEFAULT_NS_PREFIX), null, null);
-    final StartElement page = eventFactory.createStartElement(
-        new QName(NSP_URI, "page", XMLConstants.DEFAULT_NS_PREFIX), null, null);
-    final StartElement rev = eventFactory.createStartElement(
-        new QName(NSP_URI, "revision", XMLConstants.DEFAULT_NS_PREFIX), null, null);
-    final StartElement id = eventFactory.createStartElement(
-        new QName(NSP_URI, "id", XMLConstants.DEFAULT_NS_PREFIX), null, null);
-    final StartElement text = eventFactory.createStartElement(
-        new QName(NSP_URI, "text", XMLConstants.DEFAULT_NS_PREFIX), null, null);
+        // Create necessary element nodes.
+        final String NSP_URI = "";
+        final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        final StartElement timestamp = eventFactory.createStartElement(
+                new QName(NSP_URI, "timestamp", XMLConstants.DEFAULT_NS_PREFIX), null, null);
+        final StartElement page = eventFactory.createStartElement(
+                new QName(NSP_URI, "page", XMLConstants.DEFAULT_NS_PREFIX), null, null);
+        final StartElement rev = eventFactory.createStartElement(
+                new QName(NSP_URI, "revision", XMLConstants.DEFAULT_NS_PREFIX), null, null);
+        final StartElement id = eventFactory.createStartElement(
+                new QName(NSP_URI, "id", XMLConstants.DEFAULT_NS_PREFIX), null, null);
+        final StartElement text = eventFactory.createStartElement(
+                new QName(NSP_URI, "text", XMLConstants.DEFAULT_NS_PREFIX), null, null);
 
-    // Create list.
-    final List<StartElement> list = new LinkedList<StartElement>();
-    list.add(timestamp);
-    list.add(page);
-    list.add(rev);
-    list.add(id);
-    list.add(text);
+        // Create list.
+        final List<StartElement> list = new LinkedList<StartElement>();
+        list.add(timestamp);
+        list.add(page);
+        list.add(rev);
+        list.add(id);
+        list.add(text);
 
-    // Invoke import.
-    new WikipediaImport(WIKIPEDIA, PATHS.PATH2.getFile()).importData(DateBy.HOURS, list);
-    XmlSerializer.main(
-        PATHS.PATH2.getFile().toAbsolutePath().toString(),
-        PATHS.PATH3.getFile().toAbsolutePath().toString());
+        // Invoke import.
+        new WikipediaImport(WIKIPEDIA, PATHS.PATH2.getFile()).importData(DateBy.HOURS, list);
+        XmlSerializer.main(
+                PATHS.PATH2.getFile().toAbsolutePath().toString(),
+                PATHS.PATH3.getFile().toAbsolutePath().toString());
 
-    final StringBuilder actual = XmlTestHelper.readFile(PATHS.PATH3.getFile().toAbsolutePath(), false);
-    final StringBuilder expected = XmlTestHelper.readFile(EXPECTED, false);
-    assertEquals("XML files match", expected.toString(), actual.toString());
-  }
+        final StringBuilder actual = XmlTestHelper.readFile(PATHS.PATH3.getFile().toAbsolutePath(), false);
+        final StringBuilder expected = XmlTestHelper.readFile(EXPECTED, false);
+        assertEquals("XML files match", expected.toString(), actual.toString());
+    }
 }

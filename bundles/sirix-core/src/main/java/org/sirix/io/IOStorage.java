@@ -24,50 +24,51 @@ import org.sirix.exception.SirixIOException;
 import org.sirix.io.bytepipe.ByteHandler;
 
 /**
- * Interface to generate access to the storage. The storage is flexible as long as {@link Reader}
- * and {@link Writer}-implementations are provided. Utility methods for common interaction with the
- * storage are provided via the {@code Storage}.
- * 
+ * Interface to generate access to the storage. The storage is flexible as long
+ * as {@link Reader} and {@link Writer}-implementations are provided. Utility
+ * methods for common interaction with the storage are provided via the
+ * {@code Storage}.
+ *
  * @author Sebastian Graf, University of Konstanz
- * 
+ *
  */
 public interface IOStorage {
 
-  /**
-   * Getting a writer.
-   * 
-   * @return an {@link Writer} instance
-   * @throws SirixIOException if the initialization fails
-   */
-  Writer createWriter();
+    /**
+     * Getting a writer.
+     *
+     * @return an {@link Writer} instance
+     * @throws SirixIOException if the initialization fails
+     */
+    Writer createWriter();
 
-  /**
-   * Getting a reader.
-   * 
-   * @return an {@link Reader} instance
-   * @throws SirixIOException if the initialization fails
-   */
-  Reader createReader();
+    /**
+     * Getting a reader.
+     *
+     * @return an {@link Reader} instance
+     * @throws SirixIOException if the initialization fails
+     */
+    Reader createReader();
 
-  /**
-   * Closing this storage.
-   * 
-   * @throws SirixIOException if an I/O error occurs
-   */
-  void close();
+    /**
+     * Closing this storage.
+     *
+     * @throws SirixIOException if an I/O error occurs
+     */
+    void close();
 
-  /**
-   * Check if storage exists.
-   * 
-   * @return true if storage holds data, false otherwise
-   * @throws SirixIOException if storage is not accessible
-   */
-  boolean exists();
+    /**
+     * Check if storage exists.
+     *
+     * @return true if storage holds data, false otherwise
+     * @throws SirixIOException if storage is not accessible
+     */
+    boolean exists();
 
-  /**
-   * Get the byte handler pipeline.
-   * 
-   * @return byte handler pipeline
-   */
-  ByteHandler getByteHandler();
+    /**
+     * Get the byte handler pipeline.
+     *
+     * @return byte handler pipeline
+     */
+    ByteHandler getByteHandler();
 }

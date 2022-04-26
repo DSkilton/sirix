@@ -7,45 +7,44 @@ import java.util.Iterator;
 // such methods/utilities should be taken out and made a library of their own
 // so any implementation of NavigableMap can reuse it, while the implementation
 // provides certain primitive methods (getEntry, successor, predecessor, etc)
-
 class Values<K, V> extends AbstractCollection<V> {
-	private final AdaptiveRadixTree<K, V> m;
 
-	Values(AdaptiveRadixTree<K, V> m){
-		this.m = m;
-	}
+    private final AdaptiveRadixTree<K, V> m;
 
-	@Override
-	public Iterator<V> iterator() {
-		return m.valueIterator();
-	}
+    Values(AdaptiveRadixTree<K, V> m) {
+        this.m = m;
+    }
 
-	@Override
-	public int size() {
-		return m.size();
-	}
+    @Override
+    public Iterator<V> iterator() {
+        return m.valueIterator();
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		return m.containsValue(o);
-	}
+    @Override
+    public int size() {
+        return m.size();
+    }
 
-	@Override
-	public boolean remove(Object o) {
-		for (LeafNode<K,V> e = m.getFirstEntry(); e != null; e = AdaptiveRadixTree.successor(e)) {
-			if (AdaptiveRadixTree.valEquals(e.getValue(), o)) {
-				m.deleteEntry(e);
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean contains(Object o) {
+        return m.containsValue(o);
+    }
 
-	@Override
-	public void clear() {
-		m.clear();
-	}
+    @Override
+    public boolean remove(Object o) {
+        for (LeafNode<K, V> e = m.getFirstEntry(); e != null; e = AdaptiveRadixTree.successor(e)) {
+            if (AdaptiveRadixTree.valEquals(e.getValue(), o)) {
+                m.deleteEntry(e);
+                return true;
+            }
+        }
+        return false;
+    }
 
-	// TODO: implement Spliterator
+    @Override
+    public void clear() {
+        m.clear();
+    }
+
+    // TODO: implement Spliterator
 }
-

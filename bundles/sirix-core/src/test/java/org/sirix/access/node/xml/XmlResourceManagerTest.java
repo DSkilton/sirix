@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.access.node.xml;
 
 import static org.junit.Assert.assertEquals;
@@ -46,236 +45,236 @@ import org.sirix.utils.XmlDocumentCreator;
 
 public class XmlResourceManagerTest {
 
-  private Holder holder;
+    private Holder holder;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.deleteEverything();
-    holder = Holder.generateRtx();
-  }
-
-  @After
-  public void tearDown() throws SirixException {
-    holder.close();
-    XmlTestHelper.closeEverything();
-  }
-
-  @Test
-  public void testSingleton() {
-    try (final var database = Holder.openResourceManager().getDatabase()) {
-      assertEquals(database, holder.getDatabase());
-
-      try (final XmlResourceManager manager = database.openResourceManager(XmlTestHelper.RESOURCE)) {
-        assertEquals(manager, holder.getResourceManager());
-      }
-
-      try (final XmlResourceManager manager2 = database.openResourceManager(XmlTestHelper.RESOURCE)) {
-        assertNotSame(manager2, holder.getResourceManager());
-      }
-    }
-  }
-
-  @Test
-  public void testClosed() {
-    final XmlNodeReadOnlyTrx rtx = holder.getXmlNodeReadTrx();
-    rtx.close();
-
-    try {
-      rtx.getAttributeCount();
-      fail();
-    } catch (final IllegalStateException e) {
-      // Must fail.
-    } finally {
-      holder.getResourceManager().close();
-    }
-  }
-
-  @Test
-  public void testNonExisting() {
-    final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    final var database2 = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    assertTrue(database == database2);
-  }
-
-  @Test
-  public void testInsertChild() {
-    try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
-      XmlDocumentCreator.create(wtx);
-      assertNotNull(wtx.moveToDocumentRoot());
-      assertEquals(NodeKind.XML_DOCUMENT, wtx.getKind());
-
-      assertNotNull(wtx.moveToFirstChild());
-      assertEquals(NodeKind.ELEMENT, wtx.getKind());
-      assertEquals("p:a",
-          new StringBuilder(wtx.getName().getPrefix()).append(":").append(wtx.getName().getLocalName()).toString());
-
-      wtx.rollback();
-    }
-  }
-
-  @Test
-  public void testRevision() {
-    XmlNodeReadOnlyTrx rtx = holder.getXmlNodeReadTrx();
-    assertEquals(0L, rtx.getRevisionNumber());
-
-    try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
-      assertEquals(1L, wtx.getRevisionNumber());
-
-      // Commit and check.
-      wtx.commit();
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.deleteEverything();
+        holder = Holder.generateRtx();
     }
 
-    try {
-      rtx = holder.getResourceManager().beginNodeReadOnlyTrx(Constants.UBP_ROOT_REVISION_NUMBER);
-
-      assertEquals(Constants.UBP_ROOT_REVISION_NUMBER, rtx.getRevisionNumber());
-    } finally {
-      rtx.close();
+    @After
+    public void tearDown() throws SirixException {
+        holder.close();
+        XmlTestHelper.closeEverything();
     }
 
-    try (final XmlNodeReadOnlyTrx rtx2 = holder.getResourceManager().beginNodeReadOnlyTrx()) {
-      assertEquals(1L, rtx2.getRevisionNumber());
-    }
-  }
+    @Test
+    public void testSingleton() {
+        try (final var database = Holder.openResourceManager().getDatabase()) {
+            assertEquals(database, holder.getDatabase());
 
-  @Test
-  public void testShreddedRevision() {
-    try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
-      XmlDocumentCreator.create(wtx);
-      assertEquals(1L, wtx.getRevisionNumber());
-      wtx.commit();
-    }
+            try (final XmlResourceManager manager = database.openResourceManager(XmlTestHelper.RESOURCE)) {
+                assertEquals(manager, holder.getResourceManager());
+            }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx()) {
-      assertEquals(1L, rtx.getRevisionNumber());
-      rtx.moveTo(12L);
-      assertEquals("bar", rtx.getValue());
-
-      try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
-        assertEquals(2L, wtx.getRevisionNumber());
-        wtx.moveTo(12L);
-        wtx.setValue("bar2");
-
-        assertEquals("bar", rtx.getValue());
-        assertEquals("bar2", wtx.getValue());
-        wtx.rollback();
-      }
+            try (final XmlResourceManager manager2 = database.openResourceManager(XmlTestHelper.RESOURCE)) {
+                assertNotSame(manager2, holder.getResourceManager());
+            }
+        }
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx()) {
-      assertEquals(1L, rtx.getRevisionNumber());
-      rtx.moveTo(12L);
-      assertEquals("bar", rtx.getValue());
-    }
-  }
+    @Test
+    public void testClosed() {
+        final XmlNodeReadOnlyTrx rtx = holder.getXmlNodeReadTrx();
+        rtx.close();
 
-  @Test
-  public void testExisting() {
-    final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    final XmlResourceManager resource = database.openResourceManager(XmlTestHelper.RESOURCE);
-
-    final XmlNodeTrx wtx1 = resource.beginNodeTrx();
-    XmlDocumentCreator.create(wtx1);
-    assertEquals(1L, wtx1.getRevisionNumber());
-    wtx1.commit();
-    wtx1.close();
-    resource.close();
-
-    final XmlResourceManager resource2 = database.openResourceManager(XmlTestHelper.RESOURCE);
-    final XmlNodeReadOnlyTrx rtx1 = resource2.beginNodeReadOnlyTrx();
-    assertEquals(1L, rtx1.getRevisionNumber());
-    rtx1.moveTo(12L);
-    assertEquals("bar", rtx1.getValue());
-
-    final XmlNodeTrx wtx2 = resource2.beginNodeTrx();
-    assertEquals(2L, wtx2.getRevisionNumber());
-    wtx2.moveTo(12L);
-    wtx2.setValue("bar2");
-
-    assertEquals("bar", rtx1.getValue());
-    assertEquals("bar2", wtx2.getValue());
-
-    rtx1.close();
-    wtx2.commit();
-    wtx2.close();
-
-    final var database2 = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    final XmlResourceManager resource3 = database2.openResourceManager(XmlTestHelper.RESOURCE);
-    final XmlNodeReadOnlyTrx rtx2 = resource3.beginNodeReadOnlyTrx();
-    assertEquals(2L, rtx2.getRevisionNumber());
-    rtx2.moveTo(12L);
-    assertEquals("bar2", rtx2.getValue());
-
-    rtx2.close();
-    resource3.close();
-  }
-
-  @Test
-  public void testIdempotentClose() {
-    final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx();
-    XmlDocumentCreator.create(wtx);
-    wtx.commit();
-    wtx.close();
-    wtx.close();
-
-    final NodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx();
-    assertEquals(false, rtx.moveTo(14L).hasMoved());
-    rtx.close();
-    rtx.close();
-    holder.getResourceManager().close();
-  }
-
-  @Test
-  public void testAutoCommitWithNodeThreshold() {
-    // After each bunch of 5 nodes commit.
-    try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx(5)) {
-      XmlDocumentCreator.create(wtx);
-      wtx.commit();
-      assertEquals(4, wtx.getRevisionNumber());
-    }
-  }
-
-  @Ignore
-  @Test
-  public void testAutoCommitWithScheduler() throws InterruptedException {
-    // After 500 milliseconds commit.
-    try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx(500, TimeUnit.MILLISECONDS)) {
-      TimeUnit.MILLISECONDS.sleep(1500);
-      assertTrue(wtx.getRevisionNumber() >= 3);
-    }
-  }
-
-  @Ignore
-  @Test
-  public void testFetchingOfClosestRevisionToAGivenPointInTime() throws InterruptedException {
-    final Instant start = Instant.now();
-    final Instant afterAllCommits;
-    final Instant afterFirstCommit;
-    final Instant afterSecondCommit;
-    try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx(2000, TimeUnit.MILLISECONDS)) {
-      TimeUnit.MILLISECONDS.sleep(2100);
-      afterFirstCommit = Instant.now();
-      TimeUnit.MILLISECONDS.sleep(2100);
-      afterSecondCommit = Instant.now();
-      TimeUnit.MILLISECONDS.sleep(2100);
-      assertTrue(wtx.getRevisionNumber() >= 3);
-      afterAllCommits = Instant.now();
+        try {
+            rtx.getAttributeCount();
+            fail();
+        } catch (final IllegalStateException e) {
+            // Must fail.
+        } finally {
+            holder.getResourceManager().close();
+        }
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(start)) {
-      assertEquals(0, rtx.getRevisionNumber());
+    @Test
+    public void testNonExisting() {
+        final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
+        final var database2 = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
+        assertTrue(database == database2);
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(afterFirstCommit)) {
-      assertEquals(1, rtx.getRevisionNumber());
+    @Test
+    public void testInsertChild() {
+        try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
+            XmlDocumentCreator.create(wtx);
+            assertNotNull(wtx.moveToDocumentRoot());
+            assertEquals(NodeKind.XML_DOCUMENT, wtx.getKind());
+
+            assertNotNull(wtx.moveToFirstChild());
+            assertEquals(NodeKind.ELEMENT, wtx.getKind());
+            assertEquals("p:a",
+                    new StringBuilder(wtx.getName().getPrefix()).append(":").append(wtx.getName().getLocalName()).toString());
+
+            wtx.rollback();
+        }
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(afterSecondCommit)) {
-      assertEquals(2, rtx.getRevisionNumber());
+    @Test
+    public void testRevision() {
+        XmlNodeReadOnlyTrx rtx = holder.getXmlNodeReadTrx();
+        assertEquals(0L, rtx.getRevisionNumber());
+
+        try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
+            assertEquals(1L, wtx.getRevisionNumber());
+
+            // Commit and check.
+            wtx.commit();
+        }
+
+        try {
+            rtx = holder.getResourceManager().beginNodeReadOnlyTrx(Constants.UBP_ROOT_REVISION_NUMBER);
+
+            assertEquals(Constants.UBP_ROOT_REVISION_NUMBER, rtx.getRevisionNumber());
+        } finally {
+            rtx.close();
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx2 = holder.getResourceManager().beginNodeReadOnlyTrx()) {
+            assertEquals(1L, rtx2.getRevisionNumber());
+        }
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(afterAllCommits)) {
-      assertEquals(holder.getResourceManager().getMostRecentRevisionNumber(), rtx.getRevisionNumber());
+    @Test
+    public void testShreddedRevision() {
+        try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
+            XmlDocumentCreator.create(wtx);
+            assertEquals(1L, wtx.getRevisionNumber());
+            wtx.commit();
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx()) {
+            assertEquals(1L, rtx.getRevisionNumber());
+            rtx.moveTo(12L);
+            assertEquals("bar", rtx.getValue());
+
+            try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx()) {
+                assertEquals(2L, wtx.getRevisionNumber());
+                wtx.moveTo(12L);
+                wtx.setValue("bar2");
+
+                assertEquals("bar", rtx.getValue());
+                assertEquals("bar2", wtx.getValue());
+                wtx.rollback();
+            }
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx()) {
+            assertEquals(1L, rtx.getRevisionNumber());
+            rtx.moveTo(12L);
+            assertEquals("bar", rtx.getValue());
+        }
     }
-  }
+
+    @Test
+    public void testExisting() {
+        final var database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
+        final XmlResourceManager resource = database.openResourceManager(XmlTestHelper.RESOURCE);
+
+        final XmlNodeTrx wtx1 = resource.beginNodeTrx();
+        XmlDocumentCreator.create(wtx1);
+        assertEquals(1L, wtx1.getRevisionNumber());
+        wtx1.commit();
+        wtx1.close();
+        resource.close();
+
+        final XmlResourceManager resource2 = database.openResourceManager(XmlTestHelper.RESOURCE);
+        final XmlNodeReadOnlyTrx rtx1 = resource2.beginNodeReadOnlyTrx();
+        assertEquals(1L, rtx1.getRevisionNumber());
+        rtx1.moveTo(12L);
+        assertEquals("bar", rtx1.getValue());
+
+        final XmlNodeTrx wtx2 = resource2.beginNodeTrx();
+        assertEquals(2L, wtx2.getRevisionNumber());
+        wtx2.moveTo(12L);
+        wtx2.setValue("bar2");
+
+        assertEquals("bar", rtx1.getValue());
+        assertEquals("bar2", wtx2.getValue());
+
+        rtx1.close();
+        wtx2.commit();
+        wtx2.close();
+
+        final var database2 = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
+        final XmlResourceManager resource3 = database2.openResourceManager(XmlTestHelper.RESOURCE);
+        final XmlNodeReadOnlyTrx rtx2 = resource3.beginNodeReadOnlyTrx();
+        assertEquals(2L, rtx2.getRevisionNumber());
+        rtx2.moveTo(12L);
+        assertEquals("bar2", rtx2.getValue());
+
+        rtx2.close();
+        resource3.close();
+    }
+
+    @Test
+    public void testIdempotentClose() {
+        final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx();
+        XmlDocumentCreator.create(wtx);
+        wtx.commit();
+        wtx.close();
+        wtx.close();
+
+        final NodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx();
+        assertEquals(false, rtx.moveTo(14L).hasMoved());
+        rtx.close();
+        rtx.close();
+        holder.getResourceManager().close();
+    }
+
+    @Test
+    public void testAutoCommitWithNodeThreshold() {
+        // After each bunch of 5 nodes commit.
+        try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx(5)) {
+            XmlDocumentCreator.create(wtx);
+            wtx.commit();
+            assertEquals(4, wtx.getRevisionNumber());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void testAutoCommitWithScheduler() throws InterruptedException {
+        // After 500 milliseconds commit.
+        try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx(500, TimeUnit.MILLISECONDS)) {
+            TimeUnit.MILLISECONDS.sleep(1500);
+            assertTrue(wtx.getRevisionNumber() >= 3);
+        }
+    }
+
+    @Ignore
+    @Test
+    public void testFetchingOfClosestRevisionToAGivenPointInTime() throws InterruptedException {
+        final Instant start = Instant.now();
+        final Instant afterAllCommits;
+        final Instant afterFirstCommit;
+        final Instant afterSecondCommit;
+        try (final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx(2000, TimeUnit.MILLISECONDS)) {
+            TimeUnit.MILLISECONDS.sleep(2100);
+            afterFirstCommit = Instant.now();
+            TimeUnit.MILLISECONDS.sleep(2100);
+            afterSecondCommit = Instant.now();
+            TimeUnit.MILLISECONDS.sleep(2100);
+            assertTrue(wtx.getRevisionNumber() >= 3);
+            afterAllCommits = Instant.now();
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(start)) {
+            assertEquals(0, rtx.getRevisionNumber());
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(afterFirstCommit)) {
+            assertEquals(1, rtx.getRevisionNumber());
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(afterSecondCommit)) {
+            assertEquals(2, rtx.getRevisionNumber());
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(afterAllCommits)) {
+            assertEquals(holder.getResourceManager().getMostRecentRevisionNumber(), rtx.getRevisionNumber());
+        }
+    }
 }

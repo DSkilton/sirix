@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.api.visitor;
 
 import org.sirix.node.immutable.json.ImmutableArrayNode;
@@ -35,118 +36,121 @@ import org.sirix.node.immutable.json.ImmutableObjectStringNode;
 import org.sirix.node.immutable.json.ImmutableStringNode;
 
 /**
- * Interface which must be implemented from visitors to implement functionality based on the visitor
- * pattern.
+ * Interface which must be implemented from visitors to implement functionality
+ * based on the visitor pattern.
  *
  * @author Johannes Lichtenberger, University of Konstanz
  *
  */
 public interface JsonNodeVisitor extends NodeVisitor {
-  /**
-   * Do something when visiting a {@link ImmutableArrayNode}.
-   *
-   * @param node the {@link ImmutableArrayNode}
-   */
-  default VisitResult visit(ImmutableArrayNode node) {
-    return VisitResultType.CONTINUE;
-  }
 
-  /**
-   * Do something when visiting a {@link ImmutableObjectNode}.
-   *
-   * @param node the {@link ImmutableObjectNode}
-   */
-  default VisitResult visit(ImmutableObjectNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableArrayNode}.
+     *
+     * @param node the {@link ImmutableArrayNode}
+     */
+    default VisitResult visit(ImmutableArrayNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting an {@link ImmutableObjectKeyNode}.
-   *
-   * @param node the {@link ImmutableObjectKeyNode}
-   */
-  default VisitResult visit(ImmutableObjectKeyNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableObjectNode}.
+     *
+     * @param node the {@link ImmutableObjectNode}
+     */
+    default VisitResult visit(ImmutableObjectNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting a {@link ImmutableObjectBooleanNode}.
-   *
-   * @param node the {@link ImmutableObjectBooleanNode}
-   */
-  default VisitResult visit(ImmutableObjectBooleanNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting an {@link ImmutableObjectKeyNode}.
+     *
+     * @param node the {@link ImmutableObjectKeyNode}
+     */
+    default VisitResult visit(ImmutableObjectKeyNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting a {@link ImmutableBooleanNode}.
-   *
-   * @param node the {@link ImmutableBooleanNode}
-   */
-  default VisitResult visit(ImmutableBooleanNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableObjectBooleanNode}.
+     *
+     * @param node the {@link ImmutableObjectBooleanNode}
+     */
+    default VisitResult visit(ImmutableObjectBooleanNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * ImmutableDocumentRoot Do something when visiting a {@link ImmutableStringNode}.
-   *
-   * @param node the {@link ImmutableStringNode}
-   */
-  default VisitResult visit(ImmutableStringNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableBooleanNode}.
+     *
+     * @param node the {@link ImmutableBooleanNode}
+     */
+    default VisitResult visit(ImmutableBooleanNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting a {@link ImmutableNullNode}.
-   *
-   * @param node the {@link ImmutableNullNode}
-   */
-  default VisitResult visit(ImmutableNumberNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * ImmutableDocumentRoot Do something when visiting a
+     * {@link ImmutableStringNode}.
+     *
+     * @param node the {@link ImmutableStringNode}
+     */
+    default VisitResult visit(ImmutableStringNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting a {@link ImmutableNullNode}.
-   *
-   * @param node the {@link ImmutableNullNode}
-   */
-  default VisitResult visit(ImmutableNullNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableNullNode}.
+     *
+     * @param node the {@link ImmutableNullNode}
+     */
+    default VisitResult visit(ImmutableNumberNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * ImmutableDocumentRoot Do something when visiting a {@link ImmutableObjectStringNode}.
-   *
-   * @param node the {@link ImmutableObjectStringNode}
-   */
-  default VisitResult visit(ImmutableObjectStringNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableNullNode}.
+     *
+     * @param node the {@link ImmutableNullNode}
+     */
+    default VisitResult visit(ImmutableNullNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting a {@link ImmutableObjectNumberNode}.
-   *
-   * @param node the {@link ImmutableObjectNumberNode}
-   */
-  default VisitResult visit(ImmutableObjectNumberNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * ImmutableDocumentRoot Do something when visiting a
+     * {@link ImmutableObjectStringNode}.
+     *
+     * @param node the {@link ImmutableObjectStringNode}
+     */
+    default VisitResult visit(ImmutableObjectStringNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting a {@link ImmutableObjectNullNode}.
-   *
-   * @param node the {@link ImmutableObjectNullNode}
-   */
-  default VisitResult visit(ImmutableObjectNullNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableObjectNumberNode}.
+     *
+     * @param node the {@link ImmutableObjectNumberNode}
+     */
+    default VisitResult visit(ImmutableObjectNumberNode node) {
+        return VisitResultType.CONTINUE;
+    }
 
-  /**
-   * Do something when visiting the {@link ImmutableJsonDocumentRootNode}.
-   *
-   * @param node the {@link ImmutableJsonDocumentRootNode}
-   */
-  default VisitResult visit(ImmutableJsonDocumentRootNode node) {
-    return VisitResultType.CONTINUE;
-  }
+    /**
+     * Do something when visiting a {@link ImmutableObjectNullNode}.
+     *
+     * @param node the {@link ImmutableObjectNullNode}
+     */
+    default VisitResult visit(ImmutableObjectNullNode node) {
+        return VisitResultType.CONTINUE;
+    }
+
+    /**
+     * Do something when visiting the {@link ImmutableJsonDocumentRootNode}.
+     *
+     * @param node the {@link ImmutableJsonDocumentRootNode}
+     */
+    default VisitResult visit(ImmutableJsonDocumentRootNode node) {
+        return VisitResultType.CONTINUE;
+    }
 }

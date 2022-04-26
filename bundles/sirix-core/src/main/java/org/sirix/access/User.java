@@ -7,39 +7,41 @@ import java.util.UUID;
 import com.google.common.base.MoreObjects;
 
 public final class User {
-  private final String userName;
 
-  private final UUID userId;
+    private final String userName;
 
-  public User(final String userName, final UUID userId) {
-    this.userName = checkNotNull(userName);
-    this.userId = checkNotNull(userId);
-  }
+    private final UUID userId;
 
-  public UUID getId() {
-    return userId;
-  }
+    public User(final String userName, final UUID userId) {
+        this.userName = checkNotNull(userName);
+        this.userId = checkNotNull(userId);
+    }
 
-  public String getName() {
-    return userName;
-  }
+    public UUID getId() {
+        return userId;
+    }
 
-  @Override
-  public int hashCode() {
-    return hash(userName, userId);
-  }
+    public String getName() {
+        return userName;
+    }
 
-  @Override
-  public boolean equals(final Object other) {
-    if (!(other instanceof User))
-      return false;
+    @Override
+    public int hashCode() {
+        return hash(userName, userId);
+    }
 
-    final User user = (User) other;
-    return Objects.equals(userId, user.userId) && Objects.equals(userName, user.userName);
-  }
+    @Override
+    public boolean equals(final Object other) {
+        if (!(other instanceof User)) {
+            return false;
+        }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this).add("userId", userId).add("userName", userName).toString();
-  }
+        final User user = (User) other;
+        return Objects.equals(userId, user.userId) && Objects.equals(userName, user.userName);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("userId", userId).add("userName", userName).toString();
+    }
 }

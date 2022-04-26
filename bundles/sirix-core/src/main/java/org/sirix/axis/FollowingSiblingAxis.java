@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import org.sirix.api.NodeCursor;
@@ -26,50 +27,52 @@ import org.sirix.node.NodeKind;
 
 /**
  * <p>
- * Iterate over all following siblings of kind ELEMENT or TEXT starting at a given node. Self is not
- * included.
+ * Iterate over all following siblings of kind ELEMENT or TEXT starting at a
+ * given node. Self is not included.
  * </p>
  */
 public final class FollowingSiblingAxis extends AbstractAxis {
 
-  /** Determines if it's the first call to hasNext(). */
-  private boolean mIsFirst;
+    /**
+     * Determines if it's the first call to hasNext().
+     */
+    private boolean mIsFirst;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param rtx exclusive (immutable) trx to iterate with
-   */
-  public FollowingSiblingAxis(final NodeCursor rtx) {
-    super(rtx);
-    mIsFirst = true;
-  }
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param rtx exclusive (immutable) trx to iterate with
+     */
+    public FollowingSiblingAxis(final NodeCursor rtx) {
+        super(rtx);
+        mIsFirst = true;
+    }
 
-  @Override
-  public void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    mIsFirst = true;
-  }
+    @Override
+    public void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        mIsFirst = true;
+    }
 
-  @Override
-  protected long nextKey() {
-    final NodeCursor cursor = getCursor();
+    @Override
+    protected long nextKey() {
+        final NodeCursor cursor = getCursor();
 
-    if (mIsFirst) {
-      mIsFirst = false;
-      /*
+        if (mIsFirst) {
+            mIsFirst = false;
+            /*
        * If the context node is an attribute or namespace node, the following-sibling axis is empty
-       */
-      if (cursor.getKind() == NodeKind.ATTRIBUTE || cursor.getKind() == NodeKind.NAMESPACE) {
+             */
+            if (cursor.getKind() == NodeKind.ATTRIBUTE || cursor.getKind() == NodeKind.NAMESPACE) {
+                return done();
+            }
+        }
+
+        if (cursor.hasRightSibling()) {
+            return cursor.getRightSiblingKey();
+        }
+
         return done();
-      }
     }
-
-    if (cursor.hasRightSibling()) {
-      return cursor.getRightSiblingKey();
-    }
-
-    return done();
-  }
 
 }

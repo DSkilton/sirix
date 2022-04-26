@@ -13,60 +13,60 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ResourceStoreImpl<R extends ResourceManager<? extends NodeReadOnlyTrx, ? extends NodeTrx>>
-    implements ResourceStore<R> {
+        implements ResourceStore<R> {
 
-  /**
-   * Central repository of all open resource managers.
-   */
-  private final Map<Path, R> resourceManagers;
+    /**
+     * Central repository of all open resource managers.
+     */
+    private final Map<Path, R> resourceManagers;
 
-  private final PathBasedPool<ResourceManager<?, ?>> allResourceManagers;
+    private final PathBasedPool<ResourceManager<?, ?>> allResourceManagers;
 
-  private final ResourceManagerFactory<R> resourceManagerFactory;
+    private final ResourceManagerFactory<R> resourceManagerFactory;
 
-  public ResourceStoreImpl(final PathBasedPool<ResourceManager<?, ?>> allResourceManagers,
-                           final ResourceManagerFactory<R> resourceManagerFactory) {
+    public ResourceStoreImpl(final PathBasedPool<ResourceManager<?, ?>> allResourceManagers,
+            final ResourceManagerFactory<R> resourceManagerFactory) {
 
-    this.resourceManagers = new ConcurrentHashMap<>();
-    this.allResourceManagers = allResourceManagers;
-    this.resourceManagerFactory = resourceManagerFactory;
-  }
+        this.resourceManagers = new ConcurrentHashMap<>();
+        this.allResourceManagers = allResourceManagers;
+        this.resourceManagerFactory = resourceManagerFactory;
+    }
 
-  @Override
-  public R openResource(final @Nonnull ResourceConfiguration resourceConfig,
-                        final @Nonnull BufferManager bufferManager,
-                        final @Nonnull Path resourceFile) {
-    return this.resourceManagers.computeIfAbsent(resourceFile, k -> {
+    @Override
+    public R openResource(final @Nonnull ResourceConfiguration resourceConfig,
+            final @Nonnull BufferManager bufferManager,
+            final @Nonnull Path resourceFile) {
+        return this.resourceManagers.computeIfAbsent(resourceFile, k -> {
 
-      final var resourceManager = this.resourceManagerFactory.create(resourceConfig, bufferManager, resourceFile);
-      this.allResourceManagers.putObject(resourceFile, resourceManager);
-      return resourceManager;
-    });
+            final var resourceManager = this.resourceManagerFactory.create(resourceConfig, bufferManager, resourceFile);
+            this.allResourceManagers.putObject(resourceFile, resourceManager);
+            return resourceManager;
+        });
 
-  }
+    }
 
-  @Override
-  public boolean hasOpenResourceManager(final Path resourceFile) {
-    checkNotNull(resourceFile);
-    return resourceManagers.containsKey(resourceFile);
-  }
+    @Override
+    public boolean hasOpenResourceManager(final Path resourceFile) {
+        checkNotNull(resourceFile);
+        return resourceManagers.containsKey(resourceFile);
+    }
 
-  @Override
-  public R getOpenResourceManager(final Path resourceFile) {
-    checkNotNull(resourceFile);
-    return resourceManagers.get(resourceFile);
-  }
+    @Override
+    public R getOpenResourceManager(final Path resourceFile) {
+        checkNotNull(resourceFile);
+        return resourceManagers.get(resourceFile);
+    }
 
-  @Override
-  public void close() {
-    resourceManagers.forEach((resourceName, resourceMgr) -> resourceMgr.close());
-    resourceManagers.clear();
-  }
+    @Override
+    public void close() {
+        resourceManagers.forEach((resourceName, resourceMgr) -> resourceMgr.close());
+        resourceManagers.clear();
+    }
 
-  @Override
-  public boolean closeResourceManager(final Path resourceFile) {
-    final R manager = resourceManagers.remove(resourceFile);
-    this.allResourceManagers.removeObject(resourceFile, manager);
-    return manager != null;
-  }
+    @Override
+    public boolean closeResourceManager(final Path resourceFile) {
+        final R manager = resourceManagers.remove(resourceFile);
+        this.allResourceManagers.removeObject(resourceFile, manager);
+        return manager != null;
+    }
 }

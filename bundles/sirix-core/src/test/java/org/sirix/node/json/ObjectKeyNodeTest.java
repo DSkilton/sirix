@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.json;
 
 import com.google.common.hash.Hashing;
@@ -45,57 +44,57 @@ import static org.junit.Assert.assertTrue;
  */
 public class ObjectKeyNodeTest {
 
-  private PageTrx pageTrx;
+    private PageTrx pageTrx;
 
-  private Database<JsonResourceManager> database;
+    private Database<JsonResourceManager> database;
 
-  @Before
-  public void setUp() throws SirixException {
-    JsonTestHelper.deleteEverything();
-    database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-    pageTrx = database.openResourceManager(JsonTestHelper.RESOURCE).beginPageTrx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        JsonTestHelper.deleteEverything();
+        database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
+        pageTrx = database.openResourceManager(JsonTestHelper.RESOURCE).beginPageTrx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    JsonTestHelper.closeEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        JsonTestHelper.closeEverything();
+    }
 
-  @Test
-  public void testNode() throws IOException {
-    // Create empty node.
-    final int nameKey = pageTrx.createNameKey("foobar", NodeKind.OBJECT_KEY);
-    final String name = "foobar";
+    @Test
+    public void testNode() throws IOException {
+        // Create empty node.
+        final int nameKey = pageTrx.createNameKey("foobar", NodeKind.OBJECT_KEY);
+        final String name = "foobar";
 
-    final long pathNodeKey = 12;
-    final NodeDelegate del = new NodeDelegate(14, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
-    final StructNodeDelegate strucDel = new StructNodeDelegate(del, 17L, 16L, 15L, 0L, 0L);
-    final ObjectKeyNode node = new ObjectKeyNode(strucDel, nameKey, name, pathNodeKey);
-    node.setHash(node.computeHash());
-    check(node, nameKey);
+        final long pathNodeKey = 12;
+        final NodeDelegate del = new NodeDelegate(14, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
+        final StructNodeDelegate strucDel = new StructNodeDelegate(del, 17L, 16L, 15L, 0L, 0L);
+        final ObjectKeyNode node = new ObjectKeyNode(strucDel, nameKey, name, pathNodeKey);
+        node.setHash(node.computeHash());
+        check(node, nameKey);
 
-    // Serialize and deserialize node.
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    node.getKind().serialize(new DataOutputStream(out), node, pageTrx);
-    final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-    final ObjectKeyNode node2 =
-        (ObjectKeyNode) NodeKind.OBJECT_KEY.deserialize(new DataInputStream(in), node.getNodeKey(), null, pageTrx);
-    check(node2, nameKey);
-  }
+        // Serialize and deserialize node.
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        node.getKind().serialize(new DataOutputStream(out), node, pageTrx);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        final ObjectKeyNode node2
+                = (ObjectKeyNode) NodeKind.OBJECT_KEY.deserialize(new DataInputStream(in), node.getNodeKey(), null, pageTrx);
+        check(node2, nameKey);
+    }
 
-  private void check(final ObjectKeyNode node, final int nameKey) {
-    // Now compare.
-    assertEquals(14L, node.getNodeKey());
-    assertEquals(13L, node.getParentKey());
-    assertEquals(17L, node.getFirstChildKey());
-    assertEquals(16L, node.getRightSiblingKey());
+    private void check(final ObjectKeyNode node, final int nameKey) {
+        // Now compare.
+        assertEquals(14L, node.getNodeKey());
+        assertEquals(13L, node.getParentKey());
+        assertEquals(17L, node.getFirstChildKey());
+        assertEquals(16L, node.getRightSiblingKey());
 
-    assertEquals(nameKey, node.getNameKey());
-    assertEquals("foobar", node.getName().getLocalName());
-    assertEquals(NodeKind.OBJECT_KEY, node.getKind());
-    assertTrue(node.hasFirstChild());
-    assertTrue(node.hasParent());
-    assertTrue(node.hasRightSibling());
-  }
+        assertEquals(nameKey, node.getNameKey());
+        assertEquals("foobar", node.getName().getLocalName());
+        assertEquals(NodeKind.OBJECT_KEY, node.getKind());
+        assertTrue(node.hasFirstChild());
+        assertTrue(node.hasParent());
+        assertTrue(node.hasRightSibling());
+    }
 
 }

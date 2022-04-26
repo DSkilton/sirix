@@ -14,40 +14,41 @@ import org.sirix.utils.LogWrapper;
 import org.slf4j.LoggerFactory;
 
 public final class NameIndexBuilder {
-  private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(NameIndexBuilder.class));
 
-  public Set<QNm> mIncludes;
-  public Set<QNm> mExcludes;
-  public RBTreeWriter<QNm, NodeReferences> mAVLTreeWriter;
+    private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(NameIndexBuilder.class));
 
-  public NameIndexBuilder(final Set<QNm> includes, final Set<QNm> excludes,
-      final RBTreeWriter<QNm, NodeReferences> avlTreeWriter) {
-    mIncludes = includes;
-    mExcludes = excludes;
-    mAVLTreeWriter = avlTreeWriter;
-  }
+    public Set<QNm> mIncludes;
+    public Set<QNm> mExcludes;
+    public RBTreeWriter<QNm, NodeReferences> mAVLTreeWriter;
 
-  public VisitResultType build(QNm name, ImmutableNode node) {
-    final boolean included = (mIncludes.isEmpty() || mIncludes.contains(name));
-    final boolean excluded = (!mExcludes.isEmpty() && mExcludes.contains(name));
-
-    if (!included || excluded) {
-      return VisitResultType.CONTINUE;
+    public NameIndexBuilder(final Set<QNm> includes, final Set<QNm> excludes,
+            final RBTreeWriter<QNm, NodeReferences> avlTreeWriter) {
+        mIncludes = includes;
+        mExcludes = excludes;
+        mAVLTreeWriter = avlTreeWriter;
     }
 
-    final Optional<NodeReferences> textReferences = mAVLTreeWriter.get(name, SearchMode.EQUAL);
+    public VisitResultType build(QNm name, ImmutableNode node) {
+        final boolean included = (mIncludes.isEmpty() || mIncludes.contains(name));
+        final boolean excluded = (!mExcludes.isEmpty() && mExcludes.contains(name));
 
-    try {
-      textReferences.ifPresentOrElse(nodeReferences -> setNodeReferences(node, nodeReferences, name),
-          () -> setNodeReferences(node, new NodeReferences(), name));
-    } catch (final SirixIOException e) {
-      LOGGER.error(e.getMessage(), e);
+        if (!included || excluded) {
+            return VisitResultType.CONTINUE;
+        }
+
+        final Optional<NodeReferences> textReferences = mAVLTreeWriter.get(name, SearchMode.EQUAL);
+
+        try {
+            textReferences.ifPresentOrElse(nodeReferences -> setNodeReferences(node, nodeReferences, name),
+                    () -> setNodeReferences(node, new NodeReferences(), name));
+        } catch (final SirixIOException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return VisitResultType.CONTINUE;
     }
 
-    return VisitResultType.CONTINUE;
-  }
-
-  private void setNodeReferences(final ImmutableNode node, final NodeReferences references, final QNm name) {
-    mAVLTreeWriter.index(name, references.addNodeKey(node.getNodeKey()), MoveCursor.NO_MOVE);
-  }
+    private void setNodeReferences(final ImmutableNode node, final NodeReferences references, final QNm name) {
+        mAVLTreeWriter.index(name, references.addNodeKey(node.getNodeKey()), MoveCursor.NO_MOVE);
+    }
 }

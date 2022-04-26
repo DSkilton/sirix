@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import org.sirix.api.NodeCursor;
@@ -31,35 +32,39 @@ import org.sirix.settings.Fixed;
  * </p>
  */
 public final class ParentAxis extends AbstractAxis {
-  /** Track number of calls of next. */
-  private boolean mFirst;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * //todo update descriptions of the cursor
-   * @param cursor exclusive (immutable) trx to iterate with.
-   */
-  public ParentAxis(final NodeCursor cursor) {
-    super(cursor);
-  }
+    /**
+     * Track number of calls of next.
+     */
+    private boolean mFirst;
 
-  @Override
-  public void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    mFirst = true;
-  }
-
-  @Override
-  protected long nextKey() {
-    final NodeCursor cursor = getCursor();
-
-    if (cursor.getKind() != NodeKind.XML_DOCUMENT && mFirst && cursor.hasParent()
-        && cursor.getParentKey() != Fixed.DOCUMENT_NODE_KEY.getStandardProperty()) {
-      mFirst = false;
-      return cursor.getParentKey();
+    /**
+     * Constructor initializing internal state.
+     *
+     * //todo update descriptions of the cursor
+     *
+     * @param cursor exclusive (immutable) trx to iterate with.
+     */
+    public ParentAxis(final NodeCursor cursor) {
+        super(cursor);
     }
 
-    return done();
-  }
+    @Override
+    public void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        mFirst = true;
+    }
+
+    @Override
+    protected long nextKey() {
+        final NodeCursor cursor = getCursor();
+
+        if (cursor.getKind() != NodeKind.XML_DOCUMENT && mFirst && cursor.hasParent()
+                && cursor.getParentKey() != Fixed.DOCUMENT_NODE_KEY.getStandardProperty()) {
+            mFirst = false;
+            return cursor.getParentKey();
+        }
+
+        return done();
+    }
 }

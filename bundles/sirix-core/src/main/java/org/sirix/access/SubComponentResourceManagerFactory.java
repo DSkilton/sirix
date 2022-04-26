@@ -9,13 +9,13 @@ import javax.inject.Provider;
 import java.nio.file.Path;
 
 /**
- * A parameterizable resource manager factory that creates {@link ResourceManager} instances based on
+ * A parameterizable resource manager factory that creates
+ * {@link ResourceManager} instances based on
  * {@link GenericResourceManagerComponent a resource manager subcomponent}.
  *
  * @author Joao Sousa
  */
-public class SubComponentResourceManagerFactory<B extends GenericResourceManagerComponent.Builder<B, R, ?>,
-        R extends ResourceManager<? extends NodeReadOnlyTrx, ? extends NodeTrx>>
+public class SubComponentResourceManagerFactory<B extends GenericResourceManagerComponent.Builder<B, R, ?>, R extends ResourceManager<? extends NodeReadOnlyTrx, ? extends NodeTrx>>
         implements ResourceManagerFactory<R> {
 
     private final Provider<B> subComponentBuilder;
@@ -26,8 +26,8 @@ public class SubComponentResourceManagerFactory<B extends GenericResourceManager
 
     @Override
     public R create(final ResourceConfiguration resourceConfig,
-                    final BufferManager bufferManager,
-                    final Path resourceFile) {
+            final BufferManager bufferManager,
+            final Path resourceFile) {
 
         return this.subComponentBuilder.get()
                 .resourceConfig(resourceConfig)

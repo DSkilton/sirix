@@ -1,85 +1,85 @@
 {
-  "metadata": {
-    "nodeKey": 1,
-    "hash": "afc35014ae4a659c92ed4a99d1f35adb",
-    "type": "OBJECT",
-    "descendantCount": 24,
-    "childCount": 4
-  },
-  "value": [
-    {
-      "key": "foo",
-      "metadata": {
-        "nodeKey": 2,
-        "hash": "f63408ac19f84f635e2140a2a38dcaa2",
-        "type": "OBJECT_KEY",
-        "descendantCount": 4
-      },
-      "value": {
-        "metadata": {
-          "nodeKey": 3,
-          "hash": "a709e167ce057fa71d7265aa0b0442fb",
-          "type": "ARRAY",
-          "descendantCount": 3,
-          "childCount": 3
-        },
-        "value": []
-      }
+    "metadata": {
+        "nodeKey": 1,
+        "hash": "afc35014ae4a659c92ed4a99d1f35adb",
+        "type": "OBJECT",
+        "descendantCount": 24,
+        "childCount": 4
     },
-    {
-      "key": "bar",
-      "metadata": {
-        "nodeKey": 7,
-        "hash": "1e18013511712fbf0c45d36e766b12b4",
-        "type": "OBJECT_KEY",
-        "descendantCount": 5
-      },
-      "value": {
-        "metadata": {
-          "nodeKey": 8,
-          "hash": "377c094c796c9cfd92e827ea27036683",
-          "type": "OBJECT",
-          "descendantCount": 4,
-          "childCount": 2
+    "value": [
+        {
+            "key": "foo",
+            "metadata": {
+                "nodeKey": 2,
+                "hash": "f63408ac19f84f635e2140a2a38dcaa2",
+                "type": "OBJECT_KEY",
+                "descendantCount": 4
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 3,
+                    "hash": "a709e167ce057fa71d7265aa0b0442fb",
+                    "type": "ARRAY",
+                    "descendantCount": 3,
+                    "childCount": 3
+                },
+                "value": []
+            }
         },
-        "value": {}
-      }
-    },
-    {
-      "key": "baz",
-      "metadata": {
-        "nodeKey": 13,
-        "hash": "b4dc5154b109389b469d2c1ace9337eb",
-        "type": "OBJECT_KEY",
-        "descendantCount": 1
-      },
-      "value": {
-        "metadata": {
-          "nodeKey": 14,
-          "hash": "a5e5a7e7781375a358b2e752310ec785",
-          "type": "OBJECT_STRING_VALUE"
+        {
+            "key": "bar",
+            "metadata": {
+                "nodeKey": 7,
+                "hash": "1e18013511712fbf0c45d36e766b12b4",
+                "type": "OBJECT_KEY",
+                "descendantCount": 5
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 8,
+                    "hash": "377c094c796c9cfd92e827ea27036683",
+                    "type": "OBJECT",
+                    "descendantCount": 4,
+                    "childCount": 2
+                },
+                "value": {}
+            }
         },
-        "value": "hello"
-      }
-    },
-    {
-      "key": "tada",
-      "metadata": {
-        "nodeKey": 15,
-        "hash": "54cd18f41e0a9030143cc737cf5af063",
-        "type": "OBJECT_KEY",
-        "descendantCount": 10
-      },
-      "value": {
-        "metadata": {
-          "nodeKey": 16,
-          "hash": "5a2084c5948a8239e825b5b72fb9cecf",
-          "type": "ARRAY",
-          "descendantCount": 9,
-          "childCount": 5
+        {
+            "key": "baz",
+            "metadata": {
+                "nodeKey": 13,
+                "hash": "b4dc5154b109389b469d2c1ace9337eb",
+                "type": "OBJECT_KEY",
+                "descendantCount": 1
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 14,
+                    "hash": "a5e5a7e7781375a358b2e752310ec785",
+                    "type": "OBJECT_STRING_VALUE"
+                },
+                "value": "hello"
+            }
         },
-        "value": []
-      }
-    }
-  ]
+        {
+            "key": "tada",
+            "metadata": {
+                "nodeKey": 15,
+                "hash": "54cd18f41e0a9030143cc737cf5af063",
+                "type": "OBJECT_KEY",
+                "descendantCount": 10
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 16,
+                    "hash": "5a2084c5948a8239e825b5b72fb9cecf",
+                    "type": "ARRAY",
+                    "descendantCount": 9,
+                    "childCount": 5
+                },
+                "value": []
+            }
+        }
+    ]
 }

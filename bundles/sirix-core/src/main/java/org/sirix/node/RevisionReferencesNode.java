@@ -7,61 +7,64 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public final class RevisionReferencesNode implements DataRecord {
-  private final long nodeKey;
 
-  private int[] revisions;
+    private final long nodeKey;
 
-  public RevisionReferencesNode(final long nodeKey, final int[] revisions) {
-    this.nodeKey = nodeKey;
-    this.revisions = revisions;
-  }
+    private int[] revisions;
 
-  @Override
-  public long getNodeKey() {
-    return nodeKey;
-  }
+    public RevisionReferencesNode(final long nodeKey, final int[] revisions) {
+        this.nodeKey = nodeKey;
+        this.revisions = revisions;
+    }
 
-  @Override
-  public SirixDeweyID getDeweyID() {
-    return null;
-  }
+    @Override
+    public long getNodeKey() {
+        return nodeKey;
+    }
 
-  @Override
-  public RecordSerializer getKind() {
-    return NodeKind.REVISION_REFERENCES_NODE;
-  }
+    @Override
+    public SirixDeweyID getDeweyID() {
+        return null;
+    }
 
-  @Override
-  public long getRevision() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public RecordSerializer getKind() {
+        return NodeKind.REVISION_REFERENCES_NODE;
+    }
 
-  public RevisionReferencesNode addRevision(final int revision) {
-    final int[] copy = new int[revisions.length + 1];
-    System.arraycopy(revisions, 0, copy, 0, revisions.length);
-    copy[copy.length - 1] = revision;
-    revisions = copy;
-    return this;
-  }
+    @Override
+    public long getRevision() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public int hashCode() {
-    int result = Objects.hash(nodeKey);
-    result = 31 * result + Arrays.hashCode(revisions);
-    return result;
-  }
+    public RevisionReferencesNode addRevision(final int revision) {
+        final int[] copy = new int[revisions.length + 1];
+        System.arraycopy(revisions, 0, copy, 0, revisions.length);
+        copy[copy.length - 1] = revision;
+        revisions = copy;
+        return this;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-    RevisionReferencesNode that = (RevisionReferencesNode) o;
-    return nodeKey == that.nodeKey && Arrays.equals(revisions, that.revisions);
-  }
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(nodeKey);
+        result = 31 * result + Arrays.hashCode(revisions);
+        return result;
+    }
 
-  public int[] getRevisions() {
-    return revisions;
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RevisionReferencesNode that = (RevisionReferencesNode) o;
+        return nodeKey == that.nodeKey && Arrays.equals(revisions, that.revisions);
+    }
+
+    public int[] getRevisions() {
+        return revisions;
+    }
 }

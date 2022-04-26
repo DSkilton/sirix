@@ -26,16 +26,16 @@ public final class CreateVersionedXmlResourceAndQuery {
         final var databaseFile = Constants.SIRIX_DATA_LOCATION.resolve("xml-database-versioned");
 
         try (final var database = Databases.openXmlDatabase(databaseFile)) {
-            try (final var manager = database.openResourceManager("resource");
-                 // Starts a read only transaction on the most recent revision.
-                 final var rtx = manager.beginNodeReadOnlyTrx()) {
+            try (final var manager = database.openResourceManager("resource"); // Starts a read only transaction on the most recent revision.
+                     final var rtx = manager.beginNodeReadOnlyTrx()) {
 
                 final var axis = VisitorDescendantAxis.newBuilder(rtx)
-                                                      .includeSelf()
-                                                      .visitor(new MyXmlNodeVisitor(manager, rtx))
-                                                      .build();
+                        .includeSelf()
+                        .visitor(new MyXmlNodeVisitor(manager, rtx))
+                        .build();
 
-                axis.forEach((unused) -> {});
+                axis.forEach((unused) -> {
+                });
             }
         }
 
@@ -59,8 +59,8 @@ public final class CreateVersionedXmlResourceAndQuery {
 
             // Axis to iterate over the node in past revisions (if the node existed back then).
             final var pastAxis = new PastAxis<>(manager, trx);
-            pastAxis.forEachRemaining((trx) ->
-                System.out.println("Element in the past (revision " + trx.getRevisionNumber() + ": " + trx.getName()));
+            pastAxis.forEachRemaining((trx)
+                    -> System.out.println("Element in the past (revision " + trx.getRevisionNumber() + ": " + trx.getName()));
 
             return VisitResultType.CONTINUE;
         }
@@ -71,8 +71,8 @@ public final class CreateVersionedXmlResourceAndQuery {
 
             // Axis to iterate over the node in past revisions (if the node existed back then).
             final var pastAxis = new PastAxis<>(manager, trx);
-            pastAxis.forEachRemaining((trx) ->
-                System.out.println("Text in the past (revision " + trx.getRevisionNumber() + ": " + trx.getValue()));
+            pastAxis.forEachRemaining((trx)
+                    -> System.out.println("Text in the past (revision " + trx.getRevisionNumber() + ": " + trx.getValue()));
 
             return VisitResultType.CONTINUE;
         }

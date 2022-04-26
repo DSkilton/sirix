@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix;
 
 import org.junit.Ignore;
@@ -44,7 +45,8 @@ import java.util.Random;
 import static org.junit.Assert.fail;
 
 /**
- * Helper class for offering convenient usage of the {@link JsonResourceManager} for test cases.
+ * Helper class for offering convenient usage of the {@link JsonResourceManager}
+ * for test cases.
  *
  * This includes instantiation of databases plus resources.
  *
@@ -53,122 +55,129 @@ import static org.junit.Assert.fail;
  */
 public final class JsonTestHelper {
 
-  /** Temporary directory path. */
-  private static final String TMPDIR = System.getProperty("java.io.tmpdir");
+    /**
+     * Temporary directory path.
+     */
+    private static final String TMPDIR = System.getProperty("java.io.tmpdir");
 
-  /** Common resource name. */
-  public static final String RESOURCE = "shredded";
+    /**
+     * Common resource name.
+     */
+    public static final String RESOURCE = "shredded";
 
-  /** Paths where the data is stored to. */
-  public enum PATHS {
-    // PATH1 (Sirix)
-    PATH1(Paths.get(TMPDIR, "sirix", "json-path1")),
+    /**
+     * Paths where the data is stored to.
+     */
+    public enum PATHS {
+        // PATH1 (Sirix)
+        PATH1(Paths.get(TMPDIR, "sirix", "json-path1")),
+        // PATH2 (Sirix)
+        PATH2(Paths.get(TMPDIR, "sirix", "json-path2")),
+        // PATH3 (JSON)
+        PATH3(Paths.get(TMPDIR, "json", "test.json"));
 
-    // PATH2 (Sirix)
-    PATH2(Paths.get(TMPDIR, "sirix", "json-path2")),
+        final Path file;
 
-    // PATH3 (JSON)
-    PATH3(Paths.get(TMPDIR, "json", "test.json"));
+        final DatabaseConfiguration config;
 
-    final Path file;
-
-    final DatabaseConfiguration config;
-
-    PATHS(final Path file) {
-      this.file = file;
-      config = new DatabaseConfiguration(file).setDatabaseType(DatabaseType.JSON);
-    }
-
-    public Path getFile() {
-      return file;
-    }
-
-    public DatabaseConfiguration getConfig() {
-      return config;
-    }
-
-  }
-
-  /** Common random instance for generating common tag names. */
-  public final static Random random = new Random();
-
-  /** Path <=> Database instances. */
-  private final static Map<Path, Database<JsonResourceManager>> INSTANCES = new HashMap<>();
-
-  @Test
-  public void testDummy() {
-    // Just empty to ensure maven running
-  }
-
-  /**
-   * Getting a database and create one if not existing. This includes the creation of a resource with
-   * the settings in the builder as standard.
-   *
-   * @param file to be created
-   * @return a database-obj
-   */
-  @Ignore
-  public static Database<JsonResourceManager> getDatabase(final Path file) {
-    if (INSTANCES.containsKey(file)) {
-      return INSTANCES.get(file);
-    } else {
-      try {
-        final DatabaseConfiguration config = new DatabaseConfiguration(file);
-        if (!Files.exists(file)) {
-          Databases.createJsonDatabase(config);
+        PATHS(final Path file) {
+            this.file = file;
+            config = new DatabaseConfiguration(file).setDatabaseType(DatabaseType.JSON);
         }
-        final var database = Databases.openJsonDatabase(file);
+
+        public Path getFile() {
+            return file;
+        }
+
+        public DatabaseConfiguration getConfig() {
+            return config;
+        }
+
+    }
+
+    /**
+     * Common random instance for generating common tag names.
+     */
+    public final static Random random = new Random();
+
+    /**
+     * Path <=> Database instances.
+     */
+    private final static Map<Path, Database<JsonResourceManager>> INSTANCES = new HashMap<>();
+
+    @Test
+    public void testDummy() {
+        // Just empty to ensure maven running
+    }
+
+    /**
+     * Getting a database and create one if not existing. This includes the
+     * creation of a resource with the settings in the builder as standard.
+     *
+     * @param file to be created
+     * @return a database-obj
+     */
+    @Ignore
+    public static Database<JsonResourceManager> getDatabase(final Path file) {
+        if (INSTANCES.containsKey(file)) {
+            return INSTANCES.get(file);
+        } else {
+            try {
+                final DatabaseConfiguration config = new DatabaseConfiguration(file);
+                if (!Files.exists(file)) {
+                    Databases.createJsonDatabase(config);
+                }
+                final var database = Databases.openJsonDatabase(file);
+                database.createResource(ResourceConfiguration.newBuilder(RESOURCE).useDeweyIDs(true).build());
+                INSTANCES.put(file, database);
+                return database;
+            } catch (final SirixRuntimeException e) {
+                fail(e.toString());
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Deleting all resources as defined in the enum {@link PATHS}.
+     *
+     * @throws SirixException if anything went wrong
+     */
+    @Ignore
+    public static void deleteEverything() {
+        closeEverything();
+        Databases.removeDatabase(PATHS.PATH1.getFile());
+        Databases.removeDatabase(PATHS.PATH2.getFile());
+    }
+
+    /**
+     * Closing all resources as defined in the enum {@link PATHS}.
+     *
+     * @throws SirixException if anything went wrong
+     */
+    @Ignore
+    public static void closeEverything() {
+        if (INSTANCES.containsKey(PATHS.PATH1.getFile())) {
+            final var database = INSTANCES.remove(PATHS.PATH1.getFile());
+            database.close();
+        }
+        if (INSTANCES.containsKey(PATHS.PATH2.getFile())) {
+            final var database = INSTANCES.remove(PATHS.PATH2.getFile());
+            database.close();
+        }
+    }
+
+    /**
+     * Creating a test document at {@link PATHS#PATH1}.
+     *
+     * @throws SirixException if anything went wrong
+     */
+    public static void createTestDocument() {
+        final var database = JsonTestHelper.getDatabase(PATHS.PATH1.getFile());
         database.createResource(ResourceConfiguration.newBuilder(RESOURCE).useDeweyIDs(true).build());
-        INSTANCES.put(file, database);
-        return database;
-      } catch (final SirixRuntimeException e) {
-        fail(e.toString());
-        return null;
-      }
+        try (final JsonResourceManager manager = database.openResourceManager(RESOURCE); final JsonNodeTrx wtx = manager.beginNodeTrx()) {
+            JsonDocumentCreator.create(wtx);
+            wtx.commit();
+        }
     }
-  }
-
-  /**
-   * Deleting all resources as defined in the enum {@link PATHS}.
-   *
-   * @throws SirixException if anything went wrong
-   */
-  @Ignore
-  public static void deleteEverything() {
-    closeEverything();
-    Databases.removeDatabase(PATHS.PATH1.getFile());
-    Databases.removeDatabase(PATHS.PATH2.getFile());
-  }
-
-  /**
-   * Closing all resources as defined in the enum {@link PATHS}.
-   *
-   * @throws SirixException if anything went wrong
-   */
-  @Ignore
-  public static void closeEverything() {
-    if (INSTANCES.containsKey(PATHS.PATH1.getFile())) {
-      final var database = INSTANCES.remove(PATHS.PATH1.getFile());
-      database.close();
-    }
-    if (INSTANCES.containsKey(PATHS.PATH2.getFile())) {
-      final var database = INSTANCES.remove(PATHS.PATH2.getFile());
-      database.close();
-    }
-  }
-
-  /**
-   * Creating a test document at {@link PATHS#PATH1}.
-   *
-   * @throws SirixException if anything went wrong
-   */
-  public static void createTestDocument() {
-    final var database = JsonTestHelper.getDatabase(PATHS.PATH1.getFile());
-    database.createResource(ResourceConfiguration.newBuilder(RESOURCE).useDeweyIDs(true).build());
-    try (final JsonResourceManager manager = database.openResourceManager(RESOURCE);
-        final JsonNodeTrx wtx = manager.beginNodeTrx()) {
-      JsonDocumentCreator.create(wtx);
-      wtx.commit();
-    }
-  }
 }

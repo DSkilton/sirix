@@ -15,56 +15,62 @@ import org.sirix.axis.AbstractTemporalAxis;
  *
  */
 public final class LastAxis<R extends NodeReadOnlyTrx & NodeCursor, W extends NodeTrx & NodeCursor>
-    extends AbstractTemporalAxis<R, W> {
+        extends AbstractTemporalAxis<R, W> {
 
-  /** Sirix {@link ResourceManager}. */
-  private final ResourceManager<R, W> resourceManager;
+    /**
+     * Sirix {@link ResourceManager}.
+     */
+    private final ResourceManager<R, W> resourceManager;
 
-  /** Node key to lookup and retrieve. */
-  private long nodeKey;
+    /**
+     * Node key to lookup and retrieve.
+     */
+    private long nodeKey;
 
-  /** Determines if it's the first call. */
-  private boolean first;
+    /**
+     * Determines if it's the first call.
+     */
+    private boolean first;
 
-  /**
-   * Constructor.
-   *
-   * @param rtx Sirix {@link NodeReadOnlyTrx}
-   */
-  public LastAxis(final ResourceManager<R, W> resourceManager, final R rtx) {
-    this.resourceManager = checkNotNull(resourceManager);
-    nodeKey = rtx.getNodeKey();
-    first = true;
-  }
-
-  @Override
-  protected R computeNext() {
-    if (first) {
-      first = false;
-
-      final Optional<R> optionalRtx =
-          resourceManager.getNodeReadTrxByRevisionNumber(resourceManager.getMostRecentRevisionNumber());
-
-      final R rtx;
-      if (optionalRtx.isPresent()) {
-        rtx = optionalRtx.get();
-      } else {
-        rtx = resourceManager.beginNodeReadOnlyTrx(resourceManager.getMostRecentRevisionNumber());
-      }
-
-      if (rtx.moveTo(nodeKey).hasMoved()) {
-        return rtx;
-      } else {
-        rtx.close();
-        return endOfData();
-      }
-    } else {
-      return endOfData();
+    /**
+     * Constructor.
+     *
+     * @param rtx Sirix {@link NodeReadOnlyTrx}
+     */
+    public LastAxis(final ResourceManager<R, W> resourceManager, final R rtx) {
+        this.resourceManager = checkNotNull(resourceManager);
+        nodeKey = rtx.getNodeKey();
+        first = true;
     }
-  }
 
-  @Override
-  public ResourceManager<R, W> getResourceManager() {
-    return resourceManager;
-  }
+    @Override
+    protected R computeNext() {
+        if (first) {
+            first = false;
+
+            final Optional<R> optionalRtx
+                    = resourceManager.getNodeReadTrxByRevisionNumber(resourceManager.getMostRecentRevisionNumber());
+
+            final R rtx;
+            if (optionalRtx.isPresent()) {
+                rtx = optionalRtx.get();
+            } else {
+                rtx = resourceManager.beginNodeReadOnlyTrx(resourceManager.getMostRecentRevisionNumber());
+            }
+
+            if (rtx.moveTo(nodeKey).hasMoved()) {
+                return rtx;
+            } else {
+                rtx.close();
+                return endOfData();
+            }
+        } else {
+            return endOfData();
+        }
+    }
+
+    @Override
+    public ResourceManager<R, W> getResourceManager() {
+        return resourceManager;
+    }
 }

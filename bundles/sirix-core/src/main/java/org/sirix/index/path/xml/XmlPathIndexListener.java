@@ -8,16 +8,16 @@ import org.sirix.node.interfaces.immutable.ImmutableNode;
 
 final class XmlPathIndexListener implements ChangeListener {
 
-  private final PathIndexListener mPathIndexListener;
+    private final PathIndexListener mPathIndexListener;
 
-  XmlPathIndexListener(final PathIndexListener pathIndexListenerDelegate) {
-    mPathIndexListener = pathIndexListenerDelegate;
-  }
-
-  @Override
-  public void listen(final ChangeType type, final ImmutableNode node, final long pathNodeKey) {
-    if (node instanceof NameNode) {
-      mPathIndexListener.listen(type, node, pathNodeKey);
+    XmlPathIndexListener(final PathIndexListener pathIndexListenerDelegate) {
+        mPathIndexListener = pathIndexListenerDelegate;
     }
-  }
+
+    @Override
+    public void listen(final ChangeType type, final ImmutableNode node, final long pathNodeKey) {
+        if (node instanceof NameNode) {
+            mPathIndexListener.listen(type, node, pathNodeKey);
+        }
+    }
 }

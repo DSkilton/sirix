@@ -23,63 +23,72 @@ import static java.util.Objects.requireNonNull;
  */
 public final class CASFilter implements Filter {
 
-  /** The paths to filter. */
-  private final Set<Path<QNm>> paths;
+    /**
+     * The paths to filter.
+     */
+    private final Set<Path<QNm>> paths;
 
-  /** {@link PathFilter} instance to filter specific paths. */
-  private final PathFilter pathFilter;
+    /**
+     * {@link PathFilter} instance to filter specific paths.
+     */
+    private final PathFilter pathFilter;
 
-  /** The key to compare. */
-  private final Atomic key;
+    /**
+     * The key to compare.
+     */
+    private final Atomic key;
 
-  /** Denotes the search mode. */
-  private final SearchMode mode;
+    /**
+     * Denotes the search mode.
+     */
+    private final SearchMode mode;
 
-  /**
-   * Constructor. Initializes the internal state.
-   *
-   * @param paths paths to match
-   * @param key the atomic key to filter
-   * @param mode the search mode to apply
-   * @param pcrCollector the path class record collector
-   */
-  public CASFilter(final Set<Path<QNm>> paths, final Atomic key, final SearchMode mode,
-      final PCRCollector pcrCollector) {
-    this.paths = requireNonNull(paths);
-    pathFilter = new PathFilter(this.paths, pcrCollector);
-    this.key = key;
-    this.mode = requireNonNull(mode);
-  }
-
-  public Set<Long> getPCRs() {
-    return pathFilter.getPCRs();
-  }
-
-  public PCRCollector getPCRCollector() {
-    return pathFilter.getPCRCollector();
-  }
-
-  public SearchMode getMode() {
-    return mode;
-  }
-
-  public Atomic getKey() {
-    return key;
-  }
-
-  /**
-   * Filter the node.
-   *
-   * @param node node to filter
-   * @return {@code true} if the node has been filtered, {@code false} otherwise
-   */
-  @Override
-  public <K extends Comparable<? super K>> boolean filter(final RBNode<K, NodeReferences> node) {
-    final K key = node.getKey();
-    if (key instanceof CASValue) {
-      final CASValue casValue = (CASValue) key;
-      return pathFilter.filter(node) && (this.key == null || mode.compare(this.key, casValue.getAtomicValue()) == 0);
+    /**
+     * Constructor. Initializes the internal state.
+     *
+     * @param paths paths to match
+     * @param key the atomic key to filter
+     * @param mode the search mode to apply
+     * @param pcrCollector the path class record collector
+     */
+    public CASFilter(final Set<Path<QNm>> paths, final Atomic key, final SearchMode mode,
+            final PCRCollector pcrCollector) {
+        this.paths = requireNonNull(paths);
+        pathFilter = new PathFilter(this.paths, pcrCollector);
+        this.key = key;
+        this.mode = requireNonNull(mode);
     }
-    return true;
-  }
+
+    public Set<Long> getPCRs() {
+        return pathFilter.getPCRs();
+    }
+
+    public PCRCollector getPCRCollector() {
+        return pathFilter.getPCRCollector();
+    }
+
+    public SearchMode getMode() {
+        return mode;
+    }
+
+    public Atomic getKey() {
+        return key;
+    }
+
+    /**
+     * Filter the node.
+     *
+     * @param node node to filter
+     * @return {@code true} if the node has been filtered, {@code false}
+     * otherwise
+     */
+    @Override
+    public <K extends Comparable<? super K>> boolean filter(final RBNode<K, NodeReferences> node) {
+        final K key = node.getKey();
+        if (key instanceof CASValue) {
+            final CASValue casValue = (CASValue) key;
+            return pathFilter.filter(node) && (this.key == null || mode.compare(this.key, casValue.getAtomicValue()) == 0);
+        }
+        return true;
+    }
 }

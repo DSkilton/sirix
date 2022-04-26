@@ -28,12 +28,12 @@
 
 -->
 <root>
-	<disy>
-		<group1/>
-		<group2/>
-		<group3/>
-	</disy>
-	<dbis>
-		<group4/>
-	</dbis>
+    <disy>
+        <group1/>
+        <group2/>
+        <group3/>
+    </disy>
+    <dbis>
+        <group4/>
+    </dbis>
 </root>

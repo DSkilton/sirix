@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,34 +36,36 @@ import com.google.common.base.Predicate;
  */
 public abstract class AbstractFilter<R extends NodeReadOnlyTrx & NodeCursor> implements Filter<R>, Predicate<Long> {
 
-  /** Iterate over transaction exclusive to this step. */
-  private R mRtx;
+    /**
+     * Iterate over transaction exclusive to this step.
+     */
+    private R mRtx;
 
-  /**
-   * Bind axis step to transaction.
-   *
-   * @param rtx transaction to operate with
-   */
-  protected AbstractFilter(final R rtx) {
-    mRtx = checkNotNull(rtx);
-  }
+    /**
+     * Bind axis step to transaction.
+     *
+     * @param rtx transaction to operate with
+     */
+    protected AbstractFilter(final R rtx) {
+        mRtx = checkNotNull(rtx);
+    }
 
-  @Override
-  public final R getTrx() {
-    return mRtx;
-  }
+    @Override
+    public final R getTrx() {
+        return mRtx;
+    }
 
-  @Override
-  public void setTrx(R rtx) {
-    mRtx = checkNotNull(rtx);
-  }
+    @Override
+    public void setTrx(R rtx) {
+        mRtx = checkNotNull(rtx);
+    }
 
-  @Override
-  public abstract boolean filter();
+    @Override
+    public abstract boolean filter();
 
-  @Override
-  public boolean apply(final @Nullable Long nodeKey) {
-    mRtx.moveTo(checkNotNull(nodeKey));
-    return filter();
-  }
+    @Override
+    public boolean apply(final @Nullable Long nodeKey) {
+        mRtx.moveTo(checkNotNull(nodeKey));
+        return filter();
+    }
 }

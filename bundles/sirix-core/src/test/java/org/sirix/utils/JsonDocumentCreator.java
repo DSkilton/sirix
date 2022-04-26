@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.utils;
 
 import static org.junit.Assert.assertNotNull;
@@ -47,74 +48,74 @@ import org.sirix.exception.SirixException;
  */
 public final class JsonDocumentCreator {
 
-  public static final String JSON =
-      "{\"foo\":[\"bar\",null,2.33],\"bar\":{\"hello\":\"world\",\"helloo\":true},\"baz\":\"hello\",\"tada\":[{\"foo\":\"bar\"},{\"baz\":false},\"boo\",{},[]]}";
+    public static final String JSON
+            = "{\"foo\":[\"bar\",null,2.33],\"bar\":{\"hello\":\"world\",\"helloo\":true},\"baz\":\"hello\",\"tada\":[{\"foo\":\"bar\"},{\"baz\":false},\"boo\",{},[]]}";
 
-  /**
-   * Private Constructor, not used.
-   */
-  private JsonDocumentCreator() {
-    throw new AssertionError("Not permitted to call constructor!");
-  }
+    /**
+     * Private Constructor, not used.
+     */
+    private JsonDocumentCreator() {
+        throw new AssertionError("Not permitted to call constructor!");
+    }
 
-  /**
-   * Create simple test document containing all supported node kinds.
-   *
-   * @param wtx {@link JsonNodeTrx} to write to
-   * @throws SirixException if anything weird happens
-   */
-  public static void create(final JsonNodeTrx wtx) {
-    assertNotNull(wtx);
-    assertTrue(wtx.moveToDocumentRoot().hasMoved());
+    /**
+     * Create simple test document containing all supported node kinds.
+     *
+     * @param wtx {@link JsonNodeTrx} to write to
+     * @throws SirixException if anything weird happens
+     */
+    public static void create(final JsonNodeTrx wtx) {
+        assertNotNull(wtx);
+        assertTrue(wtx.moveToDocumentRoot().hasMoved());
 
-    wtx.insertObjectAsFirstChild();
+        wtx.insertObjectAsFirstChild();
 
-    wtx.insertObjectRecordAsFirstChild("foo", new ArrayValue())
-       .insertStringValueAsFirstChild("bar")
-       .insertNullValueAsRightSibling()
-       .insertNumberValueAsRightSibling(2.33);
+        wtx.insertObjectRecordAsFirstChild("foo", new ArrayValue())
+                .insertStringValueAsFirstChild("bar")
+                .insertNullValueAsRightSibling()
+                .insertNumberValueAsRightSibling(2.33);
 
-    wtx.moveToParent().trx().moveToParent();
+        wtx.moveToParent().trx().moveToParent();
 
-    assert wtx.isObjectKey();
+        assert wtx.isObjectKey();
 
-    wtx.insertObjectRecordAsRightSibling("bar", new ObjectValue())
-       .insertObjectRecordAsFirstChild("hello", new StringValue("world"))
-       .moveToParent();
-    wtx.insertObjectRecordAsRightSibling("helloo", new BooleanValue(true))
-       .moveToParent()
-       .trx()
-       .moveToParent()
-       .trx()
-       .moveToParent();
+        wtx.insertObjectRecordAsRightSibling("bar", new ObjectValue())
+                .insertObjectRecordAsFirstChild("hello", new StringValue("world"))
+                .moveToParent();
+        wtx.insertObjectRecordAsRightSibling("helloo", new BooleanValue(true))
+                .moveToParent()
+                .trx()
+                .moveToParent()
+                .trx()
+                .moveToParent();
 
-    assert wtx.isObjectKey();
+        assert wtx.isObjectKey();
 
-    wtx.insertObjectRecordAsRightSibling("baz", new StringValue("hello")).moveToParent().trx();
+        wtx.insertObjectRecordAsRightSibling("baz", new StringValue("hello")).moveToParent().trx();
 
-    assert wtx.isObjectKey();
+        assert wtx.isObjectKey();
 
-    wtx.insertObjectRecordAsRightSibling("tada", new ArrayValue())
-       .insertObjectAsFirstChild()
-       .insertObjectRecordAsFirstChild("foo", new StringValue("bar"))
-       .moveToParent()
-       .trx()
-       .moveToParent();
+        wtx.insertObjectRecordAsRightSibling("tada", new ArrayValue())
+                .insertObjectAsFirstChild()
+                .insertObjectRecordAsFirstChild("foo", new StringValue("bar"))
+                .moveToParent()
+                .trx()
+                .moveToParent();
 
-    assert wtx.isObject();
+        assert wtx.isObject();
 
-    wtx.insertObjectAsRightSibling()
-       .insertObjectRecordAsFirstChild("baz", new BooleanValue(false))
-       .moveToParent()
-       .trx()
-       .moveToParent();
+        wtx.insertObjectAsRightSibling()
+                .insertObjectRecordAsFirstChild("baz", new BooleanValue(false))
+                .moveToParent()
+                .trx()
+                .moveToParent();
 
-    assert wtx.isObject();
+        assert wtx.isObject();
 
-    wtx.insertStringValueAsRightSibling("boo");
-    wtx.insertObjectAsRightSibling();
-    wtx.insertArrayAsRightSibling();
+        wtx.insertStringValueAsRightSibling("boo");
+        wtx.insertObjectAsRightSibling();
+        wtx.insertArrayAsRightSibling();
 
-    wtx.moveToDocumentRoot();
-  }
+        wtx.moveToDocumentRoot();
+    }
 }

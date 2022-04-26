@@ -8,60 +8,64 @@ import org.sirix.page.interfaces.KeyValuePage;
 import org.sirix.page.interfaces.Page;
 
 public final class PersistentFileCache implements AutoCloseable {
-  /** Write to a persistent file. */
-  private final Writer writer;
 
-  public PersistentFileCache(final Writer writer) {
-    this.writer = checkNotNull(writer);
-  }
+    /**
+     * Write to a persistent file.
+     */
+    private final Writer writer;
 
-  public PageContainer get(PageReference reference, final PageReadOnlyTrx pageReadTrx) {
-    checkNotNull(pageReadTrx);
+    public PersistentFileCache(final Writer writer) {
+        this.writer = checkNotNull(writer);
+    }
 
-    if (reference.getPersistentLogKey() < 0)
-      return PageContainer.emptyInstance();
+    public PageContainer get(PageReference reference, final PageReadOnlyTrx pageReadTrx) {
+        checkNotNull(pageReadTrx);
 
-    final Page modifiedPage = writer.read(reference, pageReadTrx);
-    final Page completePage;
+        if (reference.getPersistentLogKey() < 0) {
+            return PageContainer.emptyInstance();
+        }
 
-    if (modifiedPage instanceof KeyValuePage) {
-      final long peristKey = reference.getPersistentLogKey();
+        final Page modifiedPage = writer.read(reference, pageReadTrx);
+        final Page completePage;
+
+        if (modifiedPage instanceof KeyValuePage) {
+            final long peristKey = reference.getPersistentLogKey();
 //      reference.setPersistentLogKey(peristKey + reference.getLength());
-      completePage = writer.read(reference, pageReadTrx);
-      reference.setPersistentLogKey(peristKey);
-    } else {
-      completePage = modifiedPage;
+            completePage = writer.read(reference, pageReadTrx);
+            reference.setPersistentLogKey(peristKey);
+        } else {
+            completePage = modifiedPage;
+        }
+
+        return PageContainer.getInstance(completePage, modifiedPage);
     }
 
-    return PageContainer.getInstance(completePage, modifiedPage);
-  }
+    public PersistentFileCache put(PageReference reference, PageContainer container) {
+        reference.setPage(container.getModified());
+        writer.write(reference);
 
-  public PersistentFileCache put(PageReference reference, PageContainer container) {
-    reference.setPage(container.getModified());
-    writer.write(reference);
-
-    if (container.getModified() instanceof KeyValuePage) {
-      final long offset = reference.getPersistentLogKey();
+        if (container.getModified() instanceof KeyValuePage) {
+            final long offset = reference.getPersistentLogKey();
 //      int length = reference.getLength();
-      reference.setPage(container.getComplete());
-      writer.write(reference);
+            reference.setPage(container.getComplete());
+            writer.write(reference);
 //      length += reference.getLength();
-      reference.setPersistentLogKey(offset);
+            reference.setPersistentLogKey(offset);
 //      reference.setLength(length);
+        }
+
+        reference.setPage(null);
+
+        return this;
     }
 
-    reference.setPage(null);
+    public PersistentFileCache truncate() {
+        writer.truncate();
+        return this;
+    }
 
-    return this;
-  }
-
-  public PersistentFileCache truncate() {
-    writer.truncate();
-    return this;
-  }
-
-  @Override
-  public void close() {
-    writer.close();
-  }
+    @Override
+    public void close() {
+        writer.close();
+    }
 }

@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import org.junit.After;
@@ -37,83 +38,83 @@ import org.sirix.service.xml.xpath.XPathAxis;
  */
 public class PredicateFilterAxisTest {
 
-  private Holder holder;
+    private Holder holder;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.deleteEverything();
-    XmlTestHelper.createTestDocument();
-    holder = Holder.generateRtx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.deleteEverything();
+        XmlTestHelper.createTestDocument();
+        holder = Holder.generateRtx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    holder.close();
-    XmlTestHelper.deleteEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        holder.close();
+        XmlTestHelper.deleteEverything();
+    }
 
-  @Test
-  public void testPredicates() throws SirixException {
+    @Test
+    public void testPredicates() throws SirixException {
 
-    // Find descendants starting from nodeKey 0L (root).
-    holder.getXmlNodeReadTrx().moveToDocumentRoot();
+        // Find descendants starting from nodeKey 0L (root).
+        holder.getXmlNodeReadTrx().moveToDocumentRoot();
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "/p:a[@i]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "/p:a[@i]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a/b[@p:x]"), new long[] {9L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a/b[@p:x]"), new long[]{9L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[text()]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[text()]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[element()]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[element()]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[node()/text()]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[node()/text()]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[./node()]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[./node()]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[./node()/node()/node()]"), new long[] {});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[./node()/node()/node()]"), new long[]{});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[//element()]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[//element()]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[/text()]"), new long[] {});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[/text()]"), new long[]{});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[3<4]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[3<4]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[13>=4]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[13>=4]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[13.0>=4]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[13.0>=4]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[4 = 4]"), new long[] {1L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[4 = 4]"), new long[]{1L});
 
-    AbsAxisTest.testAxisConventions(new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[3=4]"), new long[] {});
+        AbsAxisTest.testAxisConventions(new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[3=4]"), new long[]{});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[3.2 = 3.22]"), new long[] {});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "p:a[3.2 = 3.22]"), new long[]{});
 
-    holder.getXmlNodeReadTrx().moveTo(1L);
+        holder.getXmlNodeReadTrx().moveTo(1L);
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "child::b[child::c]"), new long[] {5L, 9L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "child::b[child::c]"), new long[]{5L, 9L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "child::*[text() or c]"), new long[] {5l, 9L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "child::*[text() or c]"), new long[]{5l, 9L});
 
-    AbsAxisTest.testAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), "child::*[text() or c], /node(), //c"),
-        new long[] {5l, 9L, 1L, 7L, 11L});
+        AbsAxisTest.testAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), "child::*[text() or c], /node(), //c"),
+                new long[]{5l, 9L, 1L, 7L, 11L});
 
-  }
+    }
 
 }

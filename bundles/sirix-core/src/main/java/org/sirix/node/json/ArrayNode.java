@@ -42,102 +42,108 @@ import org.sirix.node.xml.AbstractStructForwardingNode;
 import java.math.BigInteger;
 
 /**
- * @author Johannes Lichtenberger <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
+ * @author Johannes Lichtenberger
+ * <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
  */
 public final class ArrayNode extends AbstractStructForwardingNode implements ImmutableJsonNode {
 
-  /** {@link StructNodeDelegate} reference. */
-  private final StructNodeDelegate structNodeDel;
+    /**
+     * {@link StructNodeDelegate} reference.
+     */
+    private final StructNodeDelegate structNodeDel;
 
-  /** The path node key. */
-  private final long pathNodeKey;
+    /**
+     * The path node key.
+     */
+    private final long pathNodeKey;
 
-  private BigInteger hash;
+    private BigInteger hash;
 
-  /**
-   * Constructor
-   *
-   * @param structDel {@link StructNodeDelegate} to be set
-   * @param pathNodeKey the path node key
-   */
-  public ArrayNode(final StructNodeDelegate structDel, final long pathNodeKey) {
-    assert structDel != null;
-    structNodeDel = structDel;
-    this.pathNodeKey = pathNodeKey;
-  }
+    /**
+     * Constructor
+     *
+     * @param structDel {@link StructNodeDelegate} to be set
+     * @param pathNodeKey the path node key
+     */
+    public ArrayNode(final StructNodeDelegate structDel, final long pathNodeKey) {
+        assert structDel != null;
+        structNodeDel = structDel;
+        this.pathNodeKey = pathNodeKey;
+    }
 
-  /**
-   * Constructor
-   *
-   * @param structDel {@link StructNodeDelegate} to be set
-   * @param pathNodeKey the path node key
-   */
-  public ArrayNode(final BigInteger hashCode, final StructNodeDelegate structDel, final long pathNodeKey) {
-    hash = hashCode;
-    assert structDel != null;
-    structNodeDel = structDel;
-    this.pathNodeKey = pathNodeKey;
-  }
+    /**
+     * Constructor
+     *
+     * @param structDel {@link StructNodeDelegate} to be set
+     * @param pathNodeKey the path node key
+     */
+    public ArrayNode(final BigInteger hashCode, final StructNodeDelegate structDel, final long pathNodeKey) {
+        hash = hashCode;
+        assert structDel != null;
+        structNodeDel = structDel;
+        this.pathNodeKey = pathNodeKey;
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.ARRAY;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.ARRAY;
+    }
 
-  @Override
-  public BigInteger computeHash() {
-    BigInteger result = BigInteger.ONE;
+    @Override
+    public BigInteger computeHash() {
+        BigInteger result = BigInteger.ONE;
 
-    result = BigInteger.valueOf(31).multiply(result).add(structNodeDel.getNodeDelegate().computeHash());
-    result = BigInteger.valueOf(31).multiply(result).add(structNodeDel.computeHash());
+        result = BigInteger.valueOf(31).multiply(result).add(structNodeDel.getNodeDelegate().computeHash());
+        result = BigInteger.valueOf(31).multiply(result).add(structNodeDel.computeHash());
 
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
+        return Node.to128BitsAtMaximumBigInteger(result);
+    }
 
-  @Override
-  public void setHash(final BigInteger hash) {
-    this.hash = Node.to128BitsAtMaximumBigInteger(hash);
-  }
+    @Override
+    public void setHash(final BigInteger hash) {
+        this.hash = Node.to128BitsAtMaximumBigInteger(hash);
+    }
 
-  @Override
-  public BigInteger getHash() {
-    return hash;
-  }
+    @Override
+    public BigInteger getHash() {
+        return hash;
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return structNodeDel.getNodeDelegate();
-  }
+    @Override
+    protected NodeDelegate delegate() {
+        return structNodeDel.getNodeDelegate();
+    }
 
-  @Override
-  protected StructNodeDelegate structDelegate() {
-    return structNodeDel;
-  }
+    @Override
+    protected StructNodeDelegate structDelegate() {
+        return structNodeDel;
+    }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this).add("structDelegate", structNodeDel).toString();
-  }
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("structDelegate", structNodeDel).toString();
+    }
 
-  @Override
-  public int hashCode() {
-    return delegate().hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return delegate().hashCode();
+    }
 
-  @Override
-  public boolean equals(final Object obj) {
-    if (!(obj instanceof ObjectKeyNode other))
-      return false;
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof ObjectKeyNode other)) {
+            return false;
+        }
 
-    return Objects.equal(delegate(), other.delegate());
-  }
+        return Objects.equal(delegate(), other.delegate());
+    }
 
-  @Override
-  public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
-    return visitor.visit(ImmutableArrayNode.of(this));
-  }
+    @Override
+    public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
+        return visitor.visit(ImmutableArrayNode.of(this));
+    }
 
-  public long getPathNodeKey() {
-    return pathNodeKey;
-  }
+    public long getPathNodeKey() {
+        return pathNodeKey;
+    }
 }

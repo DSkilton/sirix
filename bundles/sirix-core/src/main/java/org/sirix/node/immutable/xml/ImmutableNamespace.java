@@ -21,120 +21,122 @@ import org.sirix.node.xml.NamespaceNode;
  */
 public class ImmutableNamespace implements ImmutableNameNode, ImmutableXmlNode {
 
-  /** Mutable {@link NamespaceNode}. */
-  private final NamespaceNode mNode;
+    /**
+     * Mutable {@link NamespaceNode}.
+     */
+    private final NamespaceNode mNode;
 
-  /**
-   * Private constructor.
-   *
-   * @param node {@link NamespaceNode} to wrap
-   */
-  private ImmutableNamespace(final NamespaceNode node) {
-    mNode = checkNotNull(node);
-  }
+    /**
+     * Private constructor.
+     *
+     * @param node {@link NamespaceNode} to wrap
+     */
+    private ImmutableNamespace(final NamespaceNode node) {
+        mNode = checkNotNull(node);
+    }
 
-  /**
-   * Get an immutable namespace node instance.
-   *
-   * @param node the mutable {@link NamespaceNode} to wrap
-   * @return immutable namespace node instance
-   */
-  public static ImmutableNamespace of(final NamespaceNode node) {
-    return new ImmutableNamespace(node);
-  }
+    /**
+     * Get an immutable namespace node instance.
+     *
+     * @param node the mutable {@link NamespaceNode} to wrap
+     * @return immutable namespace node instance
+     */
+    public static ImmutableNamespace of(final NamespaceNode node) {
+        return new ImmutableNamespace(node);
+    }
 
-  @Override
-  public int getTypeKey() {
-    return mNode.getTypeKey();
-  }
+    @Override
+    public int getTypeKey() {
+        return mNode.getTypeKey();
+    }
 
-  @Override
-  public boolean isSameItem(final @Nullable Node pOther) {
-    return mNode.isSameItem(pOther);
-  }
+    @Override
+    public boolean isSameItem(final @Nullable Node pOther) {
+        return mNode.isSameItem(pOther);
+    }
 
-  @Override
-  public VisitResult acceptVisitor(final XmlNodeVisitor pVisitor) {
-    return pVisitor.visit(this);
-  }
+    @Override
+    public VisitResult acceptVisitor(final XmlNodeVisitor pVisitor) {
+        return pVisitor.visit(this);
+    }
 
-  @Override
-  public BigInteger getHash() {
-    return mNode.getHash();
-  }
+    @Override
+    public BigInteger getHash() {
+        return mNode.getHash();
+    }
 
-  @Override
-  public long getParentKey() {
-    return mNode.getParentKey();
-  }
+    @Override
+    public long getParentKey() {
+        return mNode.getParentKey();
+    }
 
-  @Override
-  public boolean hasParent() {
-    return mNode.hasParent();
-  }
+    @Override
+    public boolean hasParent() {
+        return mNode.hasParent();
+    }
 
-  @Override
-  public long getNodeKey() {
-    return mNode.getNodeKey();
-  }
+    @Override
+    public long getNodeKey() {
+        return mNode.getNodeKey();
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return mNode.getKind();
-  }
+    @Override
+    public NodeKind getKind() {
+        return mNode.getKind();
+    }
 
-  @Override
-  public long getRevision() {
-    return mNode.getRevision();
-  }
+    @Override
+    public long getRevision() {
+        return mNode.getRevision();
+    }
 
-  @Override
-  public int getLocalNameKey() {
-    return mNode.getLocalNameKey();
-  }
+    @Override
+    public int getLocalNameKey() {
+        return mNode.getLocalNameKey();
+    }
 
-  @Override
-  public int getPrefixKey() {
-    return mNode.getPrefixKey();
-  }
+    @Override
+    public int getPrefixKey() {
+        return mNode.getPrefixKey();
+    }
 
-  @Override
-  public int getURIKey() {
-    return mNode.getURIKey();
-  }
+    @Override
+    public int getURIKey() {
+        return mNode.getURIKey();
+    }
 
-  @Override
-  public long getPathNodeKey() {
-    return mNode.getPathNodeKey();
-  }
+    @Override
+    public long getPathNodeKey() {
+        return mNode.getPathNodeKey();
+    }
 
-  @Override
-  public SirixDeweyID getDeweyID() {
-    return mNode.getDeweyID();
-  }
+    @Override
+    public SirixDeweyID getDeweyID() {
+        return mNode.getDeweyID();
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return mNode.equals(obj);
-  }
+    @Override
+    public boolean equals(Object obj) {
+        return mNode.equals(obj);
+    }
 
-  @Override
-  public int hashCode() {
-    return mNode.hashCode();
-  }
+    @Override
+    public int hashCode() {
+        return mNode.hashCode();
+    }
 
-  @Override
-  public String toString() {
-    return mNode.toString();
-  }
+    @Override
+    public String toString() {
+        return mNode.toString();
+    }
 
-  @Override
-  public QNm getName() {
-    return mNode.getName();
-  }
+    @Override
+    public QNm getName() {
+        return mNode.getName();
+    }
 
-  @Override
-  public BigInteger computeHash() {
-    return mNode.computeHash();
-  }
+    @Override
+    public BigInteger computeHash() {
+        return mNode.computeHash();
+    }
 }

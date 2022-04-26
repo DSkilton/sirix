@@ -20,45 +20,47 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class ImmutableObjectNullNode extends AbstractImmutableJsonStructuralNode {
 
-  /** Mutable {@link ObjectNullNode}. */
-  private final ObjectNullNode mNode;
+    /**
+     * Mutable {@link ObjectNullNode}.
+     */
+    private final ObjectNullNode mNode;
 
-  /**
-   * Private constructor.
-   *
-   * @param node mutable {@link ElementNode}
-   */
-  private ImmutableObjectNullNode(final ObjectNullNode node) {
-    mNode = checkNotNull(node);
-  }
+    /**
+     * Private constructor.
+     *
+     * @param node mutable {@link ElementNode}
+     */
+    private ImmutableObjectNullNode(final ObjectNullNode node) {
+        mNode = checkNotNull(node);
+    }
 
-  /**
-   * Get an immutable JSON-array node instance.
-   *
-   * @param node the mutable {@link ImmutableObjectNullNode} to wrap
-   * @return immutable JSON-array node instance
-   */
-  public static ImmutableObjectNullNode of(final ObjectNullNode node) {
-    return new ImmutableObjectNullNode(node);
-  }
+    /**
+     * Get an immutable JSON-array node instance.
+     *
+     * @param node the mutable {@link ImmutableObjectNullNode} to wrap
+     * @return immutable JSON-array node instance
+     */
+    public static ImmutableObjectNullNode of(final ObjectNullNode node) {
+        return new ImmutableObjectNullNode(node);
+    }
 
-  @Override
-  public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
-    return visitor.visit(this);
-  }
+    @Override
+    public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
+        return visitor.visit(this);
+    }
 
-  @Override
-  public StructNode structDelegate() {
-    return mNode;
-  }
+    @Override
+    public StructNode structDelegate() {
+        return mNode;
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.NULL_VALUE;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.NULL_VALUE;
+    }
 
-  @Override
-  public BigInteger computeHash() {
-    return mNode.computeHash();
-  }
+    @Override
+    public BigInteger computeHash() {
+        return mNode.computeHash();
+    }
 }

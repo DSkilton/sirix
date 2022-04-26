@@ -46,11 +46,11 @@ public interface JsonLocalDatabaseModule {
     @DatabaseScope
     @Provides
     static Database<JsonResourceManager> jsonDatabase(final TransactionManager transactionManager,
-                                                      final DatabaseConfiguration dbConfig,
-                                                      final PathBasedPool<Database<?>> sessions,
-                                                      final ResourceStore<JsonResourceManager> resourceStore,
-                                                      final WriteLocksRegistry writeLocks,
-                                                      final PathBasedPool<ResourceManager<?, ?>> resourceManagers) {
+            final DatabaseConfiguration dbConfig,
+            final PathBasedPool<Database<?>> sessions,
+            final ResourceStore<JsonResourceManager> resourceStore,
+            final WriteLocksRegistry writeLocks,
+            final PathBasedPool<ResourceManager<?, ?>> resourceManagers) {
 
         return new LocalDatabase<>(
                 transactionManager,

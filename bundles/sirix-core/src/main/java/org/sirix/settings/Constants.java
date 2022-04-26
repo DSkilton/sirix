@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.settings;
 
 import java.nio.charset.Charset;
@@ -29,100 +30,116 @@ import java.nio.charset.StandardCharsets;
  */
 public final class Constants {
 
-  /**
-   * Private constructor.
-   */
-  private Constants() {
-    // Cannot be instantiated.
-    throw new AssertionError("May not be instantiated!");
-  }
+    /**
+     * Private constructor.
+     */
+    private Constants() {
+        // Cannot be instantiated.
+        throw new AssertionError("May not be instantiated!");
+    }
 
-  // --- Varia
-  // ------------------------------------------------------------------
+    // --- Varia
+    // ------------------------------------------------------------------
+    /**
+     * Default internal encoding.
+     */
+    public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
 
-  /** Default internal encoding. */
-  public static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
+    // --- Indirect Page
+    // ----------------------------------------------------------
+    /**
+     * Count of indirect references in indirect page.
+     */
+    public static final int INP_REFERENCE_COUNT = 1024;
 
-  // --- Indirect Page
-  // ----------------------------------------------------------
+    /**
+     * 2^INP_REFERENCE_COUNT_EXPONENT = INP_REFERENCE_COUNT.
+     */
+    public static final int INP_REFERENCE_COUNT_EXPONENT = 10;
 
-  /** Count of indirect references in indirect page. */
-  public static final int INP_REFERENCE_COUNT = 1024;
+    /**
+     * Exponent of pages per level (root level = 0, leaf level = 7). 2 ^ (7 *
+     * INP_REFERENCE_COUNT_EXPONENT) = INP_REFERENCE_COUNT ^ 7, 2 ^ (6 *
+     * INP_REFERENCE_COUNT_EXPONENT) = INP_REFERENCE_COUNT ^ 6....
+     */
+    public static final int[] INP_LEVEL_PAGE_COUNT_EXPONENT = {
+        7 * INP_REFERENCE_COUNT_EXPONENT, 6 * INP_REFERENCE_COUNT_EXPONENT,
+        5 * INP_REFERENCE_COUNT_EXPONENT,
+        4 * INP_REFERENCE_COUNT_EXPONENT, 3 * INP_REFERENCE_COUNT_EXPONENT,
+        2 * INP_REFERENCE_COUNT_EXPONENT, 1 * INP_REFERENCE_COUNT_EXPONENT,
+        0 * INP_REFERENCE_COUNT_EXPONENT};
 
-  /** 2^INP_REFERENCE_COUNT_EXPONENT = INP_REFERENCE_COUNT. */
-  public static final int INP_REFERENCE_COUNT_EXPONENT = 10;
+    // --- Path summary
+    // -------------------------------------------------------------
+    /**
+     * Count of indirect references in indirect page.
+     */
+    public static final int PATHINP_REFERENCE_COUNT = 1024;
 
-  /**
-   * Exponent of pages per level (root level = 0, leaf level = 7). 2 ^ (7 *
-   * INP_REFERENCE_COUNT_EXPONENT) = INP_REFERENCE_COUNT ^ 7, 2 ^ (6 * INP_REFERENCE_COUNT_EXPONENT)
-   * = INP_REFERENCE_COUNT ^ 6....
-   */
-  public static final int[] INP_LEVEL_PAGE_COUNT_EXPONENT = {
-      7 * INP_REFERENCE_COUNT_EXPONENT, 6 * INP_REFERENCE_COUNT_EXPONENT,
-      5 * INP_REFERENCE_COUNT_EXPONENT,
-      4 * INP_REFERENCE_COUNT_EXPONENT, 3 * INP_REFERENCE_COUNT_EXPONENT,
-      2 * INP_REFERENCE_COUNT_EXPONENT, 1 * INP_REFERENCE_COUNT_EXPONENT,
-      0 * INP_REFERENCE_COUNT_EXPONENT};
+    /**
+     * 2^PATHINP_REFERENCE_COUNT_EXPONENT = PATHINP_REFERENCE_COUNT.
+     */
+    public static final int PATHINP_REFERENCE_COUNT_EXPONENT = 10;
 
-  // --- Path summary
-  // -------------------------------------------------------------
+    /**
+     * Exponent of pages per level (root level = 0, leaf level = 7). 2 ^ (7 *
+     * PATHINP_REFERENCE_COUNT_EXPONENT) = PATHINP_REFERENCE_COUNT ^ 7, 2 ^ (6 *
+     * PATHINP_REFERENCE_COUNT_EXPONENT) = PATHINP_REFERENCE_COUNT ^ 6....
+     */
+    public static final int[] PATHINP_LEVEL_PAGE_COUNT_EXPONENT = {
+        4 * PATHINP_REFERENCE_COUNT_EXPONENT,
+        3 * PATHINP_REFERENCE_COUNT_EXPONENT,
+        2 * PATHINP_REFERENCE_COUNT_EXPONENT,
+        1 * PATHINP_REFERENCE_COUNT_EXPONENT, 0 * PATHINP_REFERENCE_COUNT_EXPONENT};
 
-  /** Count of indirect references in indirect page. */
-  public static final int PATHINP_REFERENCE_COUNT = 1024;
+    // --- Uber Page
+    // -------------------------------------------------------------
+    /**
+     * Count of indirect references in indirect page.
+     */
+    public static final int UBPINP_REFERENCE_COUNT = 1024;
 
-  /** 2^PATHINP_REFERENCE_COUNT_EXPONENT = PATHINP_REFERENCE_COUNT. */
-  public static final int PATHINP_REFERENCE_COUNT_EXPONENT = 10;
+    /**
+     * 2^INP_REFERENCE_COUNT_EXPONENT = INP_REFERENCE_COUNT.
+     */
+    public static final int UBPINP_REFERENCE_COUNT_EXPONENT = 10;
 
-  /**
-   * Exponent of pages per level (root level = 0, leaf level = 7). 2 ^ (7 *
-   * PATHINP_REFERENCE_COUNT_EXPONENT) = PATHINP_REFERENCE_COUNT ^ 7, 2 ^ (6 *
-   * PATHINP_REFERENCE_COUNT_EXPONENT) = PATHINP_REFERENCE_COUNT ^ 6....
-   */
-  public static final int[] PATHINP_LEVEL_PAGE_COUNT_EXPONENT = {
-      4 * PATHINP_REFERENCE_COUNT_EXPONENT,
-      3 * PATHINP_REFERENCE_COUNT_EXPONENT,
-      2 * PATHINP_REFERENCE_COUNT_EXPONENT,
-      1 * PATHINP_REFERENCE_COUNT_EXPONENT, 0 * PATHINP_REFERENCE_COUNT_EXPONENT};
+    /**
+     * Exponent of pages per level (root level = 0, leaf level = 7). 2 ^ (7 *
+     * INP_REFERENCE_COUNT_EXPONENT) = INP_REFERENCE_COUNT ^ 7, 2 ^ (6 *
+     * INP_REFERENCE_COUNT_EXPONENT) = INP_REFERENCE_COUNT ^ 6....
+     */
+    public static final int[] UBPINP_LEVEL_PAGE_COUNT_EXPONENT = {
+        4 * UBPINP_REFERENCE_COUNT_EXPONENT,
+        3 * UBPINP_REFERENCE_COUNT_EXPONENT,
+        2 * UBPINP_REFERENCE_COUNT_EXPONENT, 1 * UBPINP_REFERENCE_COUNT_EXPONENT,
+        0 * UBPINP_REFERENCE_COUNT_EXPONENT};
 
-  // --- Uber Page
-  // -------------------------------------------------------------
+    /**
+     * Revision count of uninitialized storage.
+     */
+    public static final int UBP_ROOT_REVISION_COUNT = 1;
 
-  /** Count of indirect references in indirect page. */
-  public static final int UBPINP_REFERENCE_COUNT = 1024;
+    /**
+     * Root revisionKey guaranteed to exist in empty storage.
+     */
+    public static final int UBP_ROOT_REVISION_NUMBER = 0;
 
-  /** 2^INP_REFERENCE_COUNT_EXPONENT = INP_REFERENCE_COUNT. */
-  public static final int UBPINP_REFERENCE_COUNT_EXPONENT = 10;
+    // --- Node Page
+    // -------------------------------------------------------------
+    /**
+     * Maximum node count per node page.
+     */
+    public static final int NDP_NODE_COUNT = 1024;
 
-  /**
-   * Exponent of pages per level (root level = 0, leaf level = 7). 2 ^ (7 *
-   * INP_REFERENCE_COUNT_EXPONENT) = INP_REFERENCE_COUNT ^ 7, 2 ^ (6 * INP_REFERENCE_COUNT_EXPONENT)
-   * = INP_REFERENCE_COUNT ^ 6....
-   */
-  public static final int[] UBPINP_LEVEL_PAGE_COUNT_EXPONENT = {
-      4 * UBPINP_REFERENCE_COUNT_EXPONENT,
-      3 * UBPINP_REFERENCE_COUNT_EXPONENT,
-      2 * UBPINP_REFERENCE_COUNT_EXPONENT, 1 * UBPINP_REFERENCE_COUNT_EXPONENT,
-      0 * UBPINP_REFERENCE_COUNT_EXPONENT};
+    /**
+     * 2^NDP_NODE_COUNT_EXPONENT = NDP_NODE_COUNT.
+     */
+    public static final int NDP_NODE_COUNT_EXPONENT = 10;
 
-  /** Revision count of uninitialized storage. */
-  public static final int UBP_ROOT_REVISION_COUNT = 1;
+    // --- Reference Page
+    // -------------------------------------------------------------
+    public static final long NULL_ID_LONG = -15;
 
-  /** Root revisionKey guaranteed to exist in empty storage. */
-  public static final int UBP_ROOT_REVISION_NUMBER = 0;
-
-  // --- Node Page
-  // -------------------------------------------------------------
-
-  /** Maximum node count per node page. */
-  public static final int NDP_NODE_COUNT = 1024;
-
-  /** 2^NDP_NODE_COUNT_EXPONENT = NDP_NODE_COUNT. */
-  public static final int NDP_NODE_COUNT_EXPONENT = 10;
-
-  // --- Reference Page
-  // -------------------------------------------------------------
-
-  public static final long NULL_ID_LONG = -15;
-
-  public static final int NULL_ID_INT = -15;
+    public static final int NULL_ID_INT = -15;
 }

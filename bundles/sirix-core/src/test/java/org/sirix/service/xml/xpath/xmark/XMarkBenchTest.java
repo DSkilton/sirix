@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.service.xml.xpath.xmark;
 
 import java.nio.file.Path;
@@ -42,57 +43,57 @@ import org.sirix.service.xml.xpath.XPathStringChecker;
  */
 public class XMarkBenchTest {
 
-  final XMarkBenchQueries xmbq = new XMarkBenchQueries();
+    final XMarkBenchQueries xmbq = new XMarkBenchQueries();
 
-  private static final String FACTOR = "0.01";
-  private static final String XMLFILE = "1mb.xml";
+    private static final String FACTOR = "0.01";
+    private static final String XMLFILE = "1mb.xml";
 
-  private static final Path XML = Paths.get("src", "test", "resources", XMLFILE);
+    private static final Path XML = Paths.get("src", "test", "resources", XMLFILE);
 
-  private static Holder holder;
+    private static Holder holder;
 
-  @BeforeClass
-  public static void setUp() throws Exception {
-    XmlTestHelper.deleteEverything();
-    // EncryptionHelper.start();
-    XmlShredder.main(
-        XML.toAbsolutePath().toString(), PATHS.PATH1.getFile().toAbsolutePath().toString());
-    holder = Holder.generateRtx();
-  }
+    @BeforeClass
+    public static void setUp() throws Exception {
+        XmlTestHelper.deleteEverything();
+        // EncryptionHelper.start();
+        XmlShredder.main(
+                XML.toAbsolutePath().toString(), PATHS.PATH1.getFile().toAbsolutePath().toString());
+        holder = Holder.generateRtx();
+    }
 
-  @Test
-  public void xMarkTest_Q1() throws SirixXPathException {
-    String query = xmbq.getQuery(1, FACTOR);
-    String result = xmbq.getResult(1, FACTOR);
-    XPathStringChecker.testIAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[] {result});
-  }
+    @Test
+    public void xMarkTest_Q1() throws SirixXPathException {
+        String query = xmbq.getQuery(1, FACTOR);
+        String result = xmbq.getResult(1, FACTOR);
+        XPathStringChecker.testIAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[]{result});
+    }
 
-  @Test
-  public void xMarkTest_Q5() throws SirixXPathException {
-    String query = xmbq.getQuery(5, FACTOR);
-    String result = xmbq.getResult(5, FACTOR);
-    XPathStringChecker.testIAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[] {result});
-  }
+    @Test
+    public void xMarkTest_Q5() throws SirixXPathException {
+        String query = xmbq.getQuery(5, FACTOR);
+        String result = xmbq.getResult(5, FACTOR);
+        XPathStringChecker.testIAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[]{result});
+    }
 
-  @Test
-  public void xMarkTest_Q6() throws SirixXPathException {
-    String query = xmbq.getQuery(6, FACTOR);
-    String result = xmbq.getResult(6, FACTOR);
-    XPathStringChecker.testIAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[] {result});
-  }
+    @Test
+    public void xMarkTest_Q6() throws SirixXPathException {
+        String query = xmbq.getQuery(6, FACTOR);
+        String result = xmbq.getResult(6, FACTOR);
+        XPathStringChecker.testIAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[]{result});
+    }
 
-  @Test
-  public void xMarkTest_Q7() throws SirixXPathException {
-    String query = xmbq.getQuery(7, FACTOR);
-    String result = xmbq.getResult(7, FACTOR);
-    XPathStringChecker.testIAxisConventions(
-        new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[] {result});
-  }
+    @Test
+    public void xMarkTest_Q7() throws SirixXPathException {
+        String query = xmbq.getQuery(7, FACTOR);
+        String result = xmbq.getResult(7, FACTOR);
+        XPathStringChecker.testIAxisConventions(
+                new XPathAxis(holder.getXmlNodeReadTrx(), query), new String[]{result});
+    }
 
-  /*
+    /*
    * @Test public void xMarkTest_Q21() { String query = xmbq.getQuery(21, FACTOR); String result =
    * xmbq.getResult(21, FACTOR); XPathStringChecker.testIAxisConventions(new XPathAxis(getRtx(),
    * query), new String[] { result }); }
@@ -104,11 +105,10 @@ public class XMarkBenchTest {
    * @Test public void xMarkTest_Q23() { String query = xmbq.getQuery(23, FACTOR); String result =
    * xmbq.getResult(23, FACTOR); XPathStringChecker.testIAxisConventions(new XPathAxis(getRtx(),
    * query), new String[] { result }); }
-   */
-
-  @AfterClass
-  public static void tearDown() throws SirixException {
-    holder.close();
-    XmlTestHelper.closeEverything();
-  }
+     */
+    @AfterClass
+    public static void tearDown() throws SirixException {
+        holder.close();
+        XmlTestHelper.closeEverything();
+    }
 }

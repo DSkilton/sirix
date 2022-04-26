@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,85 +30,91 @@ import org.sirix.axis.AbstractAxis;
 
 /**
  * <p>
- * The PredicateAxis evaluates a predicate (in the form of an axis) and returns true, if the
- * predicates has a value (axis.hasNext() == true) and this value if not the boolean value false.
- * Otherwise false is returned. Since a predicate is a kind of filter, the transaction that has been
- * altered by means of the predicate's evaluation has to be reset to the key that it was set to
+ * The PredicateAxis evaluates a predicate (in the form of an axis) and returns
+ * true, if the predicates has a value (axis.hasNext() == true) and this value
+ * if not the boolean value false. Otherwise false is returned. Since a
+ * predicate is a kind of filter, the transaction that has been altered by means
+ * of the predicate's evaluation has to be reset to the key that it was set to
  * before the evaluation.
  * </p>
  */
 public final class PredicateFilterAxis extends AbstractAxis {
 
-  /** First run. */
-  private boolean mIsFirst;
+    /**
+     * First run.
+     */
+    private boolean mIsFirst;
 
-  /** Predicate axis. */
-  private final Axis mPredicate;
+    /**
+     * Predicate axis.
+     */
+    private final Axis mPredicate;
 
-  /**
-   * Constructor. Initializes the internal state.
-   *
-   * @param nodeCursor exclusive (immutable) cursor to iterate with
-   * @param predicate predicate expression
-   */
-  public PredicateFilterAxis(final NodeCursor nodeCursor, final Axis predicate) {
-    super(nodeCursor);
-    mIsFirst = true;
-    mPredicate = checkNotNull(predicate);
-  }
-
-  @Override
-  public final void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    if (mPredicate != null) {
-      mPredicate.reset(nodeKey);
+    /**
+     * Constructor. Initializes the internal state.
+     *
+     * @param nodeCursor exclusive (immutable) cursor to iterate with
+     * @param predicate predicate expression
+     */
+    public PredicateFilterAxis(final NodeCursor nodeCursor, final Axis predicate) {
+        super(nodeCursor);
+        mIsFirst = true;
+        mPredicate = checkNotNull(predicate);
     }
-    mIsFirst = true;
-  }
 
-  @Override
-  protected long nextKey() {
-    // A predicate has to evaluate to true only once.
-    if (mIsFirst) {
-      mIsFirst = false;
-
-      final long currKey = getCursor().getNodeKey();
-      mPredicate.reset(currKey);
-
-      if (mPredicate.hasNext()) {
-        mPredicate.next();
-        if (isBooleanFalse()) {
-          return done();
+    @Override
+    public final void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        if (mPredicate != null) {
+            mPredicate.reset(nodeKey);
         }
-        return currKey;
-      }
+        mIsFirst = true;
     }
 
-    return done();
-  }
+    @Override
+    protected long nextKey() {
+        // A predicate has to evaluate to true only once.
+        if (mIsFirst) {
+            mIsFirst = false;
 
-  /**
-   * Tests whether current item is an atomic value with boolean value "false".
-   *
-   * @return {@code true}, if item is boolean typed atomic value with type "false".
-   */
-  private boolean isBooleanFalse() {
-    if (getTrx() instanceof XmlNodeReadOnlyTrx) {
-      final XmlNodeReadOnlyTrx rtx = asXdmNodeReadTrx();
-      if (rtx.getNodeKey() >= 0) {
+            final long currKey = getCursor().getNodeKey();
+            mPredicate.reset(currKey);
+
+            if (mPredicate.hasNext()) {
+                mPredicate.next();
+                if (isBooleanFalse()) {
+                    return done();
+                }
+                return currKey;
+            }
+        }
+
+        return done();
+    }
+
+    /**
+     * Tests whether current item is an atomic value with boolean value "false".
+     *
+     * @return {@code true}, if item is boolean typed atomic value with type
+     * "false".
+     */
+    private boolean isBooleanFalse() {
+        if (getTrx() instanceof XmlNodeReadOnlyTrx) {
+            final XmlNodeReadOnlyTrx rtx = asXdmNodeReadTrx();
+            if (rtx.getNodeKey() >= 0) {
+                return false;
+            } else { // is AtomicValue
+                if (rtx.getTypeKey() == rtx.keyForName("xs:boolean")) {
+                    // atomic value of type boolean
+                    // return true, if atomic values's value is false
+                    return !(Boolean.parseBoolean(rtx.getValue()));
+                } else {
+                    return false;
+                }
+            }
+        }
+
         return false;
-      } else { // is AtomicValue
-        if (rtx.getTypeKey() == rtx.keyForName("xs:boolean")) {
-          // atomic value of type boolean
-          // return true, if atomic values's value is false
-          return !(Boolean.parseBoolean(rtx.getValue()));
-        } else {
-          return false;
-        }
-      }
     }
-
-    return false;
-  }
 
 }

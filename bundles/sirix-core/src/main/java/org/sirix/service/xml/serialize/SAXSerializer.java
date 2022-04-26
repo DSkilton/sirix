@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.service.xml.serialize;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -62,341 +63,347 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  */
 public final class SAXSerializer extends org.sirix.service.AbstractSerializer<XmlNodeReadOnlyTrx, XmlNodeTrx>
-    implements XMLReader {
+        implements XMLReader {
 
-  /** {@link LogWrapper} reference. */
-  private final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(SAXSerializer.class));
+    /**
+     * {@link LogWrapper} reference.
+     */
+    private final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(SAXSerializer.class));
 
-  /** SAX content handler. */
-  private ContentHandler contentHandler;
+    /**
+     * SAX content handler.
+     */
+    private ContentHandler contentHandler;
 
-  /**
-   * Constructor.
-   *
-   * @param resMgr Sirix {@link ResourceManager}
-   * @param handler SAX {@link ContentHandler}
-   * @param revision revision to serialize
-   * @param revisions further revisions to serialize
-   */
-  public SAXSerializer(final XmlResourceManager resMgr, final ContentHandler handler, final @Nonnegative int revision,
-      final int... revisions) {
-    super(resMgr, null, revision, revisions);
-    contentHandler = handler;
-  }
-
-  @Override
-  protected void emitNode(final XmlNodeReadOnlyTrx rtx) {
-    switch (rtx.getKind()) {
-      case XML_DOCUMENT:
-        break;
-      case ELEMENT:
-        generateElement(rtx);
-        break;
-      case TEXT:
-        generateText(rtx);
-        break;
-      case COMMENT:
-        generateComment(rtx);
-        break;
-      case PROCESSING_INSTRUCTION:
-        generatePI(rtx);
-        break;
-      // $CASES-OMITTED$
-      default:
-        throw new UnsupportedOperationException("Node kind not supported by sirix!");
+    /**
+     * Constructor.
+     *
+     * @param resMgr Sirix {@link ResourceManager}
+     * @param handler SAX {@link ContentHandler}
+     * @param revision revision to serialize
+     * @param revisions further revisions to serialize
+     */
+    public SAXSerializer(final XmlResourceManager resMgr, final ContentHandler handler, final @Nonnegative int revision,
+            final int... revisions) {
+        super(resMgr, null, revision, revisions);
+        contentHandler = handler;
     }
-  }
 
-  @Override
-  protected void emitEndNode(final XmlNodeReadOnlyTrx rtx, final boolean lastEndNode) {
-    final QNm qName = rtx.getName();
-    final String mURI = qName.getNamespaceURI();
-    try {
-      contentHandler.endPrefixMapping(qName.getPrefix());
-      contentHandler.endElement(mURI, qName.getLocalName(), Utils.buildName(qName));
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
-    }
-  }
-
-  @Override
-  protected void emitRevisionStartNode(final @Nonnull XmlNodeReadOnlyTrx rtx) {
-    final int length = (revisions.length == 1 && revisions[0] < 0)
-        ? resMgr.getMostRecentRevisionNumber()
-        : revisions.length;
-
-    if (length > 1) {
-      final AttributesImpl atts = new AttributesImpl();
-      atts.addAttribute("sdb", "revision", "sdb:revision", "", Integer.toString(rtx.getRevisionNumber()));
-      try {
-        contentHandler.startElement("https://sirix.io", "sirix-item", "sdb:sirix-item", atts);
-      } catch (final SAXException e) {
-        LOGGER.error(e.getMessage(), e);
-      }
-    }
-  }
-
-  @Override
-  protected void emitRevisionEndNode(final @Nonnull XmlNodeReadOnlyTrx rtx) {
-    final int length = (revisions.length == 1 && revisions[0] < 0)
-        ? (int) resMgr.getMostRecentRevisionNumber()
-        : revisions.length;
-
-    if (length > 1) {
-      try {
-        contentHandler.endElement("https://sirix.io", "sirix-item", "sdb:sirix-item");
-      } catch (final SAXException e) {
-        LOGGER.error(e.getMessage(), e);
-      }
-    }
-  }
-
-  /**
-   * Generates a comment event.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} implementation
-   */
-  private void generateComment(final XmlNodeReadOnlyTrx rtx) {
-    try {
-      final char[] content = rtx.getValue().toCharArray();
-      contentHandler.characters(content, 0, content.length);
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * Generate a processing instruction event.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} implementation
-   */
-  private void generatePI(final XmlNodeReadOnlyTrx rtx) {
-    try {
-      contentHandler.processingInstruction(rtx.getName().getLocalName(), rtx.getValue());
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * Generate a start element event.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} implementation
-   */
-  private void generateElement(final XmlNodeReadOnlyTrx rtx) {
-    final AttributesImpl atts = new AttributesImpl();
-    final long key = rtx.getNodeKey();
-
-    try {
-      // Process namespace nodes.
-      for (int i = 0, namesCount = rtx.getNamespaceCount(); i < namesCount; i++) {
-        rtx.moveToNamespace(i);
-        final QNm qName = rtx.getName();
-        contentHandler.startPrefixMapping(qName.getPrefix(), qName.getNamespaceURI());
-        final String mURI = qName.getNamespaceURI();
-        if (qName.getPrefix() == null || qName.getPrefix().length() == 0) {
-          atts.addAttribute(mURI, "xmlns", "xmlns", "CDATA", mURI);
-        } else {
-          atts.addAttribute(mURI, "xmlns", "xmlns:" + rtx.getName().getPrefix(), "CDATA", mURI);
+    @Override
+    protected void emitNode(final XmlNodeReadOnlyTrx rtx) {
+        switch (rtx.getKind()) {
+            case XML_DOCUMENT:
+                break;
+            case ELEMENT:
+                generateElement(rtx);
+                break;
+            case TEXT:
+                generateText(rtx);
+                break;
+            case COMMENT:
+                generateComment(rtx);
+                break;
+            case PROCESSING_INSTRUCTION:
+                generatePI(rtx);
+                break;
+            // $CASES-OMITTED$
+            default:
+                throw new UnsupportedOperationException("Node kind not supported by sirix!");
         }
-        rtx.moveTo(key);
-      }
+    }
 
-      // Process attributes.
-      for (int i = 0, attCount = rtx.getAttributeCount(); i < attCount; i++) {
-        rtx.moveToAttribute(i);
+    @Override
+    protected void emitEndNode(final XmlNodeReadOnlyTrx rtx, final boolean lastEndNode) {
         final QNm qName = rtx.getName();
         final String mURI = qName.getNamespaceURI();
-        atts.addAttribute(mURI, qName.getLocalName(), Utils.buildName(qName), rtx.getType(), rtx.getValue());
-        rtx.moveTo(key);
-      }
-
-      // Create SAX events.
-      final QNm qName = rtx.getName();
-      contentHandler.startElement(qName.getNamespaceURI(), qName.getLocalName(), Utils.buildName(qName), atts);
-
-      // Empty elements.
-      if (!rtx.hasFirstChild()) {
-        contentHandler.endElement(qName.getNamespaceURI(), qName.getLocalName(), Utils.buildName(qName));
-      }
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
+        try {
+            contentHandler.endPrefixMapping(qName.getPrefix());
+            contentHandler.endElement(mURI, qName.getLocalName(), Utils.buildName(qName));
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
-  }
 
-  /**
-   * Generate a text event.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} implementation
-   */
-  private void generateText(final XmlNodeReadOnlyTrx rtx) {
-    try {
-      contentHandler.characters(XMLToken.escapeContent(rtx.getValue()).toCharArray(), 0, rtx.getValue().length());
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
+    @Override
+    protected void emitRevisionStartNode(final @Nonnull XmlNodeReadOnlyTrx rtx) {
+        final int length = (revisions.length == 1 && revisions[0] < 0)
+                ? resMgr.getMostRecentRevisionNumber()
+                : revisions.length;
+
+        if (length > 1) {
+            final AttributesImpl atts = new AttributesImpl();
+            atts.addAttribute("sdb", "revision", "sdb:revision", "", Integer.toString(rtx.getRevisionNumber()));
+            try {
+                contentHandler.startElement("https://sirix.io", "sirix-item", "sdb:sirix-item", atts);
+            } catch (final SAXException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
-  }
 
-  @Override
-  protected void setTrxForVisitor(XmlNodeReadOnlyTrx rtx) {}
+    @Override
+    protected void emitRevisionEndNode(final @Nonnull XmlNodeReadOnlyTrx rtx) {
+        final int length = (revisions.length == 1 && revisions[0] < 0)
+                ? (int) resMgr.getMostRecentRevisionNumber()
+                : revisions.length;
 
-  @Override
-  protected boolean areSiblingNodesGoingToBeSkipped(XmlNodeReadOnlyTrx rtx) {
-    return false;
-  }
-
-  @Override
-  protected boolean isSubtreeGoingToBeVisited(final XmlNodeReadOnlyTrx rtx) {
-    return true;
-  }
-
-  /**
-   * Main method.
-   *
-   * @param args args[0] specifies the path to the sirix storage from which to generate SAX events.
-   * @throws SirixException if any Sirix exception occurs
-   */
-  public static void main(final String... args) {
-    final Path path = Paths.get(args[0]);
-    final DatabaseConfiguration config = new DatabaseConfiguration(path);
-    Databases.createXmlDatabase(config);
-    final var database = Databases.openXmlDatabase(path);
-    database.createResource(new ResourceConfiguration.Builder("shredded").build());
-    try (final XmlResourceManager resource = database.openResourceManager("shredded")) {
-      final DefaultHandler defHandler = new DefaultHandler();
-      final SAXSerializer serializer = new SAXSerializer(resource, defHandler, resource.getMostRecentRevisionNumber());
-      serializer.call();
+        if (length > 1) {
+            try {
+                contentHandler.endElement("https://sirix.io", "sirix-item", "sdb:sirix-item");
+            } catch (final SAXException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
-  }
 
-  @Override
-  protected void emitStartDocument() {
-    try {
-      contentHandler.startDocument();
+    /**
+     * Generates a comment event.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} implementation
+     */
+    private void generateComment(final XmlNodeReadOnlyTrx rtx) {
+        try {
+            final char[] content = rtx.getValue().toCharArray();
+            contentHandler.characters(content, 0, content.length);
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
 
-      final int length = (revisions.length == 1 && revisions[0] < 0)
-          ? resMgr.getMostRecentRevisionNumber()
-          : revisions.length;
+    /**
+     * Generate a processing instruction event.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} implementation
+     */
+    private void generatePI(final XmlNodeReadOnlyTrx rtx) {
+        try {
+            contentHandler.processingInstruction(rtx.getName().getLocalName(), rtx.getValue());
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
 
-      if (length > 1) {
-        final String ns = "https://sirix.io";
-
+    /**
+     * Generate a start element event.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} implementation
+     */
+    private void generateElement(final XmlNodeReadOnlyTrx rtx) {
         final AttributesImpl atts = new AttributesImpl();
+        final long key = rtx.getNodeKey();
 
-        atts.addAttribute(ns, "xmlns", "xmlns:sdb", "", ns);
+        try {
+            // Process namespace nodes.
+            for (int i = 0, namesCount = rtx.getNamespaceCount(); i < namesCount; i++) {
+                rtx.moveToNamespace(i);
+                final QNm qName = rtx.getName();
+                contentHandler.startPrefixMapping(qName.getPrefix(), qName.getNamespaceURI());
+                final String mURI = qName.getNamespaceURI();
+                if (qName.getPrefix() == null || qName.getPrefix().length() == 0) {
+                    atts.addAttribute(mURI, "xmlns", "xmlns", "CDATA", mURI);
+                } else {
+                    atts.addAttribute(mURI, "xmlns", "xmlns:" + rtx.getName().getPrefix(), "CDATA", mURI);
+                }
+                rtx.moveTo(key);
+            }
 
-        contentHandler.startElement("sdb", "sirix", "sdb:sirix", atts);
-      }
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
+            // Process attributes.
+            for (int i = 0, attCount = rtx.getAttributeCount(); i < attCount; i++) {
+                rtx.moveToAttribute(i);
+                final QNm qName = rtx.getName();
+                final String mURI = qName.getNamespaceURI();
+                atts.addAttribute(mURI, qName.getLocalName(), Utils.buildName(qName), rtx.getType(), rtx.getValue());
+                rtx.moveTo(key);
+            }
+
+            // Create SAX events.
+            final QNm qName = rtx.getName();
+            contentHandler.startElement(qName.getNamespaceURI(), qName.getLocalName(), Utils.buildName(qName), atts);
+
+            // Empty elements.
+            if (!rtx.hasFirstChild()) {
+                contentHandler.endElement(qName.getNamespaceURI(), qName.getLocalName(), Utils.buildName(qName));
+            }
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
-  }
 
-  @Override
-  protected void emitEndDocument() {
-    try {
-      final int length = (revisions.length == 1 && revisions[0] < 0)
-          ? (int) resMgr.getMostRecentRevisionNumber()
-          : revisions.length;
-
-      if (length > 1) {
-        contentHandler.endElement("sdb", "sirix", "sdb:sirix");
-      }
-
-      contentHandler.endDocument();
-    } catch (final SAXException e) {
-      LOGGER.error(e.getMessage(), e);
+    /**
+     * Generate a text event.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} implementation
+     */
+    private void generateText(final XmlNodeReadOnlyTrx rtx) {
+        try {
+            contentHandler.characters(XMLToken.escapeContent(rtx.getValue()).toCharArray(), 0, rtx.getValue().length());
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
-  }
 
-  /* Implements XMLReader method. */
-  @Override
-  public ContentHandler getContentHandler() {
-    return contentHandler;
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public DTDHandler getDTDHandler() {
-    return null;
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public EntityResolver getEntityResolver() {
-    return null;
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public ErrorHandler getErrorHandler() {
-    return null;
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
-    throw new SAXNotSupportedException();
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
-    throw new SAXNotSupportedException();
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public void parse(InputSource input) throws IOException, SAXException {
-    throw new UnsupportedOperationException();
-  }
-
-  /* Implements XMLReader method. */
-  @Override
-  public void parse(String systemID) throws IOException, SAXException {
-    emitStartDocument();
-    try {
-      super.call();
-    } catch (final SirixException e) {
-      LOGGER.error(e.getMessage(), e);
+    @Override
+    protected void setTrxForVisitor(XmlNodeReadOnlyTrx rtx) {
     }
-    emitEndDocument();
-  }
 
-  /* Implements XMLReader method. */
-  @Override
-  public void setContentHandler(final ContentHandler contentHandler) {
-    this.contentHandler = checkNotNull(contentHandler);
-  }
+    @Override
+    protected boolean areSiblingNodesGoingToBeSkipped(XmlNodeReadOnlyTrx rtx) {
+        return false;
+    }
 
-  /* Implements XMLReader method. */
-  @Override
-  public void setDTDHandler(DTDHandler handler) {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    protected boolean isSubtreeGoingToBeVisited(final XmlNodeReadOnlyTrx rtx) {
+        return true;
+    }
 
-  /* Implements XMLReader method. */
-  @Override
-  public void setEntityResolver(EntityResolver resolver) {
-    throw new UnsupportedOperationException();
+    /**
+     * Main method.
+     *
+     * @param args args[0] specifies the path to the sirix storage from which to
+     * generate SAX events.
+     * @throws SirixException if any Sirix exception occurs
+     */
+    public static void main(final String... args) {
+        final Path path = Paths.get(args[0]);
+        final DatabaseConfiguration config = new DatabaseConfiguration(path);
+        Databases.createXmlDatabase(config);
+        final var database = Databases.openXmlDatabase(path);
+        database.createResource(new ResourceConfiguration.Builder("shredded").build());
+        try (final XmlResourceManager resource = database.openResourceManager("shredded")) {
+            final DefaultHandler defHandler = new DefaultHandler();
+            final SAXSerializer serializer = new SAXSerializer(resource, defHandler, resource.getMostRecentRevisionNumber());
+            serializer.call();
+        }
+    }
 
-  }
+    @Override
+    protected void emitStartDocument() {
+        try {
+            contentHandler.startDocument();
 
-  /* Implements XMLReader method. */
-  @Override
-  public void setErrorHandler(ErrorHandler handler) {
-    throw new UnsupportedOperationException();
-  }
+            final int length = (revisions.length == 1 && revisions[0] < 0)
+                    ? resMgr.getMostRecentRevisionNumber()
+                    : revisions.length;
 
-  /* Implements XMLReader method. */
-  @Override
-  public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
-    throw new SAXNotSupportedException();
-  }
+            if (length > 1) {
+                final String ns = "https://sirix.io";
 
-  /* Implements XMLReader method. */
-  @Override
-  public void setProperty(String name, final Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
-    throw new SAXNotSupportedException();
-  }
+                final AttributesImpl atts = new AttributesImpl();
+
+                atts.addAttribute(ns, "xmlns", "xmlns:sdb", "", ns);
+
+                contentHandler.startElement("sdb", "sirix", "sdb:sirix", atts);
+            }
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    protected void emitEndDocument() {
+        try {
+            final int length = (revisions.length == 1 && revisions[0] < 0)
+                    ? (int) resMgr.getMostRecentRevisionNumber()
+                    : revisions.length;
+
+            if (length > 1) {
+                contentHandler.endElement("sdb", "sirix", "sdb:sirix");
+            }
+
+            contentHandler.endDocument();
+        } catch (final SAXException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public ContentHandler getContentHandler() {
+        return contentHandler;
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public DTDHandler getDTDHandler() {
+        return null;
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public EntityResolver getEntityResolver() {
+        return null;
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return null;
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
+        throw new SAXNotSupportedException();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
+        throw new SAXNotSupportedException();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void parse(InputSource input) throws IOException, SAXException {
+        throw new UnsupportedOperationException();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void parse(String systemID) throws IOException, SAXException {
+        emitStartDocument();
+        try {
+            super.call();
+        } catch (final SirixException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        emitEndDocument();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void setContentHandler(final ContentHandler contentHandler) {
+        this.contentHandler = checkNotNull(contentHandler);
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void setDTDHandler(DTDHandler handler) {
+        throw new UnsupportedOperationException();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void setEntityResolver(EntityResolver resolver) {
+        throw new UnsupportedOperationException();
+
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void setErrorHandler(ErrorHandler handler) {
+        throw new UnsupportedOperationException();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
+        throw new SAXNotSupportedException();
+    }
+
+    /* Implements XMLReader method. */
+    @Override
+    public void setProperty(String name, final Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
+        throw new SAXNotSupportedException();
+    }
 }

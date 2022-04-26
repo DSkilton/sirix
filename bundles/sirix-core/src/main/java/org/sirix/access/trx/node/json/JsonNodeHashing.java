@@ -8,34 +8,34 @@ import org.sirix.node.interfaces.immutable.ImmutableNode;
 
 final class JsonNodeHashing extends AbstractNodeHashing<ImmutableNode> {
 
-  private final InternalJsonNodeReadOnlyTrx nodeReadOnlyTrx;
+    private final InternalJsonNodeReadOnlyTrx nodeReadOnlyTrx;
 
-  /**
-   * Constructor.
-   *
-   * @param hashType        the hash type used
-   * @param nodeReadOnlyTrx the internal read-only node trx
-   * @param pageWriteTrx    the page trx
-   */
-  JsonNodeHashing(final HashType hashType, final InternalJsonNodeReadOnlyTrx nodeReadOnlyTrx,
-      final PageTrx pageWriteTrx) {
-    super(hashType, nodeReadOnlyTrx, pageWriteTrx);
-    this.nodeReadOnlyTrx = nodeReadOnlyTrx;
-  }
+    /**
+     * Constructor.
+     *
+     * @param hashType the hash type used
+     * @param nodeReadOnlyTrx the internal read-only node trx
+     * @param pageWriteTrx the page trx
+     */
+    JsonNodeHashing(final HashType hashType, final InternalJsonNodeReadOnlyTrx nodeReadOnlyTrx,
+            final PageTrx pageWriteTrx) {
+        super(hashType, nodeReadOnlyTrx, pageWriteTrx);
+        this.nodeReadOnlyTrx = nodeReadOnlyTrx;
+    }
 
-  @Override
-  protected StructNode getStructuralNode() {
-    return nodeReadOnlyTrx.getStructuralNode();
-  }
+    @Override
+    protected StructNode getStructuralNode() {
+        return nodeReadOnlyTrx.getStructuralNode();
+    }
 
-  @Override
-  protected ImmutableNode getCurrentNode() {
-    return nodeReadOnlyTrx.getCurrentNode();
-  }
+    @Override
+    protected ImmutableNode getCurrentNode() {
+        return nodeReadOnlyTrx.getCurrentNode();
+    }
 
-  @Override
-  protected void setCurrentNode(final ImmutableNode node) {
-    nodeReadOnlyTrx.setCurrentNode(node);
-  }
+    @Override
+    protected void setCurrentNode(final ImmutableNode node) {
+        nodeReadOnlyTrx.setCurrentNode(node);
+    }
 
 }

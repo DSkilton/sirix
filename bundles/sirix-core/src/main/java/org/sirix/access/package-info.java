@@ -11,27 +11,29 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /**
  * <p>
  * The access semantics is as follows:
  * </p>
  * <ul>
- * <li>There can only be a single {@link org.sirix.api.Database} instance per Database-Folder</li>
+ * <li>There can only be a single {@link org.sirix.api.Database} instance per
+ * Database-Folder</li>
  * <li>There can be multiple {@link org.sirix.api.ResourceManager} instances per
- * {@link org.sirix.api.Database} linked uniquely to resources representing concrete
- * data-storages.</li>
- * <li>There can only be a single {@link org.sirix.api.xml.XmlNodeTrx} instance per
- * {@link org.sirix.api.ResourceManager}</li>
- * <li>There can be multiple {@link org.sirix.api.xml.XmlNodeReadOnlyTrx} instances per
- * {@link org.sirix.api.ResourceManager}.</li>
+ * {@link org.sirix.api.Database} linked uniquely to resources representing
+ * concrete data-storages.</li>
+ * <li>There can only be a single {@link org.sirix.api.xml.XmlNodeTrx} instance
+ * per {@link org.sirix.api.ResourceManager}</li>
+ * <li>There can be multiple {@link org.sirix.api.xml.XmlNodeReadOnlyTrx}
+ * instances per {@link org.sirix.api.ResourceManager}.</li>
  * </ul>
  * <p>
  * Code examples:
@@ -63,8 +65,9 @@
  * </pre>
  *
  * <p>
- * Best practice to safely manipulate a sirix resource within a database if everything exists:
- *</p>
+ * Best practice to safely manipulate a sirix resource within a database if
+ * everything exists:
+ * </p>
  * <pre>
  *         final IDatabase database = Database.openDatabase(new File(&quot;/path/to/db/location&quot;);
  *         final ISession session = Session.beginSession(new SessionConfiguration(&quot;existingResource&quot;);
@@ -88,4 +91,3 @@
  * @author Sebastian Graf, University of Konstanz
  */
 package org.sirix.access;
-

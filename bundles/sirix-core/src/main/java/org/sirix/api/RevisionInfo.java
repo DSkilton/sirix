@@ -9,70 +9,72 @@ import org.sirix.access.User;
 import com.google.common.base.MoreObjects;
 
 public final class RevisionInfo {
-  private final User user;
 
-  private final int revision;
+    private final User user;
 
-  private final Instant revisionTimestamp;
+    private final int revision;
 
-  private final String commitMessage;
+    private final Instant revisionTimestamp;
 
-  private int hash;
+    private final String commitMessage;
 
-  public RevisionInfo(final User user, final int revision, final Instant revisionTimestamp,
-      final String commitMessage) {
-    this.user = checkNotNull(user);
+    private int hash;
 
-    checkArgument(revision >= 0);
+    public RevisionInfo(final User user, final int revision, final Instant revisionTimestamp,
+            final String commitMessage) {
+        this.user = checkNotNull(user);
 
-    this.revision = revision;
-    this.revisionTimestamp = checkNotNull(revisionTimestamp);
-    this.commitMessage = commitMessage;
-  }
+        checkArgument(revision >= 0);
 
-  public User getUser() {
-    return user;
-  }
-
-  public int getRevision() {
-    return revision;
-  }
-
-  public Instant getRevisionTimestamp() {
-    return revisionTimestamp;
-  }
-
-  public Optional<String> getCommitMessage() {
-    return Optional.ofNullable(commitMessage);
-  }
-
-  @Override
-  public int hashCode() {
-    if (hash == 0) {
-      hash = Objects.hash(user, revision, revisionTimestamp, commitMessage);
+        this.revision = revision;
+        this.revisionTimestamp = checkNotNull(revisionTimestamp);
+        this.commitMessage = commitMessage;
     }
-    return hash;
-  }
 
-  @Override
-  public boolean equals(final Object other) {
-    if (!(other instanceof RevisionInfo))
-      return false;
+    public User getUser() {
+        return user;
+    }
 
-    final RevisionInfo otherRevisionInfo = (RevisionInfo) other;
+    public int getRevision() {
+        return revision;
+    }
 
-    return this.user == otherRevisionInfo.user && this.revision == otherRevisionInfo.revision
-        && revisionTimestamp.equals(otherRevisionInfo.revisionTimestamp)
-        && Objects.equals(this.commitMessage, otherRevisionInfo.commitMessage);
-  }
+    public Instant getRevisionTimestamp() {
+        return revisionTimestamp;
+    }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-                      .add("user", user)
-                      .add("revision", revision)
-                      .add("revisionTimestamp", revisionTimestamp)
-                      .add("commitMessage", commitMessage)
-                      .toString();
-  }
+    public Optional<String> getCommitMessage() {
+        return Optional.ofNullable(commitMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        if (hash == 0) {
+            hash = Objects.hash(user, revision, revisionTimestamp, commitMessage);
+        }
+        return hash;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (!(other instanceof RevisionInfo)) {
+            return false;
+        }
+
+        final RevisionInfo otherRevisionInfo = (RevisionInfo) other;
+
+        return this.user == otherRevisionInfo.user && this.revision == otherRevisionInfo.revision
+                && revisionTimestamp.equals(otherRevisionInfo.revisionTimestamp)
+                && Objects.equals(this.commitMessage, otherRevisionInfo.commitMessage);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("user", user)
+                .add("revision", revision)
+                .add("revisionTimestamp", revisionTimestamp)
+                .add("commitMessage", commitMessage)
+                .toString();
+    }
 }

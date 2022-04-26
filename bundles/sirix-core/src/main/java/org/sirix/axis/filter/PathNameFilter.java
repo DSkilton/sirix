@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter;
 
 import org.brackit.xquery.atomic.QNm;
@@ -31,50 +32,54 @@ import org.sirix.index.path.summary.PathSummaryReader;
  */
 public final class PathNameFilter extends AbstractFilter<PathSummaryReader> {
 
-  /** Key of local name to test. */
-  private final int mLocalNameKey;
+    /**
+     * Key of local name to test.
+     */
+    private final int mLocalNameKey;
 
-  /** Key of prefix to test. */
-  private final int mPrefixKey;
+    /**
+     * Key of prefix to test.
+     */
+    private final int mPrefixKey;
 
-  /**
-   * Default constructor.
-   *
-   * @param rtx the node trx/node cursor this filter is bound to
-   * @param name name to check
-   */
-  public PathNameFilter(final PathSummaryReader rtx, final QNm name) {
-    super(rtx);
-    mPrefixKey = (name.getPrefix() == null || name.getPrefix().isEmpty())
-        ? -1
-        : rtx.keyForName(name.getPrefix());
-    mLocalNameKey = rtx.keyForName(name.getLocalName());
-  }
-
-  /**
-   * Default constructor.
-   *
-   * @param rtx {@link PathSummaryReader} this filter is bound to
-   * @param name name to check
-   */
-  public PathNameFilter(final PathSummaryReader rtx, final String name) {
-    super(rtx);
-    final int index = name.indexOf(":");
-    if (index != -1) {
-      mPrefixKey = rtx.keyForName(name.substring(0, index));
-    } else {
-      mPrefixKey = -1;
+    /**
+     * Default constructor.
+     *
+     * @param rtx the node trx/node cursor this filter is bound to
+     * @param name name to check
+     */
+    public PathNameFilter(final PathSummaryReader rtx, final QNm name) {
+        super(rtx);
+        mPrefixKey = (name.getPrefix() == null || name.getPrefix().isEmpty())
+                ? -1
+                : rtx.keyForName(name.getPrefix());
+        mLocalNameKey = rtx.keyForName(name.getLocalName());
     }
 
-    mLocalNameKey = rtx.keyForName(name.substring(index + 1));
-  }
+    /**
+     * Default constructor.
+     *
+     * @param rtx {@link PathSummaryReader} this filter is bound to
+     * @param name name to check
+     */
+    public PathNameFilter(final PathSummaryReader rtx, final String name) {
+        super(rtx);
+        final int index = name.indexOf(":");
+        if (index != -1) {
+            mPrefixKey = rtx.keyForName(name.substring(0, index));
+        } else {
+            mPrefixKey = -1;
+        }
 
-  @Override
-  public boolean filter() {
-    boolean returnVal = false;
-    if (getTrx().isNameNode()) {
-      returnVal = (getTrx().getLocalNameKey() == mLocalNameKey && getTrx().getPrefixKey() == mPrefixKey);
+        mLocalNameKey = rtx.keyForName(name.substring(index + 1));
     }
-    return returnVal;
-  }
+
+    @Override
+    public boolean filter() {
+        boolean returnVal = false;
+        if (getTrx().isNameNode()) {
+            returnVal = (getTrx().getLocalNameKey() == mLocalNameKey && getTrx().getPrefixKey() == mPrefixKey);
+        }
+        return returnVal;
+    }
 }

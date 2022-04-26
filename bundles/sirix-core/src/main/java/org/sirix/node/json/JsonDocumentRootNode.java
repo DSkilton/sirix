@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.json;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,90 +41,97 @@ import com.google.common.base.Objects;
 /**
  *
  * <p>
- * Node representing the root of a document. This node is guaranteed to exist in revision 0 and can
- * not be removed.
+ * Node representing the root of a document. This node is guaranteed to exist in
+ * revision 0 and can not be removed.
  * </p>
  */
 public final class JsonDocumentRootNode extends AbstractStructForwardingNode implements StructNode, ImmutableJsonNode {
 
-  /** {@link NodeDelegate} reference. */
-  private final NodeDelegate mNodeDel;
+    /**
+     * {@link NodeDelegate} reference.
+     */
+    private final NodeDelegate mNodeDel;
 
-  /** {@link StructNodeDelegate} reference. */
-  private final StructNodeDelegate mStructNodeDel;
+    /**
+     * {@link StructNodeDelegate} reference.
+     */
+    private final StructNodeDelegate mStructNodeDel;
 
-  /** The hash code of the node. */
-  private BigInteger mHash;
+    /**
+     * The hash code of the node.
+     */
+    private BigInteger mHash;
 
-  /**
-   * Constructor.
-   *
-   * @param nodeDel {@link NodeDelegate} reference
-   * @param structDel {@link StructNodeDelegate} reference
-   */
-  public JsonDocumentRootNode(@Nonnull final NodeDelegate nodeDel, @Nonnull final StructNodeDelegate structDel) {
-    mNodeDel = checkNotNull(nodeDel);
-    mStructNodeDel = checkNotNull(structDel);
-  }
-
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.JSON_DOCUMENT;
-  }
-
-  @Override
-  public BigInteger computeHash() {
-    BigInteger result = BigInteger.ONE;
-
-    result = BigInteger.valueOf(31).multiply(result).add(mStructNodeDel.getNodeDelegate().computeHash());
-    result = BigInteger.valueOf(31).multiply(result).add(mStructNodeDel.computeHash());
-
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
-
-  @Override
-  public void setHash(final BigInteger hash) {
-    mHash = Node.to128BitsAtMaximumBigInteger(hash);
-  }
-
-  @Override
-  public BigInteger getHash() {
-    if (mHash == null)
-      mHash = Node.to128BitsAtMaximumBigInteger(computeHash());
-    return mHash;
-  }
-
-  @Override
-  public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
-    return visitor.visit(ImmutableJsonDocumentRootNode.of(this));
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(mNodeDel);
-  }
-
-  @Override
-  public boolean equals(@Nullable final Object obj) {
-    if (obj instanceof JsonDocumentRootNode) {
-      final JsonDocumentRootNode other = (JsonDocumentRootNode) obj;
-      return Objects.equal(mNodeDel, other.mNodeDel);
+    /**
+     * Constructor.
+     *
+     * @param nodeDel {@link NodeDelegate} reference
+     * @param structDel {@link StructNodeDelegate} reference
+     */
+    public JsonDocumentRootNode(@Nonnull final NodeDelegate nodeDel, @Nonnull final StructNodeDelegate structDel) {
+        mNodeDel = checkNotNull(nodeDel);
+        mStructNodeDel = checkNotNull(structDel);
     }
-    return false;
-  }
 
-  @Override
-  public String toString() {
-    return super.toString();
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.JSON_DOCUMENT;
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return mNodeDel;
-  }
+    @Override
+    public BigInteger computeHash() {
+        BigInteger result = BigInteger.ONE;
 
-  @Override
-  protected StructNodeDelegate structDelegate() {
-    return mStructNodeDel;
-  }
+        result = BigInteger.valueOf(31).multiply(result).add(mStructNodeDel.getNodeDelegate().computeHash());
+        result = BigInteger.valueOf(31).multiply(result).add(mStructNodeDel.computeHash());
+
+        return Node.to128BitsAtMaximumBigInteger(result);
+    }
+
+    @Override
+    public void setHash(final BigInteger hash) {
+        mHash = Node.to128BitsAtMaximumBigInteger(hash);
+    }
+
+    @Override
+    public BigInteger getHash() {
+        if (mHash == null) {
+            mHash = Node.to128BitsAtMaximumBigInteger(computeHash());
+        }
+        return mHash;
+    }
+
+    @Override
+    public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
+        return visitor.visit(ImmutableJsonDocumentRootNode.of(this));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(mNodeDel);
+    }
+
+    @Override
+    public boolean equals(@Nullable final Object obj) {
+        if (obj instanceof JsonDocumentRootNode) {
+            final JsonDocumentRootNode other = (JsonDocumentRootNode) obj;
+            return Objects.equal(mNodeDel, other.mNodeDel);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    protected NodeDelegate delegate() {
+        return mNodeDel;
+    }
+
+    @Override
+    protected StructNodeDelegate structDelegate() {
+        return mStructNodeDel;
+    }
 }

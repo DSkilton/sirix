@@ -4,7 +4,8 @@
     oops1
     <b>foo<c/></b>
     oops2
-    <b x="y"><c/>bar</b>
+    <b x="y">
+        <c/>bar</b>
     oops3
     
 </a>

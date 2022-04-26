@@ -20,28 +20,29 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
 
 public interface PathIndex<B, L extends ChangeListener> {
-  B createBuilder(PageTrx pageTrx, PathSummaryReader pathSummaryReader, IndexDef indexDef);
 
-  L createListener(PageTrx pageTrx, PathSummaryReader pathSummaryReader, IndexDef indexDef);
+    B createBuilder(PageTrx pageTrx, PathSummaryReader pathSummaryReader, IndexDef indexDef);
 
-  default Iterator<NodeReferences> openIndex(final PageReadOnlyTrx pageRtx, final IndexDef indexDef,
-      final PathFilter filter) {
-    final RBTreeReader<Long, NodeReferences> reader =
-        RBTreeReader.getInstance(pageRtx.getResourceManager().getIndexCache(),
-                                 pageRtx,
-                                 indexDef.getType(),
-                                 indexDef.getID());
+    L createListener(PageTrx pageTrx, PathSummaryReader pathSummaryReader, IndexDef indexDef);
 
-    if (filter != null && filter.getPCRs().size() == 1) {
-      final Optional<NodeReferences> optionalNodeReferences =
-          reader.get(filter.getPCRs().iterator().next(), SearchMode.EQUAL);
-      return Iterators.forArray(optionalNodeReferences.orElse(new NodeReferences()));
-    } else {
-      final Iterator<RBNode<Long, NodeReferences>> iter =
-          reader.new RBNodeIterator(Fixed.DOCUMENT_NODE_KEY.getStandardProperty());
-      final Set<Filter> setFilter = filter == null ? ImmutableSet.of() : ImmutableSet.of(filter);
+    default Iterator<NodeReferences> openIndex(final PageReadOnlyTrx pageRtx, final IndexDef indexDef,
+            final PathFilter filter) {
+        final RBTreeReader<Long, NodeReferences> reader
+                = RBTreeReader.getInstance(pageRtx.getResourceManager().getIndexCache(),
+                        pageRtx,
+                        indexDef.getType(),
+                        indexDef.getID());
 
-      return new IndexFilterAxis<>(iter, setFilter);
+        if (filter != null && filter.getPCRs().size() == 1) {
+            final Optional<NodeReferences> optionalNodeReferences
+                    = reader.get(filter.getPCRs().iterator().next(), SearchMode.EQUAL);
+            return Iterators.forArray(optionalNodeReferences.orElse(new NodeReferences()));
+        } else {
+            final Iterator<RBNode<Long, NodeReferences>> iter
+                    = reader.new RBNodeIterator(Fixed.DOCUMENT_NODE_KEY.getStandardProperty());
+            final Set<Filter> setFilter = filter == null ? ImmutableSet.of() : ImmutableSet.of(filter);
+
+            return new IndexFilterAxis<>(iter, setFilter);
+        }
     }
-  }
 }

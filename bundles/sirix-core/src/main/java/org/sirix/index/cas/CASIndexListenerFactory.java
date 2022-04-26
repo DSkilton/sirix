@@ -12,25 +12,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class CASIndexListenerFactory {
 
-  private final DatabaseType databaseType;
+    private final DatabaseType databaseType;
 
-  public CASIndexListenerFactory(final DatabaseType databaseType) {
-    this.databaseType = databaseType;
-  }
+    public CASIndexListenerFactory(final DatabaseType databaseType) {
+        this.databaseType = databaseType;
+    }
 
-  public CASIndexListener create(final PageTrx pageTrx,
-      final PathSummaryReader pathSummaryReader, final IndexDef indexDef) {
-    final var pathSummary = checkNotNull(pathSummaryReader);
-    final var avlTreeWriter =
-        RBTreeWriter.<CASValue, NodeReferences>getInstance(
-                this.databaseType,
-                pageTrx,
-                indexDef.getType(),
-                indexDef.getID()
-        );
-    final var type = checkNotNull(indexDef.getContentType());
-    final var paths = checkNotNull(indexDef.getPaths());
+    public CASIndexListener create(final PageTrx pageTrx,
+            final PathSummaryReader pathSummaryReader, final IndexDef indexDef) {
+        final var pathSummary = checkNotNull(pathSummaryReader);
+        final var avlTreeWriter
+                = RBTreeWriter.<CASValue, NodeReferences>getInstance(
+                        this.databaseType,
+                        pageTrx,
+                        indexDef.getType(),
+                        indexDef.getID()
+                );
+        final var type = checkNotNull(indexDef.getContentType());
+        final var paths = checkNotNull(indexDef.getPaths());
 
-    return new CASIndexListener(pathSummary, avlTreeWriter, paths, type);
-  }
+        return new CASIndexListener(pathSummary, avlTreeWriter, paths, type);
+    }
 }

@@ -13,76 +13,77 @@ import org.sirix.node.SirixDeweyID;
 import java.util.List;
 
 public interface JsonNodeReadOnlyTrx extends NodeCursor, NodeReadOnlyTrx {
-  @Override
-  String getValue();
 
-  boolean isObject();
+    @Override
+    String getValue();
 
-  boolean isObjectKey();
+    boolean isObject();
 
-  boolean isArray();
+    boolean isObjectKey();
 
-  boolean isStringValue();
+    boolean isArray();
 
-  boolean isNumberValue();
+    boolean isStringValue();
 
-  boolean isNullValue();
+    boolean isNumberValue();
 
-  boolean isBooleanValue();
+    boolean isNullValue();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveTo(long nodeKey);
+    boolean isBooleanValue();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToDocumentRoot();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveTo(long nodeKey);
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToFirstChild();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToDocumentRoot();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToLastChild();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToFirstChild();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToLeftSibling();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToLastChild();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToParent();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToLeftSibling();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToRightSibling();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToParent();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToPrevious();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToRightSibling();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToNext();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToPrevious();
 
-  @Override
-  Move<? extends JsonNodeReadOnlyTrx> moveToNextFollowing();
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToNext();
 
-  /**
-   * Accept a visitor.
-   *
-   * @param visitor {@link JsonNodeVisitor} implementation
-   * @return {@link VisitResultType} value
-   */
-  VisitResult acceptVisitor(JsonNodeVisitor visitor);
+    @Override
+    Move<? extends JsonNodeReadOnlyTrx> moveToNextFollowing();
 
-  /**
-   * Get the {@link ResourceManager} this instance is bound to.
-   *
-   * @return the resource manager
-   */
-  @Override
-  JsonResourceManager getResourceManager();
+    /**
+     * Accept a visitor.
+     *
+     * @param visitor {@link JsonNodeVisitor} implementation
+     * @return {@link VisitResultType} value
+     */
+    VisitResult acceptVisitor(JsonNodeVisitor visitor);
 
-  boolean getBooleanValue();
+    /**
+     * Get the {@link ResourceManager} this instance is bound to.
+     *
+     * @return the resource manager
+     */
+    @Override
+    JsonResourceManager getResourceManager();
 
-  Number getNumberValue();
+    boolean getBooleanValue();
 
-  int getNameKey();
+    Number getNumberValue();
 
-  List<JsonObject> getUpdateOperations();
+    int getNameKey();
 
-  List<JsonObject> getUpdateOperationsInSubtreeOfNode(SirixDeweyID deweyID, long maxDepth);
+    List<JsonObject> getUpdateOperations();
+
+    List<JsonObject> getUpdateOperationsInSubtreeOfNode(SirixDeweyID deweyID, long maxDepth);
 }

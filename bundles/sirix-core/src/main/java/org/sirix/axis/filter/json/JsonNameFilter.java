@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis.filter.json;
 
 import org.brackit.xquery.atomic.QNm;
@@ -33,39 +34,41 @@ import org.sirix.axis.filter.AbstractFilter;
  */
 public final class JsonNameFilter extends AbstractFilter<JsonNodeReadOnlyTrx> {
 
-  /** Key of local name to test. */
-  private final QNm mName;
+    /**
+     * Key of local name to test.
+     */
+    private final QNm mName;
 
-  /**
-   * Default constructor.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} this filter is bound to
-   * @param name name to check
-   */
-  public JsonNameFilter(final JsonNodeReadOnlyTrx rtx, final QNm name) {
-    super(rtx);
+    /**
+     * Default constructor.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} this filter is bound to
+     * @param name name to check
+     */
+    public JsonNameFilter(final JsonNodeReadOnlyTrx rtx, final QNm name) {
+        super(rtx);
 
-    mName = name;
-  }
+        mName = name;
+    }
 
-  /**
-   * Default constructor.
-   *
-   * @param rtx {@link XmlNodeReadOnlyTrx} this filter is bound to
-   * @param name name to check
-   */
-  public JsonNameFilter(final JsonNodeReadOnlyTrx rtx, final String name) {
-    super(rtx);
+    /**
+     * Default constructor.
+     *
+     * @param rtx {@link XmlNodeReadOnlyTrx} this filter is bound to
+     * @param name name to check
+     */
+    public JsonNameFilter(final JsonNodeReadOnlyTrx rtx, final String name) {
+        super(rtx);
 
-    mName = new QNm(name);
-  }
+        mName = new QNm(name);
+    }
 
-  @Override
-  public boolean filter() {
-    final JsonNodeReadOnlyTrx rtx = getTrx();
+    @Override
+    public boolean filter() {
+        final JsonNodeReadOnlyTrx rtx = getTrx();
 
-    return rtx.isObjectKey()
-        ? mName.equals(rtx.getName())
-        : false;
-  }
+        return rtx.isObjectKey()
+                ? mName.equals(rtx.getName())
+                : false;
+    }
 }

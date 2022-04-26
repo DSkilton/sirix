@@ -14,32 +14,32 @@ import org.sirix.node.json.ObjectNumberNode;
 
 public final class JsonCASIndexListener implements ChangeListener {
 
-  private final CASIndexListener mIndexListenerDelegate;
+    private final CASIndexListener mIndexListenerDelegate;
 
-  public JsonCASIndexListener(final CASIndexListener indexListenerDelegate) {
-    mIndexListenerDelegate = indexListenerDelegate;
-  }
-
-  @Override
-  public void listen(final ChangeType type, final ImmutableNode node, final long pathNodeKey) {
-    switch (node.getKind()) {
-      case STRING_VALUE:
-      case OBJECT_STRING_VALUE:
-        final ValueNode valueNode = ((ValueNode) node);
-        mIndexListenerDelegate.listen(type, valueNode, pathNodeKey, new Str(valueNode.getValue()));
-        break;
-      case BOOLEAN_VALUE:
-        mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((BooleanNode) node).getValue())));
-        break;
-      case OBJECT_BOOLEAN_VALUE:
-        mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((ObjectBooleanNode) node).getValue())));
-        break;
-      case NUMBER_VALUE:
-        mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((NumberNode) node).getValue())));
-        break;
-      case OBJECT_NUMBER_VALUE:
-        mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((ObjectNumberNode) node).getValue())));
-        break;
+    public JsonCASIndexListener(final CASIndexListener indexListenerDelegate) {
+        mIndexListenerDelegate = indexListenerDelegate;
     }
-  }
+
+    @Override
+    public void listen(final ChangeType type, final ImmutableNode node, final long pathNodeKey) {
+        switch (node.getKind()) {
+            case STRING_VALUE:
+            case OBJECT_STRING_VALUE:
+                final ValueNode valueNode = ((ValueNode) node);
+                mIndexListenerDelegate.listen(type, valueNode, pathNodeKey, new Str(valueNode.getValue()));
+                break;
+            case BOOLEAN_VALUE:
+                mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((BooleanNode) node).getValue())));
+                break;
+            case OBJECT_BOOLEAN_VALUE:
+                mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((ObjectBooleanNode) node).getValue())));
+                break;
+            case NUMBER_VALUE:
+                mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((NumberNode) node).getValue())));
+                break;
+            case OBJECT_NUMBER_VALUE:
+                mIndexListenerDelegate.listen(type, node, pathNodeKey, new Str(String.valueOf(((ObjectNumberNode) node).getValue())));
+                break;
+        }
+    }
 }

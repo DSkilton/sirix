@@ -11,27 +11,27 @@ import org.sirix.node.delegates.NodeDelegate;
  */
 public final class DeweyIDMappingNode extends AbstractForwardingNode {
 
-  /**
-   * Delegate for common data.
-   */
-  private final NodeDelegate mDelegate;
+    /**
+     * Delegate for common data.
+     */
+    private final NodeDelegate mDelegate;
 
-  /**
-   * Constructor.
-   *
-   * @param nodeDelegate node delegate
-   */
-  public DeweyIDMappingNode(final NodeDelegate nodeDelegate) {
-    mDelegate = checkNotNull(nodeDelegate);
-  }
+    /**
+     * Constructor.
+     *
+     * @param nodeDelegate node delegate
+     */
+    public DeweyIDMappingNode(final NodeDelegate nodeDelegate) {
+        mDelegate = checkNotNull(nodeDelegate);
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.DEWEYIDMAPPING;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.DEWEYIDMAPPING;
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return mDelegate;
-  }
+    @Override
+    protected NodeDelegate delegate() {
+        return mDelegate;
+    }
 }

@@ -24,242 +24,230 @@ import static org.junit.Assert.assertTrue;
 
 public class JsonNodeTrxUpdateTest {
 
-  private static final Path JSON = Paths.get("src", "test", "resources", "json");
+    private static final Path JSON = Paths.get("src", "test", "resources", "json");
 
-  @Before
-  public void setUp() {
-    JsonTestHelper.deleteEverything();
-  }
-
-  @After
-  public void tearDown() {
-    JsonTestHelper.closeEverything();
-  }
-
-  @Test
-  public void testDeweyIDs() {
-    JsonTestHelper.createTestDocument();
-
-    try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-         final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var rtx = manager.beginNodeReadOnlyTrx()) {
-      new DescendantAxis(rtx).forEach(
-          nodeKey -> System.out.println("nodeKey:" + rtx.getNodeKey() + " deweyID:" + rtx.getDeweyID()));
+    @Before
+    public void setUp() {
+        JsonTestHelper.deleteEverything();
     }
-  }
 
-  @Test
-  public void testUpdateObjectRecordName() {
-    JsonTestHelper.createTestDocument();
-
-    try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-         final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var wtx = manager.beginNodeTrx()) {
-      wtx.moveTo(2);
-
-      assertEquals(new QNm("foo"), wtx.getName());
-      wtx.setObjectKeyName("foobar");
-
-      assertsForUpdateObjectRecordName(wtx);
-
-      wtx.commit();
-
-      assertsForUpdateObjectRecordName(wtx);
-
-      try (final var rtx = manager.beginNodeReadOnlyTrx()) {
-        assertsForUpdateObjectRecordName(rtx);
-      }
+    @After
+    public void tearDown() {
+        JsonTestHelper.closeEverything();
     }
-  }
 
-  private void assertsForUpdateObjectRecordName(JsonNodeReadOnlyTrx rtx) {
-    rtx.moveTo(2);
+    @Test
+    public void testDeweyIDs() {
+        JsonTestHelper.createTestDocument();
 
-    assertEquals(new QNm("foobar"), rtx.getName());
-  }
-
-  @Test
-  public void testUpdateStringValue() {
-    JsonTestHelper.createTestDocument();
-
-    try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-         final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var wtx = manager.beginNodeTrx()) {
-      wtx.moveTo(4);
-
-      assertEquals("bar", wtx.getValue());
-      wtx.setStringValue("baz");
-
-      assertsForUpdateStringValue(wtx);
-
-      wtx.commit();
-
-      assertsForUpdateStringValue(wtx);
-
-      try (final var rtx = manager.beginNodeReadOnlyTrx()) {
-        assertsForUpdateStringValue(rtx);
-      }
+        try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile()); final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var rtx = manager.beginNodeReadOnlyTrx()) {
+            new DescendantAxis(rtx).forEach(
+                    nodeKey -> System.out.println("nodeKey:" + rtx.getNodeKey() + " deweyID:" + rtx.getDeweyID()));
+        }
     }
-  }
 
-  private void assertsForUpdateStringValue(JsonNodeReadOnlyTrx rtx) {
-    rtx.moveTo(4);
+    @Test
+    public void testUpdateObjectRecordName() {
+        JsonTestHelper.createTestDocument();
 
-    assertEquals("baz", rtx.getValue());
-  }
+        try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile()); final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var wtx = manager.beginNodeTrx()) {
+            wtx.moveTo(2);
 
-  @Test
-  public void testUpdateNumberValue() {
-    JsonTestHelper.createTestDocument();
+            assertEquals(new QNm("foo"), wtx.getName());
+            wtx.setObjectKeyName("foobar");
 
-    try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-         final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var wtx = manager.beginNodeTrx()) {
-      wtx.moveTo(6);
+            assertsForUpdateObjectRecordName(wtx);
 
-      assertEquals(2.33, wtx.getNumberValue());
-      wtx.setNumberValue(5.77);
+            wtx.commit();
 
-      assertsForUpdateNumberValue(wtx);
+            assertsForUpdateObjectRecordName(wtx);
 
-      wtx.commit();
-
-      assertsForUpdateNumberValue(wtx);
-
-      try (final var rtx = manager.beginNodeReadOnlyTrx()) {
-        assertsForUpdateNumberValue(rtx);
-      }
+            try (final var rtx = manager.beginNodeReadOnlyTrx()) {
+                assertsForUpdateObjectRecordName(rtx);
+            }
+        }
     }
-  }
 
-  private void assertsForUpdateNumberValue(JsonNodeReadOnlyTrx rtx) {
-    rtx.moveTo(6);
+    private void assertsForUpdateObjectRecordName(JsonNodeReadOnlyTrx rtx) {
+        rtx.moveTo(2);
 
-    assertEquals(5.77, rtx.getNumberValue());
-  }
-
-  @Test
-  public void testUpdateBooleanValue() {
-    JsonTestHelper.createTestDocument();
-
-    try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-         final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var wtx = manager.beginNodeTrx()) {
-      wtx.moveTo(12);
-
-      assertTrue(wtx.getBooleanValue());
-      wtx.setBooleanValue(false);
-
-      assertsForUpdateBooleanValue(wtx);
-
-      wtx.commit();
-
-      assertsForUpdateBooleanValue(wtx);
-
-      try (final var rtx = manager.beginNodeReadOnlyTrx()) {
-        assertsForUpdateBooleanValue(rtx);
-      }
+        assertEquals(new QNm("foobar"), rtx.getName());
     }
-  }
 
-  private void assertsForUpdateBooleanValue(JsonNodeReadOnlyTrx rtx) {
-    rtx.moveTo(12);
+    @Test
+    public void testUpdateStringValue() {
+        JsonTestHelper.createTestDocument();
 
-    assertFalse(rtx.getBooleanValue());
-  }
+        try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile()); final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var wtx = manager.beginNodeTrx()) {
+            wtx.moveTo(4);
 
-  @Test
-  public void test_whenMultipleRevisionsExist_thenStoreUpdateOperations() throws IOException {
-    JsonTestHelper.createTestDocument();
+            assertEquals("bar", wtx.getValue());
+            wtx.setStringValue("baz");
 
-    final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-    assert database != null;
-    try (final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var wtx = manager.beginNodeTrx()) {
-      wtx.moveToDocumentRoot().trx().moveToFirstChild();
-      wtx.insertObjectRecordAsFirstChild("tadaaa", new StringValue("todooo"));
-      wtx.moveTo(5);
-      wtx.insertSubtreeAsRightSibling(JsonShredder.createStringReader("{\"test\":1}"), JsonNodeTrx.Commit.No);
-      wtx.moveTo(5);
-      wtx.remove();
-      wtx.moveTo(4);
-      wtx.insertBooleanValueAsRightSibling(true);
-      wtx.setBooleanValue(false);
-      wtx.moveTo(6);
-      wtx.setNumberValue(1.2);
-      wtx.moveTo(9);
-      wtx.remove();
-      wtx.moveTo(13);
-      wtx.remove();
-      wtx.moveTo(15);
-      wtx.setObjectKeyName("tadaa");
-      wtx.moveTo(22);
-      wtx.setBooleanValue(true);
-      wtx.commit();
+            assertsForUpdateStringValue(wtx);
 
-      final var diffPath = manager.getResourceConfig()
-                                  .getResource()
-                                  .resolve(ResourceConfiguration.ResourcePaths.UPDATE_OPERATIONS.getPath())
-                                  .resolve("diffFromRev1toRev2.json");
+            wtx.commit();
 
-      assertEquals(Files.readString(JSON.resolve("diffFromRev1toRev2.json")), Files.readString(diffPath));
+            assertsForUpdateStringValue(wtx);
+
+            try (final var rtx = manager.beginNodeReadOnlyTrx()) {
+                assertsForUpdateStringValue(rtx);
+            }
+        }
     }
-  }
 
-  @Test
-  public void test_whenMultipleRevisionsExist_thenGetUpdateOperationsInSubtree() {
-    JsonTestHelper.createTestDocument();
+    private void assertsForUpdateStringValue(JsonNodeReadOnlyTrx rtx) {
+        rtx.moveTo(4);
 
-    final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
-    assert database != null;
-    try (final var manager = database.openResourceManager(JsonTestHelper.RESOURCE);
-         final var wtx = manager.beginNodeTrx()) {
-      wtx.moveToDocumentRoot().trx().moveToFirstChild();
-      wtx.insertObjectRecordAsFirstChild("tadaaa", new StringValue("todooo"));
-      wtx.moveTo(5);
-      wtx.insertSubtreeAsRightSibling(JsonShredder.createStringReader("{\"test\":1}"), JsonNodeTrx.Commit.No);
-      wtx.moveTo(5);
-      wtx.remove();
-      wtx.moveTo(4);
-      wtx.insertBooleanValueAsRightSibling(true);
-      wtx.setBooleanValue(false);
-      wtx.moveTo(6);
-      wtx.setNumberValue(1.2);
-      wtx.moveTo(9);
-      wtx.remove();
-      wtx.moveTo(13);
-      wtx.remove();
-      wtx.moveTo(15);
-      wtx.setObjectKeyName("tadaa");
-      wtx.moveTo(22);
-      wtx.setBooleanValue(true);
-      wtx.commit();
-
-      wtx.moveTo(2);
-
-      var rootDeweyId = wtx.getDeweyID();
-      var updateOperations = wtx.getUpdateOperationsInSubtreeOfNode(rootDeweyId, Integer.MAX_VALUE);
-
-      assertEquals(4, updateOperations.size());
-      assertTrue(updateOperations.get(0).has("insert"));
-      assertTrue(updateOperations.get(1).has("delete"));
-      assertTrue(updateOperations.get(2).has("insert"));
-      assertTrue(updateOperations.get(3).has("update"));
-
-      wtx.moveTo(17);
-      wtx.insertObjectRecordAsFirstChild("foo1", new StringValue("bar1"));
-      wtx.commit();
-
-      wtx.moveTo(15);
-      rootDeweyId = wtx.getDeweyID();
-      updateOperations = wtx.getUpdateOperationsInSubtreeOfNode(rootDeweyId, 1);
-
-      assertEquals(0, updateOperations.size());
-
-      updateOperations = wtx.getUpdateOperationsInSubtreeOfNode(rootDeweyId, 2);
-
-      assertEquals(1, updateOperations.size());
-      assertTrue(updateOperations.get(0).has("insert"));
+        assertEquals("baz", rtx.getValue());
     }
-  }
+
+    @Test
+    public void testUpdateNumberValue() {
+        JsonTestHelper.createTestDocument();
+
+        try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile()); final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var wtx = manager.beginNodeTrx()) {
+            wtx.moveTo(6);
+
+            assertEquals(2.33, wtx.getNumberValue());
+            wtx.setNumberValue(5.77);
+
+            assertsForUpdateNumberValue(wtx);
+
+            wtx.commit();
+
+            assertsForUpdateNumberValue(wtx);
+
+            try (final var rtx = manager.beginNodeReadOnlyTrx()) {
+                assertsForUpdateNumberValue(rtx);
+            }
+        }
+    }
+
+    private void assertsForUpdateNumberValue(JsonNodeReadOnlyTrx rtx) {
+        rtx.moveTo(6);
+
+        assertEquals(5.77, rtx.getNumberValue());
+    }
+
+    @Test
+    public void testUpdateBooleanValue() {
+        JsonTestHelper.createTestDocument();
+
+        try (final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile()); final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var wtx = manager.beginNodeTrx()) {
+            wtx.moveTo(12);
+
+            assertTrue(wtx.getBooleanValue());
+            wtx.setBooleanValue(false);
+
+            assertsForUpdateBooleanValue(wtx);
+
+            wtx.commit();
+
+            assertsForUpdateBooleanValue(wtx);
+
+            try (final var rtx = manager.beginNodeReadOnlyTrx()) {
+                assertsForUpdateBooleanValue(rtx);
+            }
+        }
+    }
+
+    private void assertsForUpdateBooleanValue(JsonNodeReadOnlyTrx rtx) {
+        rtx.moveTo(12);
+
+        assertFalse(rtx.getBooleanValue());
+    }
+
+    @Test
+    public void test_whenMultipleRevisionsExist_thenStoreUpdateOperations() throws IOException {
+        JsonTestHelper.createTestDocument();
+
+        final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
+        assert database != null;
+        try (final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var wtx = manager.beginNodeTrx()) {
+            wtx.moveToDocumentRoot().trx().moveToFirstChild();
+            wtx.insertObjectRecordAsFirstChild("tadaaa", new StringValue("todooo"));
+            wtx.moveTo(5);
+            wtx.insertSubtreeAsRightSibling(JsonShredder.createStringReader("{\"test\":1}"), JsonNodeTrx.Commit.No);
+            wtx.moveTo(5);
+            wtx.remove();
+            wtx.moveTo(4);
+            wtx.insertBooleanValueAsRightSibling(true);
+            wtx.setBooleanValue(false);
+            wtx.moveTo(6);
+            wtx.setNumberValue(1.2);
+            wtx.moveTo(9);
+            wtx.remove();
+            wtx.moveTo(13);
+            wtx.remove();
+            wtx.moveTo(15);
+            wtx.setObjectKeyName("tadaa");
+            wtx.moveTo(22);
+            wtx.setBooleanValue(true);
+            wtx.commit();
+
+            final var diffPath = manager.getResourceConfig()
+                    .getResource()
+                    .resolve(ResourceConfiguration.ResourcePaths.UPDATE_OPERATIONS.getPath())
+                    .resolve("diffFromRev1toRev2.json");
+
+            assertEquals(Files.readString(JSON.resolve("diffFromRev1toRev2.json")), Files.readString(diffPath));
+        }
+    }
+
+    @Test
+    public void test_whenMultipleRevisionsExist_thenGetUpdateOperationsInSubtree() {
+        JsonTestHelper.createTestDocument();
+
+        final var database = JsonTestHelper.getDatabase(JsonTestHelper.PATHS.PATH1.getFile());
+        assert database != null;
+        try (final var manager = database.openResourceManager(JsonTestHelper.RESOURCE); final var wtx = manager.beginNodeTrx()) {
+            wtx.moveToDocumentRoot().trx().moveToFirstChild();
+            wtx.insertObjectRecordAsFirstChild("tadaaa", new StringValue("todooo"));
+            wtx.moveTo(5);
+            wtx.insertSubtreeAsRightSibling(JsonShredder.createStringReader("{\"test\":1}"), JsonNodeTrx.Commit.No);
+            wtx.moveTo(5);
+            wtx.remove();
+            wtx.moveTo(4);
+            wtx.insertBooleanValueAsRightSibling(true);
+            wtx.setBooleanValue(false);
+            wtx.moveTo(6);
+            wtx.setNumberValue(1.2);
+            wtx.moveTo(9);
+            wtx.remove();
+            wtx.moveTo(13);
+            wtx.remove();
+            wtx.moveTo(15);
+            wtx.setObjectKeyName("tadaa");
+            wtx.moveTo(22);
+            wtx.setBooleanValue(true);
+            wtx.commit();
+
+            wtx.moveTo(2);
+
+            var rootDeweyId = wtx.getDeweyID();
+            var updateOperations = wtx.getUpdateOperationsInSubtreeOfNode(rootDeweyId, Integer.MAX_VALUE);
+
+            assertEquals(4, updateOperations.size());
+            assertTrue(updateOperations.get(0).has("insert"));
+            assertTrue(updateOperations.get(1).has("delete"));
+            assertTrue(updateOperations.get(2).has("insert"));
+            assertTrue(updateOperations.get(3).has("update"));
+
+            wtx.moveTo(17);
+            wtx.insertObjectRecordAsFirstChild("foo1", new StringValue("bar1"));
+            wtx.commit();
+
+            wtx.moveTo(15);
+            rootDeweyId = wtx.getDeweyID();
+            updateOperations = wtx.getUpdateOperationsInSubtreeOfNode(rootDeweyId, 1);
+
+            assertEquals(0, updateOperations.size());
+
+            updateOperations = wtx.getUpdateOperationsInSubtreeOfNode(rootDeweyId, 2);
+
+            assertEquals(1, updateOperations.size());
+            assertTrue(updateOperations.get(0).has("insert"));
+        }
+    }
 }

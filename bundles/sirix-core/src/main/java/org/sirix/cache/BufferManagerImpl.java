@@ -6,47 +6,48 @@ import org.sirix.page.RevisionRootPage;
 import org.sirix.page.interfaces.Page;
 
 public final class BufferManagerImpl implements BufferManager {
-  private final PageCache pageCache;
 
-  private final RecordPageCache recordPageCache;
+    private final PageCache pageCache;
 
-  private final RevisionRootPageCache revisionRootPageCache;
+    private final RecordPageCache recordPageCache;
 
-  private final RedBlackTreeNodeCache redBlackTreeNodeCache;
+    private final RevisionRootPageCache revisionRootPageCache;
 
-  public BufferManagerImpl(final int maxPageCacheSize, final int maxRecordPageCacheSize,
-      final int maxRevisionRootPageCache, final int maxRBTreeNodeCache) {
-    pageCache = new PageCache(maxPageCacheSize);
-    recordPageCache = new RecordPageCache(maxRecordPageCacheSize);
-    revisionRootPageCache = new RevisionRootPageCache(maxRevisionRootPageCache);
-    redBlackTreeNodeCache = new RedBlackTreeNodeCache(maxRBTreeNodeCache);
-  }
+    private final RedBlackTreeNodeCache redBlackTreeNodeCache;
 
-  @Override
-  public Cache<PageReference, Page> getPageCache() {
-    return pageCache;
-  }
+    public BufferManagerImpl(final int maxPageCacheSize, final int maxRecordPageCacheSize,
+            final int maxRevisionRootPageCache, final int maxRBTreeNodeCache) {
+        pageCache = new PageCache(maxPageCacheSize);
+        recordPageCache = new RecordPageCache(maxRecordPageCacheSize);
+        revisionRootPageCache = new RevisionRootPageCache(maxRevisionRootPageCache);
+        redBlackTreeNodeCache = new RedBlackTreeNodeCache(maxRBTreeNodeCache);
+    }
 
-  @Override
-  public Cache<PageReference, Page> getRecordPageCache() {
-    return recordPageCache;
-  }
+    @Override
+    public Cache<PageReference, Page> getPageCache() {
+        return pageCache;
+    }
 
-  @Override
-  public Cache<Integer, RevisionRootPage> getRevisionRootPageCache() {
-    return revisionRootPageCache;
-  }
+    @Override
+    public Cache<PageReference, Page> getRecordPageCache() {
+        return recordPageCache;
+    }
 
-  @Override
-  public Cache<RBIndexKey, RBNode<?, ?>> getIndexCache() {
-    return redBlackTreeNodeCache;
-  }
+    @Override
+    public Cache<Integer, RevisionRootPage> getRevisionRootPageCache() {
+        return revisionRootPageCache;
+    }
 
-  @Override
-  public void close() {
-    pageCache.clear();
-    recordPageCache.clear();
-    revisionRootPageCache.clear();
-    redBlackTreeNodeCache.clear();
-  }
+    @Override
+    public Cache<RBIndexKey, RBNode<?, ?>> getIndexCache() {
+        return redBlackTreeNodeCache;
+    }
+
+    @Override
+    public void close() {
+        pageCache.clear();
+        recordPageCache.clear();
+        revisionRootPageCache.clear();
+        redBlackTreeNodeCache.clear();
+    }
 }

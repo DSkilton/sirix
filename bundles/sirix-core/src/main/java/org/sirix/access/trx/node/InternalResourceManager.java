@@ -13,41 +13,41 @@ import org.sirix.page.UberPage;
 import org.sirix.page.UnorderedKeyValuePage;
 
 public interface InternalResourceManager<R extends NodeReadOnlyTrx & NodeCursor, W extends NodeTrx & NodeCursor>
-    extends ResourceManager<R, W> {
-  /**
-   * Abort a write transaction.
-   */
-  enum Abort {
-    /**
-     * Yes, abort.
-     */
-    YES,
+        extends ResourceManager<R, W> {
 
     /**
-     * No, don't abort.
+     * Abort a write transaction.
      */
-    NO
-  }
+    enum Abort {
+        /**
+         * Yes, abort.
+         */
+        YES,
+        /**
+         * No, don't abort.
+         */
+        NO
+    }
 
-  Path getCommitFile();
+    Path getCommitFile();
 
-  void assertAccess(int revision);
+    void assertAccess(int revision);
 
-  PageTrx createPageTransaction(long trxID, int revision, int i, Abort no, boolean isBoundToNodeTrx);
+    PageTrx createPageTransaction(long trxID, int revision, int i, Abort no, boolean isBoundToNodeTrx);
 
-  Lock getCommitLock();
+    Lock getCommitLock();
 
-  void setLastCommittedUberPage(UberPage lastUberPage);
+    void setLastCommittedUberPage(UberPage lastUberPage);
 
-  void closeWriteTransaction(long transactionID);
+    void closeWriteTransaction(long transactionID);
 
-  void setNodePageWriteTransaction(long transactionID, PageTrx pageTrx);
+    void setNodePageWriteTransaction(long transactionID, PageTrx pageTrx);
 
-  void closeNodePageWriteTransaction(long transactionID);
+    void closeNodePageWriteTransaction(long transactionID);
 
-  void closeReadTransaction(long trxId);
+    void closeReadTransaction(long trxId);
 
-  void closePageReadTransaction(long trxId);
+    void closePageReadTransaction(long trxId);
 
-  void closePageWriteTransaction(long transactionID);
+    void closePageWriteTransaction(long transactionID);
 }

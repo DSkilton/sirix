@@ -1,23 +1,23 @@
 {
-  "foo": [
-    "bar",
-    null,
-    2.33
-  ],
-  "bar": {
-    "hello": "world",
-    "helloo": true
-  },
-  "baz": "hello",
-  "tada": [
-    {
-      "foo": "bar"
+    "foo": [
+        "bar",
+        null,
+        2.33
+    ],
+    "bar": {
+        "hello": "world",
+        "helloo": true
     },
-    {
-      "baz": false
-    },
-    "boo",
-    {},
-    []
-  ]
+    "baz": "hello",
+    "tada": [
+        {
+            "foo": "bar"
+        },
+        {
+            "baz": false
+        },
+        "boo",
+        {},
+        []
+    ]
 }

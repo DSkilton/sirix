@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.service.xml.xpath.xmark;
 
 import java.util.HashSet;
@@ -34,21 +35,21 @@ import org.perfidix.ouput.AbstractOutput;
 
 public class BenchConfigClass extends AbstractConfig {
 
-  private final static int RUNS = 10;
-  private final static Set<AbstractMeter> METERS = new HashSet<>(2);
+    private final static int RUNS = 10;
+    private final static Set<AbstractMeter> METERS = new HashSet<>(2);
 
-  private final static Set<AbstractOutput> OUTPUT = new HashSet<>();
+    private final static Set<AbstractOutput> OUTPUT = new HashSet<>();
 
-  private final static KindOfArrangement ARRAN = KindOfArrangement.SequentialMethodArrangement;
-  private final static double GCPROB = 1.0d;
+    private final static KindOfArrangement ARRAN = KindOfArrangement.SequentialMethodArrangement;
+    private final static double GCPROB = 1.0d;
 
-  static {
-    METERS.add(new TimeMeter(Time.Seconds));
-    METERS.add(new MemMeter(Memory.Mebibyte));
-  }
+    static {
+        METERS.add(new TimeMeter(Time.Seconds));
+        METERS.add(new MemMeter(Memory.Mebibyte));
+    }
 
-  public BenchConfigClass() {
-    super(RUNS, METERS, OUTPUT, ARRAN, GCPROB);
-  }
+    public BenchConfigClass() {
+        super(RUNS, METERS, OUTPUT, ARRAN, GCPROB);
+    }
 
 }

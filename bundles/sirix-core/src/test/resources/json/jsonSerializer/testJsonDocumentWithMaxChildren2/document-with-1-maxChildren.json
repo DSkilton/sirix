@@ -1,1 +1,23 @@
-{"problems":[{"Diabetes":[{"medications":[{"medicationsClasses":[{"className":[{"associatedDrug":[{"name":"asprin","dose":""},{"name":"somethingElse","dose":""}]}]}]}],"labs":[{"missing_field":"missing_value"}]}],"Asthma":[{}]}]}
+{
+    "problems": [{
+            "Diabetes": [{
+                    "medications": [{
+                            "medicationsClasses": [{
+                                    "className": [{
+                                            "associatedDrug": [{
+                                                    "name": "asprin",
+                                                    "dose": ""
+                                                }, {
+                                                    "name": "somethingElse",
+                                                    "dose": ""
+                                                }]
+                                        }]
+                                }]
+                        }],
+                    "labs": [{
+                            "missing_field": "missing_value"
+                        }]
+                }],
+            "Asthma": [{}]
+        }]
+}

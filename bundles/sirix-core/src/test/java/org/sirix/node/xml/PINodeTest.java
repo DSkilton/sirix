@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node.xml;
 
 import com.google.common.hash.Hashing;
@@ -46,70 +47,74 @@ import static org.junit.Assert.assertEquals;
  */
 public class PINodeTest {
 
-  /** {@link Holder} instance. */
-  private Holder mHolder;
+    /**
+     * {@link Holder} instance.
+     */
+    private Holder mHolder;
 
-  /** Sirix {@link PageReadOnlyTrx} instance. */
-  private PageReadOnlyTrx mPageReadTrx;
+    /**
+     * Sirix {@link PageReadOnlyTrx} instance.
+     */
+    private PageReadOnlyTrx mPageReadTrx;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-    mHolder = Holder.generateDeweyIDResourceMgr();
-    mPageReadTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
+        mHolder = Holder.generateDeweyIDResourceMgr();
+        mPageReadTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    mPageReadTrx.close();
-    mHolder.close();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        mPageReadTrx.close();
+        mHolder.close();
+    }
 
-  @Test
-  public void testProcessInstructionNode() throws IOException {
-    final byte[] value = {(byte) 17, (byte) 18};
+    @Test
+    public void testProcessInstructionNode() throws IOException {
+        final byte[] value = {(byte) 17, (byte) 18};
 
-    final NodeDelegate del = new NodeDelegate(99, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
-    final StructNodeDelegate structDel = new StructNodeDelegate(del, 17, 16, 22, 1, 1);
-    final NameNodeDelegate nameDel = new NameNodeDelegate(del, 13, 14, 15, 1);
-    final ValueNodeDelegate valDel = new ValueNodeDelegate(del, value, false);
+        final NodeDelegate del = new NodeDelegate(99, 13, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
+        final StructNodeDelegate structDel = new StructNodeDelegate(del, 17, 16, 22, 1, 1);
+        final NameNodeDelegate nameDel = new NameNodeDelegate(del, 13, 14, 15, 1);
+        final ValueNodeDelegate valDel = new ValueNodeDelegate(del, value, false);
 
-    final PINode node = new PINode(structDel, nameDel, valDel, mPageReadTrx);
-    node.setHash(node.computeHash());
+        final PINode node = new PINode(structDel, nameDel, valDel, mPageReadTrx);
+        node.setHash(node.computeHash());
 
-    // Create empty node.
-    check(node);
+        // Create empty node.
+        check(node);
 
-    // Serialize and deserialize node.
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    node.getKind().serialize(new DataOutputStream(out), node, mPageReadTrx);
-    final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-    final PINode node2 = (PINode) NodeKind.PROCESSING_INSTRUCTION.deserialize(new DataInputStream(in), node.getNodeKey(),
-        node.getDeweyID(), mPageReadTrx);
-    check(node2);
-  }
+        // Serialize and deserialize node.
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        node.getKind().serialize(new DataOutputStream(out), node, mPageReadTrx);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        final PINode node2 = (PINode) NodeKind.PROCESSING_INSTRUCTION.deserialize(new DataInputStream(in), node.getNodeKey(),
+                node.getDeweyID(), mPageReadTrx);
+        check(node2);
+    }
 
-  private final void check(final PINode node) {
-    // Now compare.
-    assertEquals(99L, node.getNodeKey());
-    assertEquals(13L, node.getParentKey());
+    private final void check(final PINode node) {
+        // Now compare.
+        assertEquals(99L, node.getNodeKey());
+        assertEquals(13L, node.getParentKey());
 
-    assertEquals(17L, node.getFirstChildKey());
-    assertEquals(16L, node.getRightSiblingKey());
-    assertEquals(22L, node.getLeftSiblingKey());
-    assertEquals(1, node.getDescendantCount());
-    assertEquals(1, node.getChildCount());
+        assertEquals(17L, node.getFirstChildKey());
+        assertEquals(16L, node.getRightSiblingKey());
+        assertEquals(22L, node.getLeftSiblingKey());
+        assertEquals(1, node.getDescendantCount());
+        assertEquals(1, node.getChildCount());
 
-    assertEquals(13, node.getURIKey());
-    assertEquals(14, node.getPrefixKey());
-    assertEquals(15, node.getLocalNameKey());
+        assertEquals(13, node.getURIKey());
+        assertEquals(14, node.getPrefixKey());
+        assertEquals(15, node.getLocalNameKey());
 
-    assertEquals(NamePageHash.generateHashForString("xs:untyped"), node.getTypeKey());
-    assertEquals(2, node.getRawValue().length);
-    assertEquals(NodeKind.PROCESSING_INSTRUCTION, node.getKind());
-    assertEquals(true, node.hasParent());
-    assertEquals(SirixDeweyID.newRootID(), node.getDeweyID());
-  }
+        assertEquals(NamePageHash.generateHashForString("xs:untyped"), node.getTypeKey());
+        assertEquals(2, node.getRawValue().length);
+        assertEquals(NodeKind.PROCESSING_INSTRUCTION, node.getKind());
+        assertEquals(true, node.hasParent());
+        assertEquals(SirixDeweyID.newRootID(), node.getDeweyID());
+    }
 
 }

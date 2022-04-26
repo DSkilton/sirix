@@ -1,10 +1,12 @@
 <root>
-	<genau/>
-	<bla></bla>
-	test
-	<super>
-		<supp>text</supp>
-		<jaaa><ja/></jaaa>
-	</super>
-	juhuuu
+    <genau/>
+    <bla></bla>
+    test
+    <super>
+        <supp>text</supp>
+        <jaaa>
+            <ja/>
+        </jaaa>
+    </super>
+    juhuuu
 </root>

@@ -15,114 +15,123 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 
 /**
- * Value representing a text value, attribute value, element QName or any other byte encoded value.
+ * Value representing a text value, attribute value, element QName or any other
+ * byte encoded value.
  *
  * @author Johannes Lichtenberger
  *
  */
 public final class CASValue implements Comparable<CASValue> {
 
-  /** Logger. */
-  private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(CASValue.class));
+    /**
+     * Logger.
+     */
+    private static final LogWrapper LOGGER = new LogWrapper(LoggerFactory.getLogger(CASValue.class));
 
-  /** Atomic value. */
-  private final Atomic value;
+    /**
+     * Atomic value.
+     */
+    private final Atomic value;
 
-  /** Path node key this text value belongs to (that is the parent path). */
-  private final long pathNodeKey;
+    /**
+     * Path node key this text value belongs to (that is the parent path).
+     */
+    private final long pathNodeKey;
 
-  /** Type of value. */
-  private final Type type;
+    /**
+     * Type of value.
+     */
+    private final Type type;
 
-  /**
-   * Constructor.
-   *
-   * @param value the atomic value
-   * @param type the type of the value
-   * @param pathNodeKey the path node-key
-   */
-  public CASValue(final Atomic value, final Type type, final @Nonnegative long pathNodeKey) {
-    this.value = value;
-    this.type = type;
-    this.pathNodeKey = pathNodeKey;
-  }
-
-  /**
-   * Get the value.
-   *
-   * @return the value
-   */
-  public byte[] getValue() {
-    if (value == null || type == null) {
-      return null;
+    /**
+     * Constructor.
+     *
+     * @param value the atomic value
+     * @param type the type of the value
+     * @param pathNodeKey the path node-key
+     */
+    public CASValue(final Atomic value, final Type type, final @Nonnegative long pathNodeKey) {
+        this.value = value;
+        this.type = type;
+        this.pathNodeKey = pathNodeKey;
     }
-    byte[] retVal = new byte[1];
-    try {
-      retVal = AtomicUtil.toBytes(value, type);
-    } catch (final SirixException e) {
-      LOGGER.error(e.getMessage(), e);
+
+    /**
+     * Get the value.
+     *
+     * @return the value
+     */
+    public byte[] getValue() {
+        if (value == null || type == null) {
+            return null;
+        }
+        byte[] retVal = new byte[1];
+        try {
+            retVal = AtomicUtil.toBytes(value, type);
+        } catch (final SirixException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return retVal;
     }
-    return retVal;
-  }
 
-  public Atomic getAtomicValue() {
-    if (value == null || type == null) {
-      return null;
+    public Atomic getAtomicValue() {
+        if (value == null || type == null) {
+            return null;
+        }
+        try {
+            return value;
+        } catch (final QueryException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
     }
-    try {
-      return value;
-    } catch (final QueryException e) {
-      LOGGER.error(e.getMessage(), e);
-      return null;
+
+    @Override
+    public int compareTo(final @Nullable CASValue other) {
+        final CASValue otherValue = other;
+        Atomic thisAtomic = value != null && type != null ? value.asType(type) : null;
+        Atomic otherAtomic
+                = otherValue.value != null && otherValue.type != null ? otherValue.value.asType(otherValue.type) : null;
+
+        return ComparisonChain.start()
+                .compare(pathNodeKey, otherValue.pathNodeKey)
+                .compare(thisAtomic, otherAtomic)
+                .result();
     }
-  }
 
-  @Override
-  public int compareTo(final @Nullable CASValue other) {
-    final CASValue otherValue = other;
-    Atomic thisAtomic = value != null && type != null ? value.asType(type) : null;
-    Atomic otherAtomic =
-        otherValue.value != null && otherValue.type != null ? otherValue.value.asType(otherValue.type) : null;
-
-    return ComparisonChain.start()
-                          .compare(pathNodeKey, otherValue.pathNodeKey)
-                          .compare(thisAtomic, otherAtomic)
-                          .result();
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(value, type, pathNodeKey);
-  }
-
-  @Override
-  public boolean equals(final @Nullable Object obj) {
-    if (obj instanceof CASValue) {
-      final CASValue otherValue = (CASValue) obj;
-      return Objects.equal(otherValue.value, value) && Objects.equal(otherValue.type, type)
-          && otherValue.pathNodeKey == pathNodeKey;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value, type, pathNodeKey);
     }
-    return false;
-  }
 
-  /**
-   * Get path node key.
-   *
-   * @return path node key
-   */
-  public long getPathNodeKey() {
-    return pathNodeKey;
-  }
+    @Override
+    public boolean equals(final @Nullable Object obj) {
+        if (obj instanceof CASValue) {
+            final CASValue otherValue = (CASValue) obj;
+            return Objects.equal(otherValue.value, value) && Objects.equal(otherValue.type, type)
+                    && otherValue.pathNodeKey == pathNodeKey;
+        }
+        return false;
+    }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-                      .add("value", value)
-                      .add("pathNodeKey", pathNodeKey)
-                      .toString();
-  }
+    /**
+     * Get path node key.
+     *
+     * @return path node key
+     */
+    public long getPathNodeKey() {
+        return pathNodeKey;
+    }
 
-  public Type getType() {
-    return type;
-  }
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("value", value)
+                .add("pathNodeKey", pathNodeKey)
+                .toString();
+    }
+
+    public Type getType() {
+        return type;
+    }
 }

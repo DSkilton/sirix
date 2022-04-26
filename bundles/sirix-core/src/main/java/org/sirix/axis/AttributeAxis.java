@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import org.sirix.api.xml.XmlNodeReadOnlyTrx;
@@ -31,42 +32,44 @@ import org.sirix.node.NodeKind;
  */
 public final class AttributeAxis extends AbstractAxis {
 
-  /** Remember next key to visit. */
-  private int mNextIndex;
+    /**
+     * Remember next key to visit.
+     */
+    private int mNextIndex;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param rtx exclusive (immutable) mTrx to iterate with
-   */
-  public AttributeAxis(final XmlNodeReadOnlyTrx rtx) {
-    super(rtx);
-  }
-
-  @Override
-  public void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    mNextIndex = 0;
-  }
-
-  @Override
-  protected long nextKey() {
-    // Move back to element, if there was already an attribute found. In
-    // this case the current node was set to an attribute by resetToLastKey().
-    if (mNextIndex > 0) {
-      assert asXdmNodeReadTrx().getKind() == NodeKind.ATTRIBUTE;
-      asXdmNodeReadTrx().moveToParent();
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param rtx exclusive (immutable) mTrx to iterate with
+     */
+    public AttributeAxis(final XmlNodeReadOnlyTrx rtx) {
+        super(rtx);
     }
 
-    if (asXdmNodeReadTrx().getKind() == NodeKind.ELEMENT) {
-      final XmlNodeReadOnlyTrx rtx = (XmlNodeReadOnlyTrx) asXdmNodeReadTrx();
-      if (mNextIndex < rtx.getAttributeCount()) {
-        final long key = rtx.getAttributeKey(mNextIndex);
-        mNextIndex += 1;
-        return key;
-      }
+    @Override
+    public void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        mNextIndex = 0;
     }
 
-    return done();
-  }
+    @Override
+    protected long nextKey() {
+        // Move back to element, if there was already an attribute found. In
+        // this case the current node was set to an attribute by resetToLastKey().
+        if (mNextIndex > 0) {
+            assert asXdmNodeReadTrx().getKind() == NodeKind.ATTRIBUTE;
+            asXdmNodeReadTrx().moveToParent();
+        }
+
+        if (asXdmNodeReadTrx().getKind() == NodeKind.ELEMENT) {
+            final XmlNodeReadOnlyTrx rtx = (XmlNodeReadOnlyTrx) asXdmNodeReadTrx();
+            if (mNextIndex < rtx.getAttributeCount()) {
+                final long key = rtx.getAttributeKey(mNextIndex);
+                mNextIndex += 1;
+                return key;
+            }
+        }
+
+        return done();
+    }
 }

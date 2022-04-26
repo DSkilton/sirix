@@ -1,10 +1,11 @@
 package org.sirix.api;
 
 public interface TransactionManager extends AutoCloseable {
-  Transaction beginTransaction();
 
-  TransactionManager closeTransaction(Transaction trx);
+    Transaction beginTransaction();
 
-  @Override
-  void close();
+    TransactionManager closeTransaction(Transaction trx);
+
+    @Override
+    void close();
 }

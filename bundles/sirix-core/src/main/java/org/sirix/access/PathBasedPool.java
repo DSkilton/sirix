@@ -41,7 +41,7 @@ public class PathBasedPool<E> {
     /**
      * Persists a file/object into the pool.
      *
-     * @param file   the file that identifies the object.
+     * @param file the file that identifies the object.
      * @param object object to be persisted to the pool.
      */
     public void putObject(final Path file, final E object) {
@@ -52,7 +52,8 @@ public class PathBasedPool<E> {
      * Checks if the provided {@code file} has any registered object.
      *
      * @param file The file which might have registered objects.
-     * @return {@code true} if the provided {@code file} has 1 or more registered objects.
+     * @return {@code true} if the provided {@code file} has 1 or more
+     * registered objects.
      */
     public boolean containsAnyEntry(final Path file) {
         return this.sessions.containsKey(file);
@@ -61,7 +62,7 @@ public class PathBasedPool<E> {
     /**
      * Package private method to remove a database.
      *
-     * @param file   file that represents object.
+     * @param file file that represents object.
      * @param object The object to be removed from the pool.
      */
     public void removeObject(final Path file, final E object) {
@@ -79,7 +80,7 @@ public class PathBasedPool<E> {
     }
 
     private Set<E> append(final Path path, @Nullable final Set<E> objects,
-                          final E object) {
+            final E object) {
         final Set<E> coalescedSessions = objects == null ? new HashSet<>() : objects;
 
         logger.trace("Registering new session in path {}", path);

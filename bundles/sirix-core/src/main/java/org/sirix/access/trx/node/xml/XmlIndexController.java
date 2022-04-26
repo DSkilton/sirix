@@ -29,91 +29,90 @@ import java.util.Set;
  */
 public final class XmlIndexController extends AbstractIndexController<XmlNodeReadOnlyTrx, XmlNodeTrx> {
 
-  /**
-   * Type of change.
-   */
-  public enum ChangeType {
     /**
-     * Insertion.
+     * Type of change.
      */
-    INSERT,
+    public enum ChangeType {
+        /**
+         * Insertion.
+         */
+        INSERT,
+        /**
+         * Deletion.
+         */
+        DELETE
+    }
 
     /**
-     * Deletion.
+     * Constructor.
      */
-    DELETE
-  }
-
-  /**
-   * Constructor.
-   */
-  public XmlIndexController() {
-    super(new Indexes(), new HashSet<>(), new XmlPathIndexImpl(), new XmlCASIndexImpl(), new XmlNameIndexImpl());
-  }
-
-  @Override
-  public XmlIndexController createIndexes(final Set<IndexDef> indexDefs, final XmlNodeTrx nodeWriteTrx) {
-    // Build the indexes.
-    IndexBuilder.build(nodeWriteTrx, createIndexBuilders(indexDefs, nodeWriteTrx));
-
-    // Create index listeners for upcoming changes.
-    createIndexListeners(indexDefs, nodeWriteTrx);
-
-    return this;
-  }
-
-  /**
-   * Create index builders.
-   *
-   * @param indexDefs    the {@link IndexDef}s
-   * @param nodeWriteTrx the {@link XmlNodeTrx}
-   * @return the created index builder instances
-   */
-  Set<XmlNodeVisitor> createIndexBuilders(final Set<IndexDef> indexDefs, final XmlNodeTrx nodeWriteTrx) {
-    // Index builders for all index definitions.
-    final var indexBuilders = new HashSet<XmlNodeVisitor>(indexDefs.size());
-    for (final IndexDef indexDef : indexDefs) {
-      indexes.add(indexDef);
-      switch (indexDef.getType()) {
-        case PATH:
-          indexBuilders.add(createPathIndexBuilder(nodeWriteTrx.getPageWtx(), nodeWriteTrx.getPathSummary(), indexDef));
-          break;
-        case CAS:
-          indexBuilders.add(createCASIndexBuilder(nodeWriteTrx,
-                                                  nodeWriteTrx.getPageWtx(),
-                                                  nodeWriteTrx.getPathSummary(),
-                                                  indexDef));
-          break;
-        case NAME:
-          indexBuilders.add(createNameIndexBuilder(nodeWriteTrx.getPageWtx(), indexDef));
-          break;
-        default:
-          break;
-      }
+    public XmlIndexController() {
+        super(new Indexes(), new HashSet<>(), new XmlPathIndexImpl(), new XmlCASIndexImpl(), new XmlNameIndexImpl());
     }
-    return indexBuilders;
-  }
 
-  @Override
-  public PathFilter createPathFilter(final Set<String> stringPaths, final XmlNodeReadOnlyTrx rtx) {
-    final Set<Path<QNm>> paths = new HashSet<>(stringPaths.size());
-    for (final String path : stringPaths) {
-      paths.add(Path.parse(path));
+    @Override
+    public XmlIndexController createIndexes(final Set<IndexDef> indexDefs, final XmlNodeTrx nodeWriteTrx) {
+        // Build the indexes.
+        IndexBuilder.build(nodeWriteTrx, createIndexBuilders(indexDefs, nodeWriteTrx));
+
+        // Create index listeners for upcoming changes.
+        createIndexListeners(indexDefs, nodeWriteTrx);
+
+        return this;
     }
-    return new PathFilter(paths, new XmlPCRCollector(rtx));
-  }
 
-  private XmlNodeVisitor createPathIndexBuilder(final PageTrx pageTrx, final PathSummaryReader pathSummaryReader,
-      final IndexDef indexDef) {
-    return (XmlNodeVisitor) pathIndex.createBuilder(pageTrx, pathSummaryReader, indexDef);
-  }
+    /**
+     * Create index builders.
+     *
+     * @param indexDefs the {@link IndexDef}s
+     * @param nodeWriteTrx the {@link XmlNodeTrx}
+     * @return the created index builder instances
+     */
+    Set<XmlNodeVisitor> createIndexBuilders(final Set<IndexDef> indexDefs, final XmlNodeTrx nodeWriteTrx) {
+        // Index builders for all index definitions.
+        final var indexBuilders = new HashSet<XmlNodeVisitor>(indexDefs.size());
+        for (final IndexDef indexDef : indexDefs) {
+            indexes.add(indexDef);
+            switch (indexDef.getType()) {
+                case PATH:
+                    indexBuilders.add(createPathIndexBuilder(nodeWriteTrx.getPageWtx(), nodeWriteTrx.getPathSummary(), indexDef));
+                    break;
+                case CAS:
+                    indexBuilders.add(createCASIndexBuilder(nodeWriteTrx,
+                            nodeWriteTrx.getPageWtx(),
+                            nodeWriteTrx.getPathSummary(),
+                            indexDef));
+                    break;
+                case NAME:
+                    indexBuilders.add(createNameIndexBuilder(nodeWriteTrx.getPageWtx(), indexDef));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return indexBuilders;
+    }
 
-  private XmlNodeVisitor createCASIndexBuilder(final XmlNodeReadOnlyTrx nodeReadTrx, final PageTrx pageTrx,
-      final PathSummaryReader pathSummaryReader, final IndexDef indexDef) {
-    return (XmlNodeVisitor) casIndex.createBuilder(nodeReadTrx, pageTrx, pathSummaryReader, indexDef);
-  }
+    @Override
+    public PathFilter createPathFilter(final Set<String> stringPaths, final XmlNodeReadOnlyTrx rtx) {
+        final Set<Path<QNm>> paths = new HashSet<>(stringPaths.size());
+        for (final String path : stringPaths) {
+            paths.add(Path.parse(path));
+        }
+        return new PathFilter(paths, new XmlPCRCollector(rtx));
+    }
 
-  private XmlNodeVisitor createNameIndexBuilder(final PageTrx pageWriteTrx, final IndexDef indexDef) {
-    return (XmlNodeVisitor) nameIndex.createBuilder(pageWriteTrx, indexDef);
-  }
+    private XmlNodeVisitor createPathIndexBuilder(final PageTrx pageTrx, final PathSummaryReader pathSummaryReader,
+            final IndexDef indexDef) {
+        return (XmlNodeVisitor) pathIndex.createBuilder(pageTrx, pathSummaryReader, indexDef);
+    }
+
+    private XmlNodeVisitor createCASIndexBuilder(final XmlNodeReadOnlyTrx nodeReadTrx, final PageTrx pageTrx,
+            final PathSummaryReader pathSummaryReader, final IndexDef indexDef) {
+        return (XmlNodeVisitor) casIndex.createBuilder(nodeReadTrx, pageTrx, pathSummaryReader, indexDef);
+    }
+
+    private XmlNodeVisitor createNameIndexBuilder(final PageTrx pageWriteTrx, final IndexDef indexDef) {
+        return (XmlNodeVisitor) nameIndex.createBuilder(pageWriteTrx, indexDef);
+    }
 }

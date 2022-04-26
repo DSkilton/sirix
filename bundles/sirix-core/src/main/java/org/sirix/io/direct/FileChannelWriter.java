@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.io.direct;
 
 import com.sun.nio.file.ExtendedOpenOption;
@@ -46,192 +45,193 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class FileChannelWriter extends AbstractForwardingReader implements Writer {
 
-  private static final short REVISION_ROOT_PAGE_BYTE_ALIGN = 256;
+    private static final short REVISION_ROOT_PAGE_BYTE_ALIGN = 256;
 
-  private static final byte PAGE_FRAGMENT_BYTE_ALIGN = 64;
+    private static final byte PAGE_FRAGMENT_BYTE_ALIGN = 64;
 
-  /**
-   * Random access to work on.
-   */
-  private final FileChannel dataFileChannel;
+    /**
+     * Random access to work on.
+     */
+    private final FileChannel dataFileChannel;
 
-  /**
-   * {@link FileChannelReader} reference for this writer.
-   */
-  private final FileChannelReader reader;
+    /**
+     * {@link FileChannelReader} reference for this writer.
+     */
+    private final FileChannelReader reader;
 
-  private final SerializationType type;
+    private final SerializationType type;
 
-  private final FileChannel revisionsOffsetFileChannel;
+    private final FileChannel revisionsOffsetFileChannel;
 
-  private final PagePersister pagePersister;
+    private final PagePersister pagePersister;
 
-  /**
-   * Constructor.
-   *
-   * @param dataFile            the data file
-   * @param revisionsOffsetFile the file, which holds pointers to the revision root pages
-   * @param handler             the byte handler
-   * @param serializationType   the serialization type (for the transaction log or the data file)
-   * @param pagePersister       transforms in-memory pages into byte-arrays and back
-   */
-  public FileChannelWriter(final Path dataFile, final Path revisionsOffsetFile, final ByteHandler handler,
-      final SerializationType serializationType, final PagePersister pagePersister) throws IOException {
-    this.dataFileChannel = FileChannel.open(dataFile, StandardOpenOption.WRITE);
-    type = checkNotNull(serializationType);
-    this.revisionsOffsetFileChannel = type == SerializationType.DATA
-        ? FileChannel.open(revisionsOffsetFile,
-                           StandardOpenOption.WRITE)
-        : null;
-    this.pagePersister = checkNotNull(pagePersister);
-    reader = new FileChannelReader(dataFile, revisionsOffsetFile, handler, serializationType, pagePersister);
-  }
-
-  @Override
-  public Writer truncateTo(final int revision) {
-    UberPage uberPage = (UberPage) reader.readUberPageReference().getPage();
-
-    while (uberPage.getRevisionNumber() != revision) {
-      uberPage = (UberPage) reader.read(new PageReference().setKey(uberPage.getPreviousUberPageKey()), null);
-      if (uberPage.getRevisionNumber() == revision) {
-        try {
-          dataFileChannel.truncate(uberPage.getPreviousUberPageKey());
-        } catch (final IOException e) {
-          throw new SirixIOException(e);
-        }
-        break;
-      }
+    /**
+     * Constructor.
+     *
+     * @param dataFile the data file
+     * @param revisionsOffsetFile the file, which holds pointers to the revision
+     * root pages
+     * @param handler the byte handler
+     * @param serializationType the serialization type (for the transaction log
+     * or the data file)
+     * @param pagePersister transforms in-memory pages into byte-arrays and back
+     */
+    public FileChannelWriter(final Path dataFile, final Path revisionsOffsetFile, final ByteHandler handler,
+            final SerializationType serializationType, final PagePersister pagePersister) throws IOException {
+        this.dataFileChannel = FileChannel.open(dataFile, StandardOpenOption.WRITE);
+        type = checkNotNull(serializationType);
+        this.revisionsOffsetFileChannel = type == SerializationType.DATA
+                ? FileChannel.open(revisionsOffsetFile,
+                        StandardOpenOption.WRITE)
+                : null;
+        this.pagePersister = checkNotNull(pagePersister);
+        reader = new FileChannelReader(dataFile, revisionsOffsetFile, handler, serializationType, pagePersister);
     }
 
-    return this;
-  }
+    @Override
+    public Writer truncateTo(final int revision) {
+        UberPage uberPage = (UberPage) reader.readUberPageReference().getPage();
 
-  /**
-   * Write page contained in page reference to storage.
-   *
-   * @param pageReference page reference to write
-   * @throws SirixIOException if errors during writing occur
-   */
-  @Override
-  public FileChannelWriter write(final PageReference pageReference) throws SirixIOException {
-    // Perform byte operations.
-    try {
-      // Serialize page.
-      final Page page = pageReference.getPage();
-      assert page != null;
-
-      final byte[] serializedPage;
-
-      try (final ByteArrayOutputStream output = new ByteArrayOutputStream();
-           final DataOutputStream dataOutput = new DataOutputStream(reader.byteHandler.serialize(output))) {
-        pagePersister.serializePage(dataOutput, page, type);
-        dataOutput.flush();
-        serializedPage = output.toByteArray();
-      }
-
-      final int writtenPageLength = serializedPage.length + FileChannelReader.OTHER_BEACON;
-      ByteBuffer buffer = ByteBuffer.allocate(writtenPageLength);
-      buffer.putInt(serializedPage.length);
-      buffer.put(serializedPage);
-      buffer.position(0);
-
-      // Getting actual offset and appending to the end of the current file.
-      final long fileSize = dataFileChannel.size();
-      long offset = fileSize == 0 ? FileChannelReader.FIRST_BEACON : fileSize;
-      if (type == SerializationType.DATA) {
-        if (page instanceof RevisionRootPage) {
-          if (offset % REVISION_ROOT_PAGE_BYTE_ALIGN != 0) {
-            offset += REVISION_ROOT_PAGE_BYTE_ALIGN - (offset % REVISION_ROOT_PAGE_BYTE_ALIGN);
-          }
-        } else if (offset % PAGE_FRAGMENT_BYTE_ALIGN != 0) {
-          offset += PAGE_FRAGMENT_BYTE_ALIGN - (offset % PAGE_FRAGMENT_BYTE_ALIGN);
+        while (uberPage.getRevisionNumber() != revision) {
+            uberPage = (UberPage) reader.read(new PageReference().setKey(uberPage.getPreviousUberPageKey()), null);
+            if (uberPage.getRevisionNumber() == revision) {
+                try {
+                    dataFileChannel.truncate(uberPage.getPreviousUberPageKey());
+                } catch (final IOException e) {
+                    throw new SirixIOException(e);
+                }
+                break;
+            }
         }
-      }
 
-      dataFileChannel.position(offset);
-      dataFileChannel.write(buffer);
+        return this;
+    }
 
-      // Remember page coordinates.
-      switch (type) {
-        case DATA:
-          pageReference.setKey(offset);
-          break;
-        case TRANSACTION_INTENT_LOG:
-          pageReference.setPersistentLogKey(offset);
-          break;
-        default:
-          // Must not happen.
-      }
+    /**
+     * Write page contained in page reference to storage.
+     *
+     * @param pageReference page reference to write
+     * @throws SirixIOException if errors during writing occur
+     */
+    @Override
+    public FileChannelWriter write(final PageReference pageReference) throws SirixIOException {
+        // Perform byte operations.
+        try {
+            // Serialize page.
+            final Page page = pageReference.getPage();
+            assert page != null;
+
+            final byte[] serializedPage;
+
+            try (final ByteArrayOutputStream output = new ByteArrayOutputStream(); final DataOutputStream dataOutput = new DataOutputStream(reader.byteHandler.serialize(output))) {
+                pagePersister.serializePage(dataOutput, page, type);
+                dataOutput.flush();
+                serializedPage = output.toByteArray();
+            }
+
+            final int writtenPageLength = serializedPage.length + FileChannelReader.OTHER_BEACON;
+            ByteBuffer buffer = ByteBuffer.allocate(writtenPageLength);
+            buffer.putInt(serializedPage.length);
+            buffer.put(serializedPage);
+            buffer.position(0);
+
+            // Getting actual offset and appending to the end of the current file.
+            final long fileSize = dataFileChannel.size();
+            long offset = fileSize == 0 ? FileChannelReader.FIRST_BEACON : fileSize;
+            if (type == SerializationType.DATA) {
+                if (page instanceof RevisionRootPage) {
+                    if (offset % REVISION_ROOT_PAGE_BYTE_ALIGN != 0) {
+                        offset += REVISION_ROOT_PAGE_BYTE_ALIGN - (offset % REVISION_ROOT_PAGE_BYTE_ALIGN);
+                    }
+                } else if (offset % PAGE_FRAGMENT_BYTE_ALIGN != 0) {
+                    offset += PAGE_FRAGMENT_BYTE_ALIGN - (offset % PAGE_FRAGMENT_BYTE_ALIGN);
+                }
+            }
+
+            dataFileChannel.position(offset);
+            dataFileChannel.write(buffer);
+
+            // Remember page coordinates.
+            switch (type) {
+                case DATA:
+                    pageReference.setKey(offset);
+                    break;
+                case TRANSACTION_INTENT_LOG:
+                    pageReference.setPersistentLogKey(offset);
+                    break;
+                default:
+                // Must not happen.
+            }
 
 //      pageReference.setLength(writtenPageLength);
-      pageReference.setHash(reader.hashFunction.hashBytes(serializedPage).asBytes());
+            pageReference.setHash(reader.hashFunction.hashBytes(serializedPage).asBytes());
 
-      if (type == SerializationType.DATA && page instanceof RevisionRootPage) {
-        revisionsOffsetFileChannel.position(revisionsOffsetFileChannel.size());
-        buffer = ByteBuffer.allocate(8);
-        revisionsOffsetFileChannel.write(buffer);
-      }
+            if (type == SerializationType.DATA && page instanceof RevisionRootPage) {
+                revisionsOffsetFileChannel.position(revisionsOffsetFileChannel.size());
+                buffer = ByteBuffer.allocate(8);
+                revisionsOffsetFileChannel.write(buffer);
+            }
 
-      return this;
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
-    }
-  }
-
-  @Override
-  public void close() {
-    try {
-      if (dataFileChannel != null) {
-        dataFileChannel.force(true);
-        dataFileChannel.close();
-      }
-      if (revisionsOffsetFileChannel != null) {
-        revisionsOffsetFileChannel.force(true);
-        revisionsOffsetFileChannel.close();
-      }
-      if (reader != null) {
-        reader.close();
-      }
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
-    }
-  }
-
-  @Override
-  public Writer writeUberPageReference(final PageReference pageReference) {
-    try {
-      write(pageReference);
-      dataFileChannel.position(0);
-
-      final ByteBuffer buffer = ByteBuffer.allocate(8);
-      buffer.putLong(pageReference.getKey());
-      buffer.position(0);
-
-      dataFileChannel.write(buffer);
-
-      return this;
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
-    }
-  }
-
-  @Override
-  protected Reader delegate() {
-    return reader;
-  }
-
-  @Override
-  public Writer truncate() {
-    try {
-      dataFileChannel.truncate(0);
-
-      if (revisionsOffsetFileChannel != null) {
-        revisionsOffsetFileChannel.truncate(0);
-      }
-    } catch (final IOException e) {
-      throw new SirixIOException(e);
+            return this;
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
+        }
     }
 
-    return this;
-  }
+    @Override
+    public void close() {
+        try {
+            if (dataFileChannel != null) {
+                dataFileChannel.force(true);
+                dataFileChannel.close();
+            }
+            if (revisionsOffsetFileChannel != null) {
+                revisionsOffsetFileChannel.force(true);
+                revisionsOffsetFileChannel.close();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
+        }
+    }
+
+    @Override
+    public Writer writeUberPageReference(final PageReference pageReference) {
+        try {
+            write(pageReference);
+            dataFileChannel.position(0);
+
+            final ByteBuffer buffer = ByteBuffer.allocate(8);
+            buffer.putLong(pageReference.getKey());
+            buffer.position(0);
+
+            dataFileChannel.write(buffer);
+
+            return this;
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
+        }
+    }
+
+    @Override
+    protected Reader delegate() {
+        return reader;
+    }
+
+    @Override
+    public Writer truncate() {
+        try {
+            dataFileChannel.truncate(0);
+
+            if (revisionsOffsetFileChannel != null) {
+                revisionsOffsetFileChannel.truncate(0);
+            }
+        } catch (final IOException e) {
+            throw new SirixIOException(e);
+        }
+
+        return this;
+    }
 }

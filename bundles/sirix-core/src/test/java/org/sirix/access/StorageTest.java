@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.access;
 
 import org.sirix.XmlTestHelper;
@@ -46,96 +45,96 @@ import static org.testng.AssertJUnit.*;
  */
 public final class StorageTest {
 
-  /**
-   * {@link ResourceConfiguration} reference.
-   */
-  private ResourceConfiguration resourceConfig;
+    /**
+     * {@link ResourceConfiguration} reference.
+     */
+    private ResourceConfiguration resourceConfig;
 
-  @BeforeClass
-  public void setUp() throws SirixException, IOException {
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-    Files.createDirectories(XmlTestHelper.PATHS.PATH1.getFile());
-    Files.createDirectories(
-        XmlTestHelper.PATHS.PATH1.getFile().resolve(ResourceConfiguration.ResourcePaths.DATA.getPath()));
-    Files.createFile(XmlTestHelper.PATHS.PATH1.getFile()
-        .resolve(ResourceConfiguration.ResourcePaths.DATA.getPath())
-        .resolve("data.sirix"));
-    resourceConfig = new ResourceConfiguration.Builder("shredded").build();
-  }
-
-  @AfterClass
-  public void tearDown() throws SirixException {
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-  }
-
-  @Test(dataProvider = "instantiateStorages")
-  public void testExists(final Class<IOStorage> clazz, final IOStorage[] storages) throws SirixException {
-    for (final IOStorage handler : storages) {
-      assertFalse("empty storage should not return true on exists", handler.exists());
-
-      try (final Writer writer = handler.createWriter()) {
-        var ref = new PageReference();
-        ref.setPage(new UberPage());
-        writer.writeUberPageReference(ref);
-      }
-
-      assertTrue("writing a single page should mark the Storage as existing", handler.exists());
-      try (final Writer writer = handler.createWriter()) {
-        writer.truncate();
-      }
-
-      assertFalse("truncating the file to length 0 should mark the Storage as non-existing", handler.exists());
+    @BeforeClass
+    public void setUp() throws SirixException, IOException {
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
+        Files.createDirectories(XmlTestHelper.PATHS.PATH1.getFile());
+        Files.createDirectories(
+                XmlTestHelper.PATHS.PATH1.getFile().resolve(ResourceConfiguration.ResourcePaths.DATA.getPath()));
+        Files.createFile(XmlTestHelper.PATHS.PATH1.getFile()
+                .resolve(ResourceConfiguration.ResourcePaths.DATA.getPath())
+                .resolve("data.sirix"));
+        resourceConfig = new ResourceConfiguration.Builder("shredded").build();
     }
-  }
 
-  @Test(dataProvider = "instantiateStorages")
-  public void testFirstRef(final Class<IOStorage> clazz, final IOStorage[] storages) throws SirixException {
-    for (final IOStorage handler : storages) {
-      try {
-        final PageReference pageRef1 = new PageReference();
-        final UberPage page1 = new UberPage();
-        pageRef1.setPage(page1);
-
-        // same instance check
-        final PageReference pageRef2;
-        try (final Writer writer = handler.createWriter()) {
-          pageRef2 = writer.writeUberPageReference(pageRef1).readUberPageReference();
-          assertEquals("Check for " + handler.getClass() + " failed.",
-              ((UberPage) pageRef1.getPage()).getRevisionCount(), ((UberPage) pageRef2.getPage()).getRevisionCount());
-        }
-
-        // new instance check
-        try (final Reader reader = handler.createReader()) {
-          final PageReference pageRef3 = reader.readUberPageReference();
-          assertEquals("Check for " + handler.getClass() + " failed.",
-              pageRef2.getKey(), pageRef3.getKey());
-          assertEquals("Check for " + handler.getClass() + " failed.",
-              ((UberPage) pageRef2.getPage()).getRevisionCount(), ((UberPage) pageRef3.getPage()).getRevisionCount());
-        }
-      } finally {
-        handler.close();
-      }
+    @AfterClass
+    public void tearDown() throws SirixException {
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
     }
-  }
 
-  /**
-   * Providing different implementations of the {@link ByteHandler} as Dataprovider to the test class.
-   *
-   * @return different classes of the {@link ByteHandler}
-   */
-  @DataProvider(name = "instantiateStorages")
-  public Object[][] instantiateStorages() {
-    final DatabaseConfiguration dbConfig = new DatabaseConfiguration(XmlTestHelper.PATHS.PATH1.getFile());
-    return new Object[][]{
-        { IOStorage.class,
-            new IOStorage[]{
-                new FileStorage(resourceConfig.setDatabaseConfiguration(dbConfig)),
-                new RAMStorage(resourceConfig.setDatabaseConfiguration(dbConfig)),
+    @Test(dataProvider = "instantiateStorages")
+    public void testExists(final Class<IOStorage> clazz, final IOStorage[] storages) throws SirixException {
+        for (final IOStorage handler : storages) {
+            assertFalse("empty storage should not return true on exists", handler.exists());
+
+            try (final Writer writer = handler.createWriter()) {
+                var ref = new PageReference();
+                ref.setPage(new UberPage());
+                writer.writeUberPageReference(ref);
+            }
+
+            assertTrue("writing a single page should mark the Storage as existing", handler.exists());
+            try (final Writer writer = handler.createWriter()) {
+                writer.truncate();
+            }
+
+            assertFalse("truncating the file to length 0 should mark the Storage as non-existing", handler.exists());
+        }
+    }
+
+    @Test(dataProvider = "instantiateStorages")
+    public void testFirstRef(final Class<IOStorage> clazz, final IOStorage[] storages) throws SirixException {
+        for (final IOStorage handler : storages) {
+            try {
+                final PageReference pageRef1 = new PageReference();
+                final UberPage page1 = new UberPage();
+                pageRef1.setPage(page1);
+
+                // same instance check
+                final PageReference pageRef2;
+                try (final Writer writer = handler.createWriter()) {
+                    pageRef2 = writer.writeUberPageReference(pageRef1).readUberPageReference();
+                    assertEquals("Check for " + handler.getClass() + " failed.",
+                            ((UberPage) pageRef1.getPage()).getRevisionCount(), ((UberPage) pageRef2.getPage()).getRevisionCount());
+                }
+
+                // new instance check
+                try (final Reader reader = handler.createReader()) {
+                    final PageReference pageRef3 = reader.readUberPageReference();
+                    assertEquals("Check for " + handler.getClass() + " failed.",
+                            pageRef2.getKey(), pageRef3.getKey());
+                    assertEquals("Check for " + handler.getClass() + " failed.",
+                            ((UberPage) pageRef2.getPage()).getRevisionCount(), ((UberPage) pageRef3.getPage()).getRevisionCount());
+                }
+            } finally {
+                handler.close();
             }
         }
-    };
-  }
+    }
+
+    /**
+     * Providing different implementations of the {@link ByteHandler} as
+     * Dataprovider to the test class.
+     *
+     * @return different classes of the {@link ByteHandler}
+     */
+    @DataProvider(name = "instantiateStorages")
+    public Object[][] instantiateStorages() {
+        final DatabaseConfiguration dbConfig = new DatabaseConfiguration(XmlTestHelper.PATHS.PATH1.getFile());
+        return new Object[][]{
+            {IOStorage.class,
+                new IOStorage[]{
+                    new FileStorage(resourceConfig.setDatabaseConfiguration(dbConfig)),
+                    new RAMStorage(resourceConfig.setDatabaseConfiguration(dbConfig)),}
+            }
+        };
+    }
 
 }

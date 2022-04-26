@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node;
 
 import com.google.common.base.MoreObjects;
@@ -30,74 +31,76 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Hash entry node.
  *
- * @author Johannes Lichtenberger <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
+ * @author Johannes Lichtenberger
+ * <a href="mailto:lichtenberger.johannes@gmail.com">mail</a>
  *
  */
 public final class HashEntryNode implements DataRecord {
 
-  private final long nodeKey;
+    private final long nodeKey;
 
-  private final int key;
+    private final int key;
 
-  private final String value;
+    private final String value;
 
-  /**
-   * Constructor.
-   *
-   * @param nodeKey the node key
-   * @param key the integer hash code
-   * @param value the String value
-   */
-  public HashEntryNode(final long nodeKey, final int key, final String value) {
-    this.nodeKey = nodeKey;
-    this.key = key;
-    this.value = checkNotNull(value);
-  }
+    /**
+     * Constructor.
+     *
+     * @param nodeKey the node key
+     * @param key the integer hash code
+     * @param value the String value
+     */
+    public HashEntryNode(final long nodeKey, final int key, final String value) {
+        this.nodeKey = nodeKey;
+        this.key = key;
+        this.value = checkNotNull(value);
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.HASH_ENTRY;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.HASH_ENTRY;
+    }
 
-  public int getKey() {
-    return key;
-  }
+    public int getKey() {
+        return key;
+    }
 
-  public String getValue() {
-    return value;
-  }
+    public String getValue() {
+        return value;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(key, value);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(key, value);
+    }
 
-  @Override
-  public boolean equals(final Object obj) {
-    if (!(obj instanceof HashEntryNode))
-      return false;
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof HashEntryNode)) {
+            return false;
+        }
 
-    final HashEntryNode other = (HashEntryNode) obj;
-    return Objects.equal(key, other.key) && Objects.equal(value, other.value);
-  }
+        final HashEntryNode other = (HashEntryNode) obj;
+        return Objects.equal(key, other.key) && Objects.equal(value, other.value);
+    }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this).add("key", key).add("value", value).toString();
-  }
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("key", key).add("value", value).toString();
+    }
 
-  @Override
-  public long getNodeKey() {
-    return nodeKey;
-  }
+    @Override
+    public long getNodeKey() {
+        return nodeKey;
+    }
 
-  @Override
-  public long getRevision() {
-    throw new UnsupportedOperationException();
-  }
+    @Override
+    public long getRevision() {
+        throw new UnsupportedOperationException();
+    }
 
-  @Override
-  public SirixDeweyID getDeweyID() {
-    return null;
-  }
+    @Override
+    public SirixDeweyID getDeweyID() {
+        return null;
+    }
 }

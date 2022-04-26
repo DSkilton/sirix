@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.diff;
 
 import org.sirix.api.xml.XmlNodeReadOnlyTrx;
@@ -28,85 +29,88 @@ import org.sirix.diff.DiffFactory.DiffType;
 import org.sirix.node.NodeKind;
 
 /**
- * Structural diff, thus no attributes and namespace nodes are taken into account.
+ * Structural diff, thus no attributes and namespace nodes are taken into
+ * account.
  *
  * @author Johannes Lichtenberger, University of Konstanz
  *
  */
 final class XmlStructuralDiff extends AbstractDiff<XmlNodeReadOnlyTrx, XmlNodeTrx> {
 
-  /**
-   * Constructor.
-   *
-   * @param builder {@link Builder} reference
-   */
-  public XmlStructuralDiff(final Builder<XmlNodeReadOnlyTrx, XmlNodeTrx> builder) {
-    super(builder);
-  }
-
-  @Override NodeKind documentNode() {
-    return NodeKind.XML_DOCUMENT;
-  }
-
-  @Override
-  boolean checkNodes(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx) {
-    boolean found = false;
-    if (newRtx.getNodeKey() == oldRtx.getNodeKey() && newRtx.getParentKey() == oldRtx.getParentKey()
-        && newRtx.getKind() == oldRtx.getKind()) {
-      switch (newRtx.getKind()) {
-        case ELEMENT:
-          if (checkNamesForEquality(newRtx, oldRtx)) {
-            found = true;
-          }
-          break;
-        case PROCESSING_INSTRUCTION:
-          found = newRtx.getValue().equals(oldRtx.getValue()) && checkNamesForEquality(newRtx, oldRtx);
-          break;
-        case COMMENT:
-        case TEXT:
-          if (newRtx.getValue().equals(oldRtx.getValue())) {
-            found = true;
-          }
-          break;
-        // $CASES-OMITTED$
-        default:
-          // Do nothing.
-      }
+    /**
+     * Constructor.
+     *
+     * @param builder {@link Builder} reference
+     */
+    public XmlStructuralDiff(final Builder<XmlNodeReadOnlyTrx, XmlNodeTrx> builder) {
+        super(builder);
     }
-    return found;
-  }
 
-  @Override
-  boolean checkNodeNamesOrValues(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx) {
-    boolean found = false;
-    if (newRtx.getKind() == oldRtx.getKind()) {
-      switch (newRtx.getKind()) {
-        case ELEMENT:
-        case PROCESSING_INSTRUCTION:
-          if (checkNamesForEquality(newRtx, oldRtx)) {
-            found = true;
-          }
-          break;
-        case TEXT:
-        case COMMENT:
-          if (newRtx.getValue().equals(oldRtx.getValue())) {
-            found = true;
-          }
-          break;
-        // $CASES-OMITTED$
-        default:
-      }
+    @Override
+    NodeKind documentNode() {
+        return NodeKind.XML_DOCUMENT;
     }
-    return found;
-  }
 
-  @Override
-  void emitNonStructuralDiff(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx, final DiffDepth depth,
-      final DiffType diff) {}
+    @Override
+    boolean checkNodes(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx) {
+        boolean found = false;
+        if (newRtx.getNodeKey() == oldRtx.getNodeKey() && newRtx.getParentKey() == oldRtx.getParentKey()
+                && newRtx.getKind() == oldRtx.getKind()) {
+            switch (newRtx.getKind()) {
+                case ELEMENT:
+                    if (checkNamesForEquality(newRtx, oldRtx)) {
+                        found = true;
+                    }
+                    break;
+                case PROCESSING_INSTRUCTION:
+                    found = newRtx.getValue().equals(oldRtx.getValue()) && checkNamesForEquality(newRtx, oldRtx);
+                    break;
+                case COMMENT:
+                case TEXT:
+                    if (newRtx.getValue().equals(oldRtx.getValue())) {
+                        found = true;
+                    }
+                    break;
+                // $CASES-OMITTED$
+                default:
+                // Do nothing.
+            }
+        }
+        return found;
+    }
 
-  protected boolean checkNamesForEquality(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx) {
-    return newRtx.getURIKey() == oldRtx.getURIKey()
-        && newRtx.getLocalNameKey() == oldRtx.getLocalNameKey()
-        && newRtx.getPrefixKey() == oldRtx.getPrefixKey();
-  }
+    @Override
+    boolean checkNodeNamesOrValues(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx) {
+        boolean found = false;
+        if (newRtx.getKind() == oldRtx.getKind()) {
+            switch (newRtx.getKind()) {
+                case ELEMENT:
+                case PROCESSING_INSTRUCTION:
+                    if (checkNamesForEquality(newRtx, oldRtx)) {
+                        found = true;
+                    }
+                    break;
+                case TEXT:
+                case COMMENT:
+                    if (newRtx.getValue().equals(oldRtx.getValue())) {
+                        found = true;
+                    }
+                    break;
+                // $CASES-OMITTED$
+                default:
+            }
+        }
+        return found;
+    }
+
+    @Override
+    void emitNonStructuralDiff(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx, final DiffDepth depth,
+            final DiffType diff) {
+    }
+
+    protected boolean checkNamesForEquality(final XmlNodeReadOnlyTrx newRtx, final XmlNodeReadOnlyTrx oldRtx) {
+        return newRtx.getURIKey() == oldRtx.getURIKey()
+                && newRtx.getLocalNameKey() == oldRtx.getLocalNameKey()
+                && newRtx.getPrefixKey() == oldRtx.getPrefixKey();
+    }
 }

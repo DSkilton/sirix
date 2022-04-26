@@ -11,12 +11,14 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.sirix.diff.algorithm;
 
@@ -31,20 +33,22 @@ import org.sirix.exception.SirixException;
  *
  */
 public interface ImportDiff {
-  /**
-   * Do the diff.
-   *
-   * @param wtx on resource to update
-   * @param rtx on new revision
-   * @throws NullPointerException if {@code pWtx} or {@code pRtx} is {@code null}
-   * @throws SirixException if something in sirix went wrong
-   */
-  void diff(final XmlNodeTrx wtx, final XmlNodeReadOnlyTrx rtx) throws SirixException;
 
-  /**
-   * Name of algorithm.
-   *
-   * @return name
-   */
-  String getName();
+    /**
+     * Do the diff.
+     *
+     * @param wtx on resource to update
+     * @param rtx on new revision
+     * @throws NullPointerException if {@code pWtx} or {@code pRtx} is
+     * {@code null}
+     * @throws SirixException if something in sirix went wrong
+     */
+    void diff(final XmlNodeTrx wtx, final XmlNodeReadOnlyTrx rtx) throws SirixException;
+
+    /**
+     * Name of algorithm.
+     *
+     * @return name
+     */
+    String getName();
 }

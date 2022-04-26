@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.diff;
 
 import com.google.common.base.MoreObjects;
@@ -30,66 +31,79 @@ import com.google.common.base.MoreObjects;
  *
  */
 final class DepthCounter {
-  /** Depth in new revision. */
-  private int mNewDepth;
 
-  /** Depth in old revision. */
-  private int mOldDepth;
+    /**
+     * Depth in new revision.
+     */
+    private int mNewDepth;
 
-  /**
-   * Constructor.
-   *
-   * @param newDepth depth of transaction cursor in new revision
-   * @param oldDepth depth of transaction cursor in old revision
-   */
-  DepthCounter(final int newDepth, final int oldDepth) {
-    mNewDepth = newDepth;
-    mOldDepth = oldDepth;
-  }
+    /**
+     * Depth in old revision.
+     */
+    private int mOldDepth;
 
-  /** Increment depth in new revision. */
-  void incrementNewDepth() {
-    mNewDepth++;
-  }
+    /**
+     * Constructor.
+     *
+     * @param newDepth depth of transaction cursor in new revision
+     * @param oldDepth depth of transaction cursor in old revision
+     */
+    DepthCounter(final int newDepth, final int oldDepth) {
+        mNewDepth = newDepth;
+        mOldDepth = oldDepth;
+    }
 
-  /** Decrement depth in new revision. */
-  void decrementNewDepth() {
-    mNewDepth--;
-  }
+    /**
+     * Increment depth in new revision.
+     */
+    void incrementNewDepth() {
+        mNewDepth++;
+    }
 
-  /** Increment depth in old revision. */
-  void incrementOldDepth() {
-    mOldDepth++;
-  }
+    /**
+     * Decrement depth in new revision.
+     */
+    void decrementNewDepth() {
+        mNewDepth--;
+    }
 
-  /** Decrement depth in old revision. */
-  void decrementOldDepth() {
-    mOldDepth--;
-  }
+    /**
+     * Increment depth in old revision.
+     */
+    void incrementOldDepth() {
+        mOldDepth++;
+    }
 
-  /**
-   * Get depth in new revision.
-   *
-   * @return depth in new revision
-   */
-  int getNewDepth() {
-    return mNewDepth;
-  }
+    /**
+     * Decrement depth in old revision.
+     */
+    void decrementOldDepth() {
+        mOldDepth--;
+    }
 
-  /**
-   * Get depth in old revision.
-   *
-   * @return depth in old revision
-   */
-  int getOldDepth() {
-    return mOldDepth;
-  }
+    /**
+     * Get depth in new revision.
+     *
+     * @return depth in new revision
+     */
+    int getNewDepth() {
+        return mNewDepth;
+    }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-                      .add("newDepth: ", mNewDepth)
-                      .add("oldDepth: ", mOldDepth)
-                      .toString();
-  }
+    /**
+     * Get depth in old revision.
+     *
+     * @return depth in old revision
+     */
+    int getOldDepth() {
+        return mOldDepth;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("newDepth: ", mNewDepth)
+                .add("oldDepth: ", mOldDepth)
+                .toString();
+    }
 }

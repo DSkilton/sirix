@@ -30,76 +30,76 @@ import java.util.Set;
  */
 public final class JsonIndexController extends AbstractIndexController<JsonNodeReadOnlyTrx, JsonNodeTrx> {
 
-  /**
-   * Constructor.
-   */
-  public JsonIndexController() {
-    super(new Indexes(), new HashSet<>(), new JsonPathIndexImpl(), new JsonCASIndexImpl(), new JsonNameIndexImpl());
-  }
-
-  @Override
-  public JsonIndexController createIndexes(final Set<IndexDef> indexDefs, final JsonNodeTrx nodeWriteTrx) {
-    // Build the indexes.
-    IndexBuilder.build(nodeWriteTrx, createIndexBuilders(indexDefs, nodeWriteTrx));
-
-    // Create index listeners for upcoming changes.
-    createIndexListeners(indexDefs, nodeWriteTrx);
-
-    return this;
-  }
-
-  /**
-   * Create index builders.
-   *
-   * @param indexDefs    the {@link IndexDef}s
-   * @param nodeWriteTrx the {@link JsonNodeTrx}
-   * @return the created index builder instances
-   */
-  Set<JsonNodeVisitor> createIndexBuilders(final Set<IndexDef> indexDefs, final JsonNodeTrx nodeWriteTrx) {
-    // Index builders for all index definitions.
-    final var indexBuilders = new HashSet<JsonNodeVisitor>(indexDefs.size());
-    for (final IndexDef indexDef : indexDefs) {
-      switch (indexDef.getType()) {
-        case PATH:
-          indexBuilders.add(createPathIndexBuilder(nodeWriteTrx.getPageWtx(), nodeWriteTrx.getPathSummary(), indexDef));
-          break;
-        case CAS:
-          indexBuilders.add(createCASIndexBuilder(nodeWriteTrx,
-                                                  nodeWriteTrx.getPageWtx(),
-                                                  nodeWriteTrx.getPathSummary(),
-                                                  indexDef));
-          break;
-        case NAME:
-          indexBuilders.add(createNameIndexBuilder(nodeWriteTrx.getPageWtx(), indexDef));
-          break;
-        default:
-          break;
-      }
+    /**
+     * Constructor.
+     */
+    public JsonIndexController() {
+        super(new Indexes(), new HashSet<>(), new JsonPathIndexImpl(), new JsonCASIndexImpl(), new JsonNameIndexImpl());
     }
-    return indexBuilders;
-  }
 
-  @Override
-  public PathFilter createPathFilter(final Set<String> queryString, final JsonNodeReadOnlyTrx rtx)
-      throws PathException {
-    final Set<Path<QNm>> paths = new HashSet<>(queryString.size());
-    for (final String path : queryString) {
-      paths.add(Path.parse(path));
+    @Override
+    public JsonIndexController createIndexes(final Set<IndexDef> indexDefs, final JsonNodeTrx nodeWriteTrx) {
+        // Build the indexes.
+        IndexBuilder.build(nodeWriteTrx, createIndexBuilders(indexDefs, nodeWriteTrx));
+
+        // Create index listeners for upcoming changes.
+        createIndexListeners(indexDefs, nodeWriteTrx);
+
+        return this;
     }
-    return new PathFilter(paths, new JsonPCRCollector(rtx));
-  }
 
-  private JsonNodeVisitor createPathIndexBuilder(final PageTrx pageWriteTrx, final PathSummaryReader pathSummaryReader,
-      final IndexDef indexDef) {
-    return (JsonNodeVisitor) pathIndex.createBuilder(pageWriteTrx, pathSummaryReader, indexDef);
-  }
+    /**
+     * Create index builders.
+     *
+     * @param indexDefs the {@link IndexDef}s
+     * @param nodeWriteTrx the {@link JsonNodeTrx}
+     * @return the created index builder instances
+     */
+    Set<JsonNodeVisitor> createIndexBuilders(final Set<IndexDef> indexDefs, final JsonNodeTrx nodeWriteTrx) {
+        // Index builders for all index definitions.
+        final var indexBuilders = new HashSet<JsonNodeVisitor>(indexDefs.size());
+        for (final IndexDef indexDef : indexDefs) {
+            switch (indexDef.getType()) {
+                case PATH:
+                    indexBuilders.add(createPathIndexBuilder(nodeWriteTrx.getPageWtx(), nodeWriteTrx.getPathSummary(), indexDef));
+                    break;
+                case CAS:
+                    indexBuilders.add(createCASIndexBuilder(nodeWriteTrx,
+                            nodeWriteTrx.getPageWtx(),
+                            nodeWriteTrx.getPathSummary(),
+                            indexDef));
+                    break;
+                case NAME:
+                    indexBuilders.add(createNameIndexBuilder(nodeWriteTrx.getPageWtx(), indexDef));
+                    break;
+                default:
+                    break;
+            }
+        }
+        return indexBuilders;
+    }
 
-  private JsonNodeVisitor createCASIndexBuilder(final JsonNodeReadOnlyTrx nodeReadTrx, final PageTrx pageWriteTrx,
-      final PathSummaryReader pathSummaryReader, final IndexDef indexDef) {
-    return (JsonNodeVisitor) casIndex.createBuilder(nodeReadTrx, pageWriteTrx, pathSummaryReader, indexDef);
-  }
+    @Override
+    public PathFilter createPathFilter(final Set<String> queryString, final JsonNodeReadOnlyTrx rtx)
+            throws PathException {
+        final Set<Path<QNm>> paths = new HashSet<>(queryString.size());
+        for (final String path : queryString) {
+            paths.add(Path.parse(path));
+        }
+        return new PathFilter(paths, new JsonPCRCollector(rtx));
+    }
 
-  private JsonNodeVisitor createNameIndexBuilder(final PageTrx pageWriteTrx, final IndexDef indexDef) {
-    return (JsonNodeVisitor) nameIndex.createBuilder(pageWriteTrx, indexDef);
-  }
+    private JsonNodeVisitor createPathIndexBuilder(final PageTrx pageWriteTrx, final PathSummaryReader pathSummaryReader,
+            final IndexDef indexDef) {
+        return (JsonNodeVisitor) pathIndex.createBuilder(pageWriteTrx, pathSummaryReader, indexDef);
+    }
+
+    private JsonNodeVisitor createCASIndexBuilder(final JsonNodeReadOnlyTrx nodeReadTrx, final PageTrx pageWriteTrx,
+            final PathSummaryReader pathSummaryReader, final IndexDef indexDef) {
+        return (JsonNodeVisitor) casIndex.createBuilder(nodeReadTrx, pageWriteTrx, pathSummaryReader, indexDef);
+    }
+
+    private JsonNodeVisitor createNameIndexBuilder(final PageTrx pageWriteTrx, final IndexDef indexDef) {
+        return (JsonNodeVisitor) nameIndex.createBuilder(pageWriteTrx, indexDef);
+    }
 }

@@ -31,8 +31,8 @@ class WriteLocksRegistryTest {
     }
 
     /**
-     * Tests that calling {@link WriteLocksRegistry#getWriteLock(Path)} on
-     * an empty {@link WriteLocksRegistry} will still return a valid lock.
+     * Tests that calling {@link WriteLocksRegistry#getWriteLock(Path)} on an
+     * empty {@link WriteLocksRegistry} will still return a valid lock.
      */
     @Test
     public final void getOnEmptyRegistryReturnsLock() {
@@ -52,8 +52,8 @@ class WriteLocksRegistryTest {
     }
 
     /**
-     * Tests that calling {@link WriteLocksRegistry#getWriteLock(Path)} with different
-     * resource paths will lead to different locks.
+     * Tests that calling {@link WriteLocksRegistry#getWriteLock(Path)} with
+     * different resource paths will lead to different locks.
      */
     @Test
     public final void differentPathsCreateDifferentLocks() {
@@ -65,7 +65,8 @@ class WriteLocksRegistryTest {
 
     /**
      * Tests that calling {@link WriteLocksRegistry#getWriteLock(Path)} after
-     * {@link WriteLocksRegistry#removeWriteLock(Path)} returns a different lock that the initial one.
+     * {@link WriteLocksRegistry#removeWriteLock(Path)} returns a different lock
+     * that the initial one.
      */
     @Test
     public final void getAfterRemoveResetsLock() {
@@ -77,8 +78,8 @@ class WriteLocksRegistryTest {
     }
 
     /**
-     * Tests that calling {@link WriteLocksRegistry#removeWriteLock(Path)} on an empty
-     * {@link WriteLocksRegistry} does not throw an exception.
+     * Tests that calling {@link WriteLocksRegistry#removeWriteLock(Path)} on an
+     * empty {@link WriteLocksRegistry} does not throw an exception.
      */
     @Test
     public final void removeOnEmptyRegistryDoesNotThrowException() {

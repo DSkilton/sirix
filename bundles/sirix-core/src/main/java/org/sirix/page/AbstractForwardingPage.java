@@ -34,43 +34,44 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Forwarding the implementation of all methods in the {@link Page} interface to a delegate.
+ * Forwarding the implementation of all methods in the {@link Page} interface to
+ * a delegate.
  *
  * @author Johannes Lichtenberger, University of Konstanz
  */
 public abstract class AbstractForwardingPage extends ForwardingObject implements Page {
 
-  /**
-   * Constructor for use by subclasses.
-   */
-  protected AbstractForwardingPage() {
-  }
+    /**
+     * Constructor for use by subclasses.
+     */
+    protected AbstractForwardingPage() {
+    }
 
-  @Override
-  protected abstract Page delegate();
+    @Override
+    protected abstract Page delegate();
 
-  @Override
-  public void commit(final PageTrx pageWriteTrx) {
-    delegate().commit(checkNotNull(pageWriteTrx));
-  }
+    @Override
+    public void commit(final PageTrx pageWriteTrx) {
+        delegate().commit(checkNotNull(pageWriteTrx));
+    }
 
-  @Override
-  public List<PageReference> getReferences() {
-    return delegate().getReferences();
-  }
+    @Override
+    public List<PageReference> getReferences() {
+        return delegate().getReferences();
+    }
 
-  @Override
-  public PageReference getOrCreateReference(final @Nonnegative int offset) {
-    return delegate().getOrCreateReference(offset);
-  }
+    @Override
+    public PageReference getOrCreateReference(final @Nonnegative int offset) {
+        return delegate().getOrCreateReference(offset);
+    }
 
-  @Override
-  public boolean setOrCreateReference(int offset, PageReference pageReference) {
-    return delegate().setOrCreateReference(offset, pageReference);
-  }
+    @Override
+    public boolean setOrCreateReference(int offset, PageReference pageReference) {
+        return delegate().setOrCreateReference(offset, pageReference);
+    }
 
-  @Override
-  public void serialize(final DataOutput out, final SerializationType type) throws IOException {
-    delegate().serialize(checkNotNull(out), checkNotNull(type));
-  }
+    @Override
+    public void serialize(final DataOutput out, final SerializationType type) throws IOException {
+        delegate().serialize(checkNotNull(out), checkNotNull(type));
+    }
 }

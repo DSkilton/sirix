@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import javax.annotation.Nonnegative;
@@ -28,57 +29,57 @@ import org.sirix.settings.Fixed;
 
 /**
  * <p>
- * Iterate over all descendants of kind ELEMENT or TEXT starting at a given node. Self is not
- * included.
+ * Iterate over all descendants of kind ELEMENT or TEXT starting at a given
+ * node. Self is not included.
  * </p>
  */
 public final class AncestorAxis extends AbstractAxis {
 
-  /**
-   * First touch of node.
-   */
-  private boolean mFirst;
+    /**
+     * First touch of node.
+     */
+    private boolean mFirst;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param nodeCursor exclusive node cursor to iterate with
-   */
-  public AncestorAxis(final NodeCursor nodeCursor) {
-    super(nodeCursor);
-  }
-
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param nodeCursor exclusive node cursor to iterate with
-   * @param includeSelf Is self included?
-   */
-  public AncestorAxis(final NodeCursor nodeCursor, final IncludeSelf includeSelf) {
-    super(nodeCursor, includeSelf);
-  }
-
-  @Override
-  public void reset(final @Nonnegative long nodeKey) {
-    super.reset(nodeKey);
-    mFirst = true;
-  }
-
-  @Override
-  protected long nextKey() {
-    final NodeCursor cursor = getCursor();
-
-    // Self
-    if (mFirst && includeSelf() == IncludeSelf.YES) {
-      mFirst = false;
-      return cursor.getNodeKey();
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param nodeCursor exclusive node cursor to iterate with
+     */
+    public AncestorAxis(final NodeCursor nodeCursor) {
+        super(nodeCursor);
     }
 
-    if (cursor.getKind() != NodeKind.XML_DOCUMENT && cursor.hasParent()
-        && cursor.getParentKey() != Fixed.DOCUMENT_NODE_KEY.getStandardProperty()) {
-      return cursor.getParentKey();
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param nodeCursor exclusive node cursor to iterate with
+     * @param includeSelf Is self included?
+     */
+    public AncestorAxis(final NodeCursor nodeCursor, final IncludeSelf includeSelf) {
+        super(nodeCursor, includeSelf);
     }
 
-    return done();
-  }
+    @Override
+    public void reset(final @Nonnegative long nodeKey) {
+        super.reset(nodeKey);
+        mFirst = true;
+    }
+
+    @Override
+    protected long nextKey() {
+        final NodeCursor cursor = getCursor();
+
+        // Self
+        if (mFirst && includeSelf() == IncludeSelf.YES) {
+            mFirst = false;
+            return cursor.getNodeKey();
+        }
+
+        if (cursor.getKind() != NodeKind.XML_DOCUMENT && cursor.hasParent()
+                && cursor.getParentKey() != Fixed.DOCUMENT_NODE_KEY.getStandardProperty()) {
+            return cursor.getParentKey();
+        }
+
+        return done();
+    }
 }

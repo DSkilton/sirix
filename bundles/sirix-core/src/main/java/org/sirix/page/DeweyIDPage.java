@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.page;
 
 import com.google.common.base.MoreObjects;
@@ -44,154 +43,154 @@ import java.util.Optional;
 
 public final class DeweyIDPage extends AbstractForwardingPage {
 
-  /**
-   * Offset of reference to index-tree.
-   */
-  public static final int REFERENCE_OFFSET = 0;
+    /**
+     * Offset of reference to index-tree.
+     */
+    public static final int REFERENCE_OFFSET = 0;
 
-  /**
-   * The references page delegate instance.
-   */
-  private Page delegate;
+    /**
+     * The references page delegate instance.
+     */
+    private Page delegate;
 
-  /**
-   * Maximum node key.
-   */
-  private long maxNodeKey;
+    /**
+     * Maximum node key.
+     */
+    private long maxNodeKey;
 
-  /**
-   * Current maximum levels of indirect pages in the tree.
-   */
-  private int currentMaxLevelOfIndirectPages;
+    /**
+     * Current maximum levels of indirect pages in the tree.
+     */
+    private int currentMaxLevelOfIndirectPages;
 
-  private ChronicleMap<SirixDeweyID, Long> deweyIDsToNodeKeys;
+    private ChronicleMap<SirixDeweyID, Long> deweyIDsToNodeKeys;
 
-  /**
-   * Create dewey-ID page.
-   */
-  public DeweyIDPage() {
-    delegate = new ReferencesPage4();
-    currentMaxLevelOfIndirectPages = 1;
-  }
-
-  /**
-   * Read name page.
-   *
-   * @param in input bytes to read from
-   */
-  protected DeweyIDPage(final DataInput in, final SerializationType type) throws IOException {
-    delegate = PageUtils.createDelegate(in, type);
-    maxNodeKey = in.readLong();
-    currentMaxLevelOfIndirectPages = in.readByte() & 0xFF;
-  }
-
-  @Override
-  public void serialize(final DataOutput out, final SerializationType type) throws IOException {
-    if (delegate instanceof ReferencesPage4) {
-      out.writeByte(0);
-    } else if (delegate instanceof BitmapReferencesPage) {
-      out.writeByte(1);
+    /**
+     * Create dewey-ID page.
+     */
+    public DeweyIDPage() {
+        delegate = new ReferencesPage4();
+        currentMaxLevelOfIndirectPages = 1;
     }
-    super.serialize(out, type);
 
-    out.writeLong(maxNodeKey);
-    out.writeByte(currentMaxLevelOfIndirectPages);
-  }
-
-  public int getCurrentMaxLevelOfIndirectPages() {
-    return currentMaxLevelOfIndirectPages;
-  }
-
-  public int incrementAndGetCurrentMaxLevelOfIndirectPages() {
-    return currentMaxLevelOfIndirectPages++;
-  }
-
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-                      .add("currMaxLevelOfIndirectPages", currentMaxLevelOfIndirectPages)
-                      .add("maxNodeKey", maxNodeKey)
-                      .toString();
-  }
-
-  /**
-   * Initialize dewey id index tree.
-   *
-   * @param pageReadTrx {@link PageReadOnlyTrx} instance
-   * @param log         the transaction intent log
-   */
-  public void createIndexTree(final DatabaseType databaseType,
-                              final PageReadOnlyTrx pageReadTrx,
-                              final TransactionIntentLog log) {
-    PageReference reference = getIndirectPageReference();
-    if (reference.getPage() == null && reference.getKey() == Constants.NULL_ID_LONG
-        && reference.getLogKey() == Constants.NULL_ID_INT
-        && reference.getPersistentLogKey() == Constants.NULL_ID_LONG) {
-      PageUtils.createTree(databaseType, reference, IndexType.DEWEYID_TO_RECORDID, pageReadTrx, log);
-      incrementAndGetMaxNodeKey();
+    /**
+     * Read name page.
+     *
+     * @param in input bytes to read from
+     */
+    protected DeweyIDPage(final DataInput in, final SerializationType type) throws IOException {
+        delegate = PageUtils.createDelegate(in, type);
+        maxNodeKey = in.readLong();
+        currentMaxLevelOfIndirectPages = in.readByte() & 0xFF;
     }
-  }
 
-  /**
-   * Get indirect page reference.
-   *
-   * @return indirect page reference
-   */
-  public PageReference getIndirectPageReference() {
-    return getOrCreateReference(REFERENCE_OFFSET);
-  }
-
-  /**
-   * Get the maximum node key.
-   *
-   * @return the maximum node key stored
-   */
-  public long getMaxNodeKey() {
-    return maxNodeKey;
-  }
-
-  public long incrementAndGetMaxNodeKey() {
-    return ++maxNodeKey;
-  }
-
-  @Override
-  protected Page delegate() {
-    return delegate;
-  }
-
-  @Override
-  public boolean setOrCreateReference(int offset, PageReference pageReference) {
-    delegate = PageUtils.setReference(delegate, offset, pageReference);
-
-    return false;
-  }
-
-  public Optional<SirixDeweyID> getDeweyIdForNodeKey(final long nodeKey, final PageReadOnlyTrx pageReadOnlyTrx) {
-    final Optional<DeweyIDNode> node = pageReadOnlyTrx.getRecord(nodeKey, IndexType.DEWEYID_TO_RECORDID, 0);
-    return node.map(DeweyIDNode::getDeweyID);
-  }
-
-  public long getNodeKeyForDeweyId(final SirixDeweyID deweyId, final PageReadOnlyTrx pageReadOnlyTrx) {
-    if (deweyIDsToNodeKeys == null) {
-      deweyIDsToNodeKeys =
-          ChronicleMap.of(SirixDeweyID.class, Long.class).name("deweyIDsToNodeKeysMap").entries(maxNodeKey).create();
-      for (long i = 1, l = maxNodeKey; i < l; i += 2) {
-        final long nodeKeyOfNode = i;
-        final Optional<? extends DataRecord> deweyIDNode =
-            pageReadOnlyTrx.getRecord(nodeKeyOfNode, IndexType.DEWEYID_TO_RECORDID, 0);
-
-        if (deweyIDNode.isPresent() && deweyIDNode.get().getKind() != NodeKind.DELETE) {
-          deweyIDsToNodeKeys.put(deweyIDNode.get().getDeweyID(), nodeKeyOfNode);
+    @Override
+    public void serialize(final DataOutput out, final SerializationType type) throws IOException {
+        if (delegate instanceof ReferencesPage4) {
+            out.writeByte(0);
+        } else if (delegate instanceof BitmapReferencesPage) {
+            out.writeByte(1);
         }
-      }
-    }
-    return deweyIDsToNodeKeys.get(deweyId);
-  }
+        super.serialize(out, type);
 
-  public void setDeweyID(final SirixDeweyID deweyId, final PageTrx pageTrx) {
-    final long nodeKey = maxNodeKey;
-    final DeweyIDNode node = new DeweyIDNode(maxNodeKey, deweyId);
-    pageTrx.createRecord(maxNodeKey++, node,  IndexType.DEWEYID_TO_RECORDID, 0);
-    deweyIDsToNodeKeys.put(deweyId, nodeKey);
-  }
+        out.writeLong(maxNodeKey);
+        out.writeByte(currentMaxLevelOfIndirectPages);
+    }
+
+    public int getCurrentMaxLevelOfIndirectPages() {
+        return currentMaxLevelOfIndirectPages;
+    }
+
+    public int incrementAndGetCurrentMaxLevelOfIndirectPages() {
+        return currentMaxLevelOfIndirectPages++;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("currMaxLevelOfIndirectPages", currentMaxLevelOfIndirectPages)
+                .add("maxNodeKey", maxNodeKey)
+                .toString();
+    }
+
+    /**
+     * Initialize dewey id index tree.
+     *
+     * @param pageReadTrx {@link PageReadOnlyTrx} instance
+     * @param log the transaction intent log
+     */
+    public void createIndexTree(final DatabaseType databaseType,
+            final PageReadOnlyTrx pageReadTrx,
+            final TransactionIntentLog log) {
+        PageReference reference = getIndirectPageReference();
+        if (reference.getPage() == null && reference.getKey() == Constants.NULL_ID_LONG
+                && reference.getLogKey() == Constants.NULL_ID_INT
+                && reference.getPersistentLogKey() == Constants.NULL_ID_LONG) {
+            PageUtils.createTree(databaseType, reference, IndexType.DEWEYID_TO_RECORDID, pageReadTrx, log);
+            incrementAndGetMaxNodeKey();
+        }
+    }
+
+    /**
+     * Get indirect page reference.
+     *
+     * @return indirect page reference
+     */
+    public PageReference getIndirectPageReference() {
+        return getOrCreateReference(REFERENCE_OFFSET);
+    }
+
+    /**
+     * Get the maximum node key.
+     *
+     * @return the maximum node key stored
+     */
+    public long getMaxNodeKey() {
+        return maxNodeKey;
+    }
+
+    public long incrementAndGetMaxNodeKey() {
+        return ++maxNodeKey;
+    }
+
+    @Override
+    protected Page delegate() {
+        return delegate;
+    }
+
+    @Override
+    public boolean setOrCreateReference(int offset, PageReference pageReference) {
+        delegate = PageUtils.setReference(delegate, offset, pageReference);
+
+        return false;
+    }
+
+    public Optional<SirixDeweyID> getDeweyIdForNodeKey(final long nodeKey, final PageReadOnlyTrx pageReadOnlyTrx) {
+        final Optional<DeweyIDNode> node = pageReadOnlyTrx.getRecord(nodeKey, IndexType.DEWEYID_TO_RECORDID, 0);
+        return node.map(DeweyIDNode::getDeweyID);
+    }
+
+    public long getNodeKeyForDeweyId(final SirixDeweyID deweyId, final PageReadOnlyTrx pageReadOnlyTrx) {
+        if (deweyIDsToNodeKeys == null) {
+            deweyIDsToNodeKeys
+                    = ChronicleMap.of(SirixDeweyID.class, Long.class).name("deweyIDsToNodeKeysMap").entries(maxNodeKey).create();
+            for (long i = 1, l = maxNodeKey; i < l; i += 2) {
+                final long nodeKeyOfNode = i;
+                final Optional<? extends DataRecord> deweyIDNode
+                        = pageReadOnlyTrx.getRecord(nodeKeyOfNode, IndexType.DEWEYID_TO_RECORDID, 0);
+
+                if (deweyIDNode.isPresent() && deweyIDNode.get().getKind() != NodeKind.DELETE) {
+                    deweyIDsToNodeKeys.put(deweyIDNode.get().getDeweyID(), nodeKeyOfNode);
+                }
+            }
+        }
+        return deweyIDsToNodeKeys.get(deweyId);
+    }
+
+    public void setDeweyID(final SirixDeweyID deweyId, final PageTrx pageTrx) {
+        final long nodeKey = maxNodeKey;
+        final DeweyIDNode node = new DeweyIDNode(maxNodeKey, deweyId);
+        pageTrx.createRecord(maxNodeKey++, node, IndexType.DEWEYID_TO_RECORDID, 0);
+        deweyIDsToNodeKeys.put(deweyId, nodeKey);
+    }
 }

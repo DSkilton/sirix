@@ -18,7 +18,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.page.delegates;
 
 import com.google.common.base.MoreObjects;
@@ -41,146 +40,146 @@ import java.util.List;
  */
 public final class ReferencesPage4 implements Page {
 
-  /**
-   * Page reference 1.
-   */
-  private final List<PageReference> references;
+    /**
+     * Page reference 1.
+     */
+    private final List<PageReference> references;
 
-  /**
-   * Page reference 4.
-   */
-  private final List<Short> offsets;
+    /**
+     * Page reference 4.
+     */
+    private final List<Short> offsets;
 
-  /**
-   * Constructor to initialize instance.
-   */
-  public ReferencesPage4() {
-    references = new ArrayList<>(4);
-    offsets = new ArrayList<>(4);
-  }
-
-  /**
-   * Constructor to initialize instance.
-   *
-   * @param in   input stream to read from
-   * @param type the serialization type
-   */
-  public ReferencesPage4(final DataInput in, final SerializationType type) {
-    final DeserializedReferencesPage4Tuple tuple = type.deserializeReferencesPage4(in);
-    references = tuple.getReferences();
-    offsets = tuple.getOffsets();
-  }
-
-  /**
-   * Constructor to initialize instance.
-   *
-   * @param pageToClone committed page
-   */
-  public ReferencesPage4(final ReferencesPage4 pageToClone) {
-    references = new ArrayList<>(4);
-    offsets = new ArrayList<>(4);
-
-    final var otherOffsets = pageToClone.getOffsets();
-
-    for (int offset = 0, size = otherOffsets.size(); offset < size; offset++) {
-      offsets.add(otherOffsets.get(offset));
-      final var pageReference = new PageReference();
-      final var pageReferenceToClone = pageToClone.getReferences().get(offset);
-      pageReference.setKey(pageReferenceToClone.getKey());
-      pageReference.setPageFragments(pageReferenceToClone.getPageFragments());
-      references.add(pageReference);
-    }
-  }
-
-  public List<Short> getOffsets() {
-    return offsets;
-  }
-
-  @Override
-  public List<PageReference> getReferences() {
-    return references;
-  }
-
-  /**
-   * Get page reference of given offset.
-   *
-   * @param offset offset of page reference
-   * @return {@link PageReference} at given offset
-   */
-  @Override
-  public PageReference getOrCreateReference(final @Nonnegative int offset) {
-    for (final var currOffset : offsets) {
-      if (currOffset == offset) {
-        return references.get(offset);
-      }
+    /**
+     * Constructor to initialize instance.
+     */
+    public ReferencesPage4() {
+        references = new ArrayList<>(4);
+        offsets = new ArrayList<>(4);
     }
 
-    if (offsets.size() < 4) {
-      offsets.add((short) offset);
-      final var newReference = new PageReference();
-      references.add(newReference);
-      return newReference;
+    /**
+     * Constructor to initialize instance.
+     *
+     * @param in input stream to read from
+     * @param type the serialization type
+     */
+    public ReferencesPage4(final DataInput in, final SerializationType type) {
+        final DeserializedReferencesPage4Tuple tuple = type.deserializeReferencesPage4(in);
+        references = tuple.getReferences();
+        offsets = tuple.getOffsets();
     }
 
-    return null;
-  }
+    /**
+     * Constructor to initialize instance.
+     *
+     * @param pageToClone committed page
+     */
+    public ReferencesPage4(final ReferencesPage4 pageToClone) {
+        references = new ArrayList<>(4);
+        offsets = new ArrayList<>(4);
 
-  @Override
-  public boolean setOrCreateReference(final int offset, final PageReference pageReference) {
-    for (int i = 0, count = offsets.size(); i < count; i++) {
-      if (offsets.get(i) == offset) {
-        references.set(i, pageReference);
-        return false;
-      }
+        final var otherOffsets = pageToClone.getOffsets();
+
+        for (int offset = 0, size = otherOffsets.size(); offset < size; offset++) {
+            offsets.add(otherOffsets.get(offset));
+            final var pageReference = new PageReference();
+            final var pageReferenceToClone = pageToClone.getReferences().get(offset);
+            pageReference.setKey(pageReferenceToClone.getKey());
+            pageReference.setPageFragments(pageReferenceToClone.getPageFragments());
+            references.add(pageReference);
+        }
     }
 
-    if (offsets.size() < 4) {
-      offsets.add((short) offset);
-      references.add(pageReference);
-      return false;
+    public List<Short> getOffsets() {
+        return offsets;
     }
 
-    return true;
-  }
-
-  /**
-   * Recursively call commit on all referenced pages.
-   *
-   * @param pageWriteTrx the page write transaction
-   */
-  @Override
-  public final void commit(@Nonnull final PageTrx pageWriteTrx) {
-    for (final PageReference reference : references) {
-      if (reference.getLogKey() != Constants.NULL_ID_INT || reference.getPersistentLogKey() != Constants.NULL_ID_LONG) {
-        pageWriteTrx.commit(reference);
-      }
+    @Override
+    public List<PageReference> getReferences() {
+        return references;
     }
-  }
 
-  /**
-   * Serialize page references into output.
-   *
-   * @param out  output stream
-   * @param type the type to serialize (transaction intent log or the data file
-   *             itself).
-   */
-  @Override
-  public void serialize(final DataOutput out, final SerializationType type) {
-    assert out != null;
-    assert type != null;
+    /**
+     * Get page reference of given offset.
+     *
+     * @param offset offset of page reference
+     * @return {@link PageReference} at given offset
+     */
+    @Override
+    public PageReference getOrCreateReference(final @Nonnegative int offset) {
+        for (final var currOffset : offsets) {
+            if (currOffset == offset) {
+                return references.get(offset);
+            }
+        }
 
-    type.serializeReferencesPage4(out, references, offsets);
-  }
+        if (offsets.size() < 4) {
+            offsets.add((short) offset);
+            final var newReference = new PageReference();
+            references.add(newReference);
+            return newReference;
+        }
 
-  @Override
-  public String toString() {
-    final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
-    for (final int offset : offsets) {
-      helper.add("offset", offset);
+        return null;
     }
-    for (final PageReference ref : references) {
-      helper.add("reference", ref);
+
+    @Override
+    public boolean setOrCreateReference(final int offset, final PageReference pageReference) {
+        for (int i = 0, count = offsets.size(); i < count; i++) {
+            if (offsets.get(i) == offset) {
+                references.set(i, pageReference);
+                return false;
+            }
+        }
+
+        if (offsets.size() < 4) {
+            offsets.add((short) offset);
+            references.add(pageReference);
+            return false;
+        }
+
+        return true;
     }
-    return helper.toString();
-  }
+
+    /**
+     * Recursively call commit on all referenced pages.
+     *
+     * @param pageWriteTrx the page write transaction
+     */
+    @Override
+    public final void commit(@Nonnull final PageTrx pageWriteTrx) {
+        for (final PageReference reference : references) {
+            if (reference.getLogKey() != Constants.NULL_ID_INT || reference.getPersistentLogKey() != Constants.NULL_ID_LONG) {
+                pageWriteTrx.commit(reference);
+            }
+        }
+    }
+
+    /**
+     * Serialize page references into output.
+     *
+     * @param out output stream
+     * @param type the type to serialize (transaction intent log or the data
+     * file itself).
+     */
+    @Override
+    public void serialize(final DataOutput out, final SerializationType type) {
+        assert out != null;
+        assert type != null;
+
+        type.serializeReferencesPage4(out, references, offsets);
+    }
+
+    @Override
+    public String toString() {
+        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
+        for (final int offset : offsets) {
+            helper.add("offset", offset);
+        }
+        for (final PageReference ref : references) {
+            helper.add("reference", ref);
+        }
+        return helper.toString();
+    }
 }

@@ -1,1 +1,208 @@
-{"metadata":{"nodeKey":1,"hash":"afc35014ae4a659c92ed4a99d1f35adb","type":"OBJECT","descendantCount":24,"childCount":4},"value":[{"key":"foo","metadata":{"nodeKey":2,"hash":"f63408ac19f84f635e2140a2a38dcaa2","type":"OBJECT_KEY","descendantCount":4},"value":{"metadata":{"nodeKey":3,"hash":"a709e167ce057fa71d7265aa0b0442fb","type":"ARRAY","descendantCount":3,"childCount":3},"value":[{"metadata":{"nodeKey":4,"hash":"8c9ac915352b74eb5c87055b4320e43b","type":"STRING_VALUE"},"value":"bar"},{"metadata":{"nodeKey":5,"hash":"87e816be385c6d8fe07d1097bedb6ddd","type":"NULL_VALUE"},"value":null},{"metadata":{"nodeKey":6,"hash":"2b675b48e9cf84d802c6523a0d91c7e5","type":"NUMBER_VALUE"},"value":2.33}]}},{"key":"bar","metadata":{"nodeKey":7,"hash":"1e18013511712fbf0c45d36e766b12b4","type":"OBJECT_KEY","descendantCount":5},"value":{"metadata":{"nodeKey":8,"hash":"377c094c796c9cfd92e827ea27036683","type":"OBJECT","descendantCount":4,"childCount":2},"value":[{"key":"hello","metadata":{"nodeKey":9,"hash":"6f8acfbb6d9b0d636102448e5318dffa","type":"OBJECT_KEY","descendantCount":1},"value":{"metadata":{"nodeKey":10,"hash":"05f302a95eb53068a72e189d2acc9738","type":"OBJECT_STRING_VALUE"},"value":"world"}},{"key":"helloo","metadata":{"nodeKey":11,"hash":"26bcf6e32057820b345fd283edc6fb01","type":"OBJECT_KEY","descendantCount":1},"value":{"metadata":{"nodeKey":12,"hash":"20c53ff03da534cbb8f204e4f5991cd2","type":"OBJECT_BOOLEAN_VALUE"},"value":true}}]}},{"key":"baz","metadata":{"nodeKey":13,"hash":"b4dc5154b109389b469d2c1ace9337eb","type":"OBJECT_KEY","descendantCount":1},"value":{"metadata":{"nodeKey":14,"hash":"a5e5a7e7781375a358b2e752310ec785","type":"OBJECT_STRING_VALUE"},"value":"hello"}},{"key":"tada","metadata":{"nodeKey":15,"hash":"54cd18f41e0a9030143cc737cf5af063","type":"OBJECT_KEY","descendantCount":10},"value":{"metadata":{"nodeKey":16,"hash":"5a2084c5948a8239e825b5b72fb9cecf","type":"ARRAY","descendantCount":9,"childCount":5},"value":[{"metadata":{"nodeKey":17,"hash":"daa08cd06b2a799e6c0c0b7e251ffb2f","type":"OBJECT","descendantCount":2,"childCount":1},"value":[{"key":"foo","metadata":{"nodeKey":18,"hash":"9c8fa54d53e543707282a1294ce4d01b","type":"OBJECT_KEY","descendantCount":1},"value":{"metadata":{"nodeKey":19,"hash":"4c772851035e6828f20796d39756e38d","type":"OBJECT_STRING_VALUE"},"value":"bar"}}]},{"metadata":{"nodeKey":20,"hash":"7de22f5b0173fc684fe4aecc7ae5c6f7","type":"OBJECT","descendantCount":2,"childCount":1},"value":[{"key":"baz","metadata":{"nodeKey":21,"hash":"bbff8b33370fa4bf464f60b884d9380c","type":"OBJECT_KEY","descendantCount":1},"value":{"metadata":{"nodeKey":22,"hash":"b6690120faf731eff68ffdc96b853297","type":"OBJECT_BOOLEAN_VALUE"},"value":false}}]},{"metadata":{"nodeKey":23,"hash":"33e7b88d4757899d04c456ca44843626","type":"STRING_VALUE"},"value":"boo"},{"metadata":{"nodeKey":24,"hash":"05391b8ae48f84fcdea8fd88b9cab9d2","type":"OBJECT","descendantCount":0,"childCount":0},"value":{}},{"metadata":{"nodeKey":25,"hash":"f454fb7db6c66c190477af8942aeee19","type":"ARRAY","descendantCount":0,"childCount":0},"value":[]}]}}]}
+{
+    "metadata": {
+        "nodeKey": 1,
+        "hash": "afc35014ae4a659c92ed4a99d1f35adb",
+        "type": "OBJECT",
+        "descendantCount": 24,
+        "childCount": 4
+    },
+    "value": [{
+            "key": "foo",
+            "metadata": {
+                "nodeKey": 2,
+                "hash": "f63408ac19f84f635e2140a2a38dcaa2",
+                "type": "OBJECT_KEY",
+                "descendantCount": 4
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 3,
+                    "hash": "a709e167ce057fa71d7265aa0b0442fb",
+                    "type": "ARRAY",
+                    "descendantCount": 3,
+                    "childCount": 3
+                },
+                "value": [{
+                        "metadata": {
+                            "nodeKey": 4,
+                            "hash": "8c9ac915352b74eb5c87055b4320e43b",
+                            "type": "STRING_VALUE"
+                        },
+                        "value": "bar"
+                    }, {
+                        "metadata": {
+                            "nodeKey": 5,
+                            "hash": "87e816be385c6d8fe07d1097bedb6ddd",
+                            "type": "NULL_VALUE"
+                        },
+                        "value": null
+                    }, {
+                        "metadata": {
+                            "nodeKey": 6,
+                            "hash": "2b675b48e9cf84d802c6523a0d91c7e5",
+                            "type": "NUMBER_VALUE"
+                        },
+                        "value": 2.33
+                    }]
+            }
+        }, {
+            "key": "bar",
+            "metadata": {
+                "nodeKey": 7,
+                "hash": "1e18013511712fbf0c45d36e766b12b4",
+                "type": "OBJECT_KEY",
+                "descendantCount": 5
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 8,
+                    "hash": "377c094c796c9cfd92e827ea27036683",
+                    "type": "OBJECT",
+                    "descendantCount": 4,
+                    "childCount": 2
+                },
+                "value": [{
+                        "key": "hello",
+                        "metadata": {
+                            "nodeKey": 9,
+                            "hash": "6f8acfbb6d9b0d636102448e5318dffa",
+                            "type": "OBJECT_KEY",
+                            "descendantCount": 1
+                        },
+                        "value": {
+                            "metadata": {
+                                "nodeKey": 10,
+                                "hash": "05f302a95eb53068a72e189d2acc9738",
+                                "type": "OBJECT_STRING_VALUE"
+                            },
+                            "value": "world"
+                        }
+                    }, {
+                        "key": "helloo",
+                        "metadata": {
+                            "nodeKey": 11,
+                            "hash": "26bcf6e32057820b345fd283edc6fb01",
+                            "type": "OBJECT_KEY",
+                            "descendantCount": 1
+                        },
+                        "value": {
+                            "metadata": {
+                                "nodeKey": 12,
+                                "hash": "20c53ff03da534cbb8f204e4f5991cd2",
+                                "type": "OBJECT_BOOLEAN_VALUE"
+                            },
+                            "value": true
+                        }
+                    }]
+            }
+        }, {
+            "key": "baz",
+            "metadata": {
+                "nodeKey": 13,
+                "hash": "b4dc5154b109389b469d2c1ace9337eb",
+                "type": "OBJECT_KEY",
+                "descendantCount": 1
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 14,
+                    "hash": "a5e5a7e7781375a358b2e752310ec785",
+                    "type": "OBJECT_STRING_VALUE"
+                },
+                "value": "hello"
+            }
+        }, {
+            "key": "tada",
+            "metadata": {
+                "nodeKey": 15,
+                "hash": "54cd18f41e0a9030143cc737cf5af063",
+                "type": "OBJECT_KEY",
+                "descendantCount": 10
+            },
+            "value": {
+                "metadata": {
+                    "nodeKey": 16,
+                    "hash": "5a2084c5948a8239e825b5b72fb9cecf",
+                    "type": "ARRAY",
+                    "descendantCount": 9,
+                    "childCount": 5
+                },
+                "value": [{
+                        "metadata": {
+                            "nodeKey": 17,
+                            "hash": "daa08cd06b2a799e6c0c0b7e251ffb2f",
+                            "type": "OBJECT",
+                            "descendantCount": 2,
+                            "childCount": 1
+                        },
+                        "value": [{
+                                "key": "foo",
+                                "metadata": {
+                                    "nodeKey": 18,
+                                    "hash": "9c8fa54d53e543707282a1294ce4d01b",
+                                    "type": "OBJECT_KEY",
+                                    "descendantCount": 1
+                                },
+                                "value": {
+                                    "metadata": {
+                                        "nodeKey": 19,
+                                        "hash": "4c772851035e6828f20796d39756e38d",
+                                        "type": "OBJECT_STRING_VALUE"
+                                    },
+                                    "value": "bar"
+                                }
+                            }]
+                    }, {
+                        "metadata": {
+                            "nodeKey": 20,
+                            "hash": "7de22f5b0173fc684fe4aecc7ae5c6f7",
+                            "type": "OBJECT",
+                            "descendantCount": 2,
+                            "childCount": 1
+                        },
+                        "value": [{
+                                "key": "baz",
+                                "metadata": {
+                                    "nodeKey": 21,
+                                    "hash": "bbff8b33370fa4bf464f60b884d9380c",
+                                    "type": "OBJECT_KEY",
+                                    "descendantCount": 1
+                                },
+                                "value": {
+                                    "metadata": {
+                                        "nodeKey": 22,
+                                        "hash": "b6690120faf731eff68ffdc96b853297",
+                                        "type": "OBJECT_BOOLEAN_VALUE"
+                                    },
+                                    "value": false
+                                }
+                            }]
+                    }, {
+                        "metadata": {
+                            "nodeKey": 23,
+                            "hash": "33e7b88d4757899d04c456ca44843626",
+                            "type": "STRING_VALUE"
+                        },
+                        "value": "boo"
+                    }, {
+                        "metadata": {
+                            "nodeKey": 24,
+                            "hash": "05391b8ae48f84fcdea8fd88b9cab9d2",
+                            "type": "OBJECT",
+                            "descendantCount": 0,
+                            "childCount": 0
+                        },
+                        "value": {}
+                    }, {
+                        "metadata": {
+                            "nodeKey": 25,
+                            "hash": "f454fb7db6c66c190477af8942aeee19",
+                            "type": "ARRAY",
+                            "descendantCount": 0,
+                            "childCount": 0
+                        },
+                        "value": []
+                    }]
+            }
+        }]
+}

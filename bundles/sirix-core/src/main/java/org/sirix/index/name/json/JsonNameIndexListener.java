@@ -10,19 +10,19 @@ import org.sirix.node.json.ObjectKeyNode;
 
 final class JsonNameIndexListener implements ChangeListener {
 
-  private final NameIndexListener mIndexListener;
+    private final NameIndexListener mIndexListener;
 
-  public JsonNameIndexListener(final NameIndexListener listener) {
-    mIndexListener = listener;
-  }
-
-  @Override
-  public void listen(ChangeType type, @Nonnull ImmutableNode node, long pathNodeKey) {
-    if (node instanceof ObjectKeyNode) {
-      final ObjectKeyNode objectKeyNode = (ObjectKeyNode) node;
-      final QNm name = objectKeyNode.getName();
-
-      mIndexListener.listen(type, objectKeyNode, name);
+    public JsonNameIndexListener(final NameIndexListener listener) {
+        mIndexListener = listener;
     }
-  }
+
+    @Override
+    public void listen(ChangeType type, @Nonnull ImmutableNode node, long pathNodeKey) {
+        if (node instanceof ObjectKeyNode) {
+            final ObjectKeyNode objectKeyNode = (ObjectKeyNode) node;
+            final QNm name = objectKeyNode.getName();
+
+            mIndexListener.listen(type, objectKeyNode, name);
+        }
+    }
 }

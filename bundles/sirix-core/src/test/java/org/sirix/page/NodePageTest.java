@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.page;
 
 import static org.junit.Assert.assertEquals;
@@ -53,72 +54,76 @@ import com.google.common.hash.Hashing;
  */
 public final class NodePageTest {
 
-  /** {@link Holder} instance. */
-  private Holder mHolder;
+    /**
+     * {@link Holder} instance.
+     */
+    private Holder mHolder;
 
-  /** Sirix {@link PageReadOnlyTrx} instance. */
-  private PageReadOnlyTrx pageReadTrx;
+    /**
+     * Sirix {@link PageReadOnlyTrx} instance.
+     */
+    private PageReadOnlyTrx pageReadTrx;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-    XmlTestHelper.createTestDocument();
-    mHolder = Holder.generateDeweyIDResourceMgr();
-    pageReadTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
+        XmlTestHelper.createTestDocument();
+        mHolder = Holder.generateDeweyIDResourceMgr();
+        pageReadTrx = mHolder.getResourceManager().beginPageReadOnlyTrx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    pageReadTrx.close();
-    mHolder.close();
-    XmlTestHelper.closeEverything();
-    XmlTestHelper.deleteEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        pageReadTrx.close();
+        mHolder.close();
+        XmlTestHelper.closeEverything();
+        XmlTestHelper.deleteEverything();
+    }
 
-  @Test
-  public void testSerializeDeserialize() throws IOException {
-    final UnorderedKeyValuePage page1 =
-        new UnorderedKeyValuePage(0L, IndexType.DOCUMENT, pageReadTrx);
-    assertEquals(0L, page1.getPageKey());
+    @Test
+    public void testSerializeDeserialize() throws IOException {
+        final UnorderedKeyValuePage page1
+                = new UnorderedKeyValuePage(0L, IndexType.DOCUMENT, pageReadTrx);
+        assertEquals(0L, page1.getPageKey());
 
-    final NodeDelegate del = new NodeDelegate(0, 1, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
-    final StructNodeDelegate strucDel = new StructNodeDelegate(del, 12l, 4l, 3l, 1l, 0l);
-    final NameNodeDelegate nameDel = new NameNodeDelegate(del, 5, 6, 7, 1);
-    final ElementNode node1 = new ElementNode(strucDel, nameDel, new ArrayList<>(), HashBiMap.create(),
-        new ArrayList<>(), new QNm("a", "b", "c"));
-    node1.setHash(node1.computeHash());
-    node1.insertAttribute(88L, 100);
-    node1.insertAttribute(87L, 101);
-    node1.insertNamespace(99L);
-    node1.insertNamespace(98L);
-    assertEquals(0L, node1.getNodeKey());
-    page1.setRecord(node1.getNodeKey(), node1);
+        final NodeDelegate del = new NodeDelegate(0, 1, Hashing.sha256(), null, 0, SirixDeweyID.newRootID());
+        final StructNodeDelegate strucDel = new StructNodeDelegate(del, 12l, 4l, 3l, 1l, 0l);
+        final NameNodeDelegate nameDel = new NameNodeDelegate(del, 5, 6, 7, 1);
+        final ElementNode node1 = new ElementNode(strucDel, nameDel, new ArrayList<>(), HashBiMap.create(),
+                new ArrayList<>(), new QNm("a", "b", "c"));
+        node1.setHash(node1.computeHash());
+        node1.insertAttribute(88L, 100);
+        node1.insertAttribute(87L, 101);
+        node1.insertNamespace(99L);
+        node1.insertNamespace(98L);
+        assertEquals(0L, node1.getNodeKey());
+        page1.setRecord(node1.getNodeKey(), node1);
 
-    final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    final DataOutputStream dataOut = new DataOutputStream(out);
-    final PagePersister pagePersister = new PagePersister();
-    pagePersister.serializePage(dataOut, page1, SerializationType.DATA);
-    final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-    final UnorderedKeyValuePage page2 = (UnorderedKeyValuePage) pagePersister.deserializePage(new DataInputStream(in),
-                                                                                              pageReadTrx, SerializationType.DATA);
-    // assertEquals(position, out.position());
-    final ElementNode element = (ElementNode) page2.getValue(0l);
-    assertEquals(0L, page2.getValue(0l).getNodeKey());
-    assertEquals(1L, element.getParentKey());
-    assertEquals(12L, element.getFirstChildKey());
-    assertEquals(3L, element.getLeftSiblingKey());
-    assertEquals(4L, element.getRightSiblingKey());
-    assertEquals(1, element.getChildCount());
-    assertEquals(2, element.getAttributeCount());
-    assertEquals(2, element.getNamespaceCount());
-    assertEquals(88L, element.getAttributeKey(0));
-    assertEquals(87L, element.getAttributeKey(1));
-    assertEquals(99L, element.getNamespaceKey(0));
-    assertEquals(98L, element.getNamespaceKey(1));
-    assertEquals(5, ((NameNode) page2.getValue(0l)).getURIKey());
-    assertEquals(6, ((NameNode) page2.getValue(0l)).getPrefixKey());
-    assertEquals(7, ((NameNode) page2.getValue(0l)).getLocalNameKey());
-    assertEquals(NamePageHash.generateHashForString("xs:untyped"), element.getTypeKey());
-  }
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final DataOutputStream dataOut = new DataOutputStream(out);
+        final PagePersister pagePersister = new PagePersister();
+        pagePersister.serializePage(dataOut, page1, SerializationType.DATA);
+        final ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        final UnorderedKeyValuePage page2 = (UnorderedKeyValuePage) pagePersister.deserializePage(new DataInputStream(in),
+                pageReadTrx, SerializationType.DATA);
+        // assertEquals(position, out.position());
+        final ElementNode element = (ElementNode) page2.getValue(0l);
+        assertEquals(0L, page2.getValue(0l).getNodeKey());
+        assertEquals(1L, element.getParentKey());
+        assertEquals(12L, element.getFirstChildKey());
+        assertEquals(3L, element.getLeftSiblingKey());
+        assertEquals(4L, element.getRightSiblingKey());
+        assertEquals(1, element.getChildCount());
+        assertEquals(2, element.getAttributeCount());
+        assertEquals(2, element.getNamespaceCount());
+        assertEquals(88L, element.getAttributeKey(0));
+        assertEquals(87L, element.getAttributeKey(1));
+        assertEquals(99L, element.getNamespaceKey(0));
+        assertEquals(98L, element.getNamespaceKey(1));
+        assertEquals(5, ((NameNode) page2.getValue(0l)).getURIKey());
+        assertEquals(6, ((NameNode) page2.getValue(0l)).getPrefixKey());
+        assertEquals(7, ((NameNode) page2.getValue(0l)).getLocalNameKey());
+        assertEquals(NamePageHash.generateHashForString("xs:untyped"), element.getTypeKey());
+    }
 }

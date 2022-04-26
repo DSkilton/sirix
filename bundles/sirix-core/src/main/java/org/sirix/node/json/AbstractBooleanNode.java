@@ -13,67 +13,67 @@ import java.math.BigInteger;
 
 public abstract class AbstractBooleanNode extends AbstractStructForwardingNode implements ImmutableJsonNode {
 
-  private StructNodeDelegate structNodeDelegate;
+    private StructNodeDelegate structNodeDelegate;
 
-  private boolean boolValue;
+    private boolean boolValue;
 
-  private BigInteger hashCode;
+    private BigInteger hashCode;
 
-  public AbstractBooleanNode(StructNodeDelegate structNodeDelegate, final boolean boolValue) {
-    this.structNodeDelegate = structNodeDelegate;
-    this.boolValue = boolValue;
-  }
-
-  @Override
-  public BigInteger computeHash() {
-    BigInteger result = BigInteger.ONE;
-
-    result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
-    if (structNodeDelegate.isNotEmpty()) {
-      result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+    public AbstractBooleanNode(StructNodeDelegate structNodeDelegate, final boolean boolValue) {
+        this.structNodeDelegate = structNodeDelegate;
+        this.boolValue = boolValue;
     }
-    result = BigInteger.valueOf(31).multiply(result).add(BigInteger.valueOf(Boolean.hashCode(boolValue)));
 
-    return Node.to128BitsAtMaximumBigInteger(result);
-  }
+    @Override
+    public BigInteger computeHash() {
+        BigInteger result = BigInteger.ONE;
 
-  @Override
-  public void setHash(final BigInteger hash) {
-    if (hash != null) {
-      hashCode = Node.to128BitsAtMaximumBigInteger(hash);
-    } else {
-      hashCode = null;
+        result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.getNodeDelegate().computeHash());
+        if (structNodeDelegate.isNotEmpty()) {
+            result = BigInteger.valueOf(31).multiply(result).add(structNodeDelegate.computeHash());
+        }
+        result = BigInteger.valueOf(31).multiply(result).add(BigInteger.valueOf(Boolean.hashCode(boolValue)));
+
+        return Node.to128BitsAtMaximumBigInteger(result);
     }
-  }
 
-  @Override
-  public BigInteger getHash() {
-    if (hashCode == null) {
-      hashCode = computeHash();
+    @Override
+    public void setHash(final BigInteger hash) {
+        if (hash != null) {
+            hashCode = Node.to128BitsAtMaximumBigInteger(hash);
+        } else {
+            hashCode = null;
+        }
     }
-    return hashCode;
-  }
 
-  public void setValue(final boolean value) {
-    boolValue = value;
-  }
+    @Override
+    public BigInteger getHash() {
+        if (hashCode == null) {
+            hashCode = computeHash();
+        }
+        return hashCode;
+    }
 
-  public boolean getValue() {
-    return boolValue;
-  }
+    public void setValue(final boolean value) {
+        boolValue = value;
+    }
 
-  @Override
-  public StructNodeDelegate getStructNodeDelegate() {
-    return structNodeDelegate;
-  }
+    public boolean getValue() {
+        return boolValue;
+    }
 
-  @Override
-  protected StructNodeDelegate structDelegate() {
-    return structNodeDelegate;
-  }
+    @Override
+    public StructNodeDelegate getStructNodeDelegate() {
+        return structNodeDelegate;
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return structNodeDelegate.getNodeDelegate();
-  }
+    @Override
+    protected StructNodeDelegate structDelegate() {
+        return structNodeDelegate;
+    }
+
+    @Override
+    protected NodeDelegate delegate() {
+        return structNodeDelegate.getNodeDelegate();
+    }
 }

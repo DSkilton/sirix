@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.node;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,51 +37,52 @@ import com.google.common.base.Objects;
  */
 public final class DeletedNode extends AbstractForwardingNode {
 
-  /**
-   * Delegate for common data.
-   */
-  private final NodeDelegate mDel;
+    /**
+     * Delegate for common data.
+     */
+    private final NodeDelegate mDel;
 
-  /**
-   * Constructor.
-   *
-   * @param nodeDel node delegate
-   */
-  public DeletedNode(final NodeDelegate nodeDel) {
-    mDel = checkNotNull(nodeDel);
-  }
+    /**
+     * Constructor.
+     *
+     * @param nodeDel node delegate
+     */
+    public DeletedNode(final NodeDelegate nodeDel) {
+        mDel = checkNotNull(nodeDel);
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.DELETE;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.DELETE;
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(mDel);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(mDel);
+    }
 
-  @Override
-  public boolean equals(final Object obj) {
-    if (!(obj instanceof DeletedNode))
-      return false;
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof DeletedNode)) {
+            return false;
+        }
 
-    final DeletedNode other = (DeletedNode) obj;
-    return Objects.equal(mDel, other.mDel);
-  }
+        final DeletedNode other = (DeletedNode) obj;
+        return Objects.equal(mDel, other.mDel);
+    }
 
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this).add("delegate", mDel.toString()).toString();
-  }
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("delegate", mDel.toString()).toString();
+    }
 
-  @Override
-  public boolean isSameItem(final @Nullable Node other) {
-    return mDel.isSameItem(other);
-  }
+    @Override
+    public boolean isSameItem(final @Nullable Node other) {
+        return mDel.isSameItem(other);
+    }
 
-  @Override
-  protected NodeDelegate delegate() {
-    return mDel;
-  }
+    @Override
+    protected NodeDelegate delegate() {
+        return mDel;
+    }
 }

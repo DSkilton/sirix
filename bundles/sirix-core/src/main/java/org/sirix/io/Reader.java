@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.io;
 
 import org.sirix.api.PageReadOnlyTrx;
@@ -39,38 +40,38 @@ import javax.annotation.Nullable;
  */
 public interface Reader extends AutoCloseable {
 
-  /**
-   * Getting the first reference of the {@code Uberpage}.
-   *
-   * @return a {@link PageReference} with link to the first reference
-   * @throws SirixIOException if something bad happens
-   */
-  PageReference readUberPageReference();
+    /**
+     * Getting the first reference of the {@code Uberpage}.
+     *
+     * @return a {@link PageReference} with link to the first reference
+     * @throws SirixIOException if something bad happens
+     */
+    PageReference readUberPageReference();
 
-  /**
-   * Getting a reference for the given pointer.
-   *
-   * @param key the reference for the page to be determined
-   * @param pageReadTrx {@link PageReadOnlyTrx} reference
-   * @return a {@link BitmapReferencesPage} as the base for a page
-   * @throws SirixIOException if something bad happens during read
-   */
-  Page read(PageReference key, @Nullable PageReadOnlyTrx pageReadTrx);
+    /**
+     * Getting a reference for the given pointer.
+     *
+     * @param key the reference for the page to be determined
+     * @param pageReadTrx {@link PageReadOnlyTrx} reference
+     * @return a {@link BitmapReferencesPage} as the base for a page
+     * @throws SirixIOException if something bad happens during read
+     */
+    Page read(PageReference key, @Nullable PageReadOnlyTrx pageReadTrx);
 
-  /**
-   * Closing the storage.
-   *
-   * @throws SirixIOException if something bad happens while access
-   */
-  @Override
-  void close();
+    /**
+     * Closing the storage.
+     *
+     * @throws SirixIOException if something bad happens while access
+     */
+    @Override
+    void close();
 
-  /**
-   * Read the revision root page.
-   *
-   * @param revision the revision to read
-   * @param pageReadTrx the page reading transaction
-   * @return the revision root page
-   */
-  RevisionRootPage readRevisionRootPage(int revision, PageReadOnlyTrx pageReadTrx);
+    /**
+     * Read the revision root page.
+     *
+     * @param revision the revision to read
+     * @param pageReadTrx the page reading transaction
+     * @return the revision root page
+     */
+    RevisionRootPage readRevisionRootPage(int revision, PageReadOnlyTrx pageReadTrx);
 }

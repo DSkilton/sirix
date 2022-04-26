@@ -4,28 +4,29 @@ import java.util.Collections;
 import java.util.Set;
 
 public class PCRValue {
-  private final long mMaxPCR;
 
-  private final Set<Long> mPCRs;
+    private final long mMaxPCR;
 
-  private PCRValue(final long maxPCR, final Set<Long> pcrs) {
-    mMaxPCR = maxPCR;
-    mPCRs = pcrs;
-  }
+    private final Set<Long> mPCRs;
 
-  public static final PCRValue getInstance(final long maxPCR, final Set<Long> pcrs) {
-    return new PCRValue(maxPCR, pcrs);
-  }
+    private PCRValue(final long maxPCR, final Set<Long> pcrs) {
+        mMaxPCR = maxPCR;
+        mPCRs = pcrs;
+    }
 
-  public static final PCRValue getEmptyInstance() {
-    return new PCRValue(0, Collections.emptySet());
-  }
+    public static final PCRValue getInstance(final long maxPCR, final Set<Long> pcrs) {
+        return new PCRValue(maxPCR, pcrs);
+    }
 
-  public long getMaxPCR() {
-    return mMaxPCR;
-  }
+    public static final PCRValue getEmptyInstance() {
+        return new PCRValue(0, Collections.emptySet());
+    }
 
-  public Set<Long> getPCRs() {
-    return mPCRs;
-  }
+    public long getMaxPCR() {
+        return mMaxPCR;
+    }
+
+    public Set<Long> getPCRs() {
+        return mPCRs;
+    }
 }

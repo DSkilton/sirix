@@ -25,11 +25,11 @@ public class SerializeVersionedXmlResource {
 
     private static void serializeRevisionOneAndTwo(final XmlResourceManager manager) {
         final var outputStream = new ByteArrayOutputStream();
-        final var serializerForRevisionOneAndTwo =
-            XmlSerializer.newBuilder(manager, outputStream, 1, 2).emitIDs()
-                                                                 .prettyPrint()
-                                                                 .serializeTimestamp(true)
-                                                                 .build();
+        final var serializerForRevisionOneAndTwo
+                = XmlSerializer.newBuilder(manager, outputStream, 1, 2).emitIDs()
+                        .prettyPrint()
+                        .serializeTimestamp(true)
+                        .build();
         serializerForRevisionOneAndTwo.call();
         System.out.println("Revision 1 and 2:");
         System.out.println(outputStream.toString());
@@ -37,11 +37,11 @@ public class SerializeVersionedXmlResource {
 
     private static void serializeMostRecentRevision(final XmlResourceManager manager) {
         final var outputStream = new ByteArrayOutputStream();
-        final var serializerForMostRecentRevision =
-            XmlSerializer.newBuilder(manager, outputStream).emitIDs()
-                                                           .prettyPrint()
-                                                           .serializeTimestamp(true)
-                                                           .build();
+        final var serializerForMostRecentRevision
+                = XmlSerializer.newBuilder(manager, outputStream).emitIDs()
+                        .prettyPrint()
+                        .serializeTimestamp(true)
+                        .build();
         serializerForMostRecentRevision.call();
         System.out.println("Most recent revision:");
         System.out.println(outputStream.toString());
@@ -49,11 +49,11 @@ public class SerializeVersionedXmlResource {
 
     private static void serializeAllRevisions(final XmlResourceManager manager) {
         final var outputStream = new ByteArrayOutputStream();
-        final var serializerForAllRevisions =
-            XmlSerializer.newBuilder(manager, outputStream, -1).emitIDs()
-                                                               .prettyPrint()
-                                                               .serializeTimestamp(true)
-                                                               .build();
+        final var serializerForAllRevisions
+                = XmlSerializer.newBuilder(manager, outputStream, -1).emitIDs()
+                        .prettyPrint()
+                        .serializeTimestamp(true)
+                        .build();
         serializerForAllRevisions.call();
         System.out.println("All revisions:");
         System.out.println(outputStream.toString());

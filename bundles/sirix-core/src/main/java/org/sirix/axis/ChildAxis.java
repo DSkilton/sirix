@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.axis;
 
 import org.sirix.api.NodeCursor;
@@ -30,35 +31,37 @@ import org.sirix.api.NodeCursor;
  */
 public final class ChildAxis extends AbstractAxis {
 
-  /** Has another child node. */
-  private boolean first;
+    /**
+     * Has another child node.
+     */
+    private boolean first;
 
-  /**
-   * Constructor initializing internal state.
-   *
-   * @param cursor cursor to iterate with
-   */
-  public ChildAxis(final NodeCursor cursor) {
-    super(cursor);
-  }
-
-  @Override
-  public void reset(final long nodeKey) {
-    super.reset(nodeKey);
-    first = true;
-  }
-
-  @Override
-  protected long nextKey() {
-    final NodeCursor cursor = getCursor();
-
-    if (!first && cursor.hasRightSibling()) {
-      return cursor.getRightSiblingKey();
-    } else if (first && cursor.hasFirstChild()) {
-      first = false;
-      return cursor.getFirstChildKey();
+    /**
+     * Constructor initializing internal state.
+     *
+     * @param cursor cursor to iterate with
+     */
+    public ChildAxis(final NodeCursor cursor) {
+        super(cursor);
     }
 
-    return done();
-  }
+    @Override
+    public void reset(final long nodeKey) {
+        super.reset(nodeKey);
+        first = true;
+    }
+
+    @Override
+    protected long nextKey() {
+        final NodeCursor cursor = getCursor();
+
+        if (!first && cursor.hasRightSibling()) {
+            return cursor.getRightSiblingKey();
+        } else if (first && cursor.hasFirstChild()) {
+            first = false;
+            return cursor.getFirstChildKey();
+        }
+
+        return done();
+    }
 }

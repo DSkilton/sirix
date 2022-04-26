@@ -11,54 +11,57 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.io;
 
 import org.sirix.exception.SirixIOException;
 import org.sirix.page.PageReference;
 
 /**
- * Interface to provide the abstract layer related to write access of the Sirix-backend.
+ * Interface to provide the abstract layer related to write access of the
+ * Sirix-backend.
  *
  * @author Sebastian Graf, University of Konstanz
  *
  */
 public interface Writer extends Reader {
-  /**
-   * Writing a page related to the reference.
-   *
-   * @param pageReference that points to a page
-   * @throws SirixIOException execption to be thrown if something bad happens
-   * @return this writer instance
-   */
-  Writer write(PageReference pageReference) throws SirixIOException;
 
-  /**
-   * Write beacon for the first reference.
-   *
-   * @param pageReference that points to the beacon
-   * @throws SirixIOException if an I/O error occured
-   * @return this writer instance
-   */
-  Writer writeUberPageReference(PageReference pageReference) throws SirixIOException;
+    /**
+     * Writing a page related to the reference.
+     *
+     * @param pageReference that points to a page
+     * @throws SirixIOException execption to be thrown if something bad happens
+     * @return this writer instance
+     */
+    Writer write(PageReference pageReference) throws SirixIOException;
 
-  /**
-   * Truncate to a specific revision.
-   *
-   * @param revision the revision to truncate to.
-   * @return this writer instance
-   */
-  Writer truncateTo(int revision);
+    /**
+     * Write beacon for the first reference.
+     *
+     * @param pageReference that points to the beacon
+     * @throws SirixIOException if an I/O error occured
+     * @return this writer instance
+     */
+    Writer writeUberPageReference(PageReference pageReference) throws SirixIOException;
 
-  /**
-   * Truncate, that is remove all file content.
-   */
-  Writer truncate();
+    /**
+     * Truncate to a specific revision.
+     *
+     * @param revision the revision to truncate to.
+     * @return this writer instance
+     */
+    Writer truncateTo(int revision);
+
+    /**
+     * Truncate, that is remove all file content.
+     */
+    Writer truncate();
 }

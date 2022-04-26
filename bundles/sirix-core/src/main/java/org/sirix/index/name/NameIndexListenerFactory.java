@@ -12,24 +12,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class NameIndexListenerFactory {
 
-  private final DatabaseType databaseType;
+    private final DatabaseType databaseType;
 
-  public NameIndexListenerFactory(final DatabaseType databaseType) {
-    this.databaseType = databaseType;
-  }
+    public NameIndexListenerFactory(final DatabaseType databaseType) {
+        this.databaseType = databaseType;
+    }
 
-  public NameIndexListener create(final PageTrx pageWriteTrx,
-      final IndexDef indexDefinition) {
-    final var includes = checkNotNull(indexDefinition.getIncluded());
-    final var excludes = checkNotNull(indexDefinition.getExcluded());
-    assert indexDefinition.getType() == IndexType.NAME;
-    final var avlTreeWriter = RBTreeWriter.<QNm, NodeReferences>getInstance(
-            this.databaseType,
-            pageWriteTrx,
-            indexDefinition.getType(),
-            indexDefinition.getID()
-    );
+    public NameIndexListener create(final PageTrx pageWriteTrx,
+            final IndexDef indexDefinition) {
+        final var includes = checkNotNull(indexDefinition.getIncluded());
+        final var excludes = checkNotNull(indexDefinition.getExcluded());
+        assert indexDefinition.getType() == IndexType.NAME;
+        final var avlTreeWriter = RBTreeWriter.<QNm, NodeReferences>getInstance(
+                this.databaseType,
+                pageWriteTrx,
+                indexDefinition.getType(),
+                indexDefinition.getID()
+        );
 
-    return new NameIndexListener(includes, excludes, avlTreeWriter);
-  }
+        return new NameIndexListener(includes, excludes, avlTreeWriter);
+    }
 }

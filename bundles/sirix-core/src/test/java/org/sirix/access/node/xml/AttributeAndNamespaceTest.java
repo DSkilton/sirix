@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.access.node.xml;
 
 import static org.junit.Assert.assertEquals;
@@ -31,43 +32,43 @@ import org.sirix.exception.SirixException;
 
 public class AttributeAndNamespaceTest {
 
-  private Holder holder;
+    private Holder holder;
 
-  @Before
-  public void setUp() throws SirixException {
-    XmlTestHelper.deleteEverything();
-    XmlTestHelper.createTestDocument();
-    holder = Holder.generateRtx();
-  }
+    @Before
+    public void setUp() throws SirixException {
+        XmlTestHelper.deleteEverything();
+        XmlTestHelper.createTestDocument();
+        holder = Holder.generateRtx();
+    }
 
-  @After
-  public void tearDown() throws SirixException {
-    holder.close();
-    XmlTestHelper.closeEverything();
-  }
+    @After
+    public void tearDown() throws SirixException {
+        holder.close();
+        XmlTestHelper.closeEverything();
+    }
 
-  @Test
-  public void testAttribute() throws SirixException {
-    holder.getXmlNodeReadTrx().moveTo(1L);
-    assertEquals(1, holder.getXmlNodeReadTrx().getAttributeCount());
-    holder.getXmlNodeReadTrx().moveToAttribute(0);
-    assertEquals("i", holder.getXmlNodeReadTrx().getName().getLocalName());
+    @Test
+    public void testAttribute() throws SirixException {
+        holder.getXmlNodeReadTrx().moveTo(1L);
+        assertEquals(1, holder.getXmlNodeReadTrx().getAttributeCount());
+        holder.getXmlNodeReadTrx().moveToAttribute(0);
+        assertEquals("i", holder.getXmlNodeReadTrx().getName().getLocalName());
 
-    holder.getXmlNodeReadTrx().moveTo(9L);
-    assertEquals(1, holder.getXmlNodeReadTrx().getAttributeCount());
-    holder.getXmlNodeReadTrx().moveToAttribute(0);
-    assertEquals(
-        "p:x", new StringBuilder(holder.getXmlNodeReadTrx().getName().getPrefix()).append(
-            ":").append(holder.getXmlNodeReadTrx().getName().getLocalName()).toString());
-    assertEquals("ns", holder.getXmlNodeReadTrx().getName().getNamespaceURI());
-  }
+        holder.getXmlNodeReadTrx().moveTo(9L);
+        assertEquals(1, holder.getXmlNodeReadTrx().getAttributeCount());
+        holder.getXmlNodeReadTrx().moveToAttribute(0);
+        assertEquals(
+                "p:x", new StringBuilder(holder.getXmlNodeReadTrx().getName().getPrefix()).append(
+                        ":").append(holder.getXmlNodeReadTrx().getName().getLocalName()).toString());
+        assertEquals("ns", holder.getXmlNodeReadTrx().getName().getNamespaceURI());
+    }
 
-  @Test
-  public void testNamespace() throws SirixException {
-    holder.getXmlNodeReadTrx().moveTo(1L);
-    assertEquals(1, holder.getXmlNodeReadTrx().getNamespaceCount());
-    holder.getXmlNodeReadTrx().moveToNamespace(0);
-    assertEquals("p", holder.getXmlNodeReadTrx().getName().getPrefix());
-    assertEquals("ns", holder.getXmlNodeReadTrx().getName().getNamespaceURI());
-  }
+    @Test
+    public void testNamespace() throws SirixException {
+        holder.getXmlNodeReadTrx().moveTo(1L);
+        assertEquals(1, holder.getXmlNodeReadTrx().getNamespaceCount());
+        holder.getXmlNodeReadTrx().moveToNamespace(0);
+        assertEquals("p", holder.getXmlNodeReadTrx().getName().getPrefix());
+        assertEquals("ns", holder.getXmlNodeReadTrx().getName().getNamespaceURI());
+    }
 }

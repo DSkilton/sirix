@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.access.node.xml;
 
 import static org.junit.Assert.assertEquals;
@@ -35,66 +36,66 @@ import org.sirix.utils.XmlDocumentCreator;
 
 public final class MinimumCommitTest {
 
-  private Holder holder;
+    private Holder holder;
 
-  @Before
-  public void setUp() {
-    XmlTestHelper.deleteEverything();
-    holder = Holder.generateWtx();
-  }
-
-  @After
-  public void tearDown() {
-    holder.close();
-    XmlTestHelper.closeEverything();
-  }
-
-  @Test
-  public void test() {
-    assertEquals(1L, holder.getXdmNodeWriteTrx().getRevisionNumber());
-    holder.getXdmNodeWriteTrx().commit();
-    holder.getXdmNodeWriteTrx().close();
-
-    holder = Holder.generateWtx();
-    assertEquals(2L, holder.getXdmNodeWriteTrx().getRevisionNumber());
-    XmlDocumentCreator.create(holder.getXdmNodeWriteTrx());
-    holder.getXdmNodeWriteTrx().commit();
-    holder.getXdmNodeWriteTrx().close();
-
-    holder = Holder.generateWtx();
-    assertEquals(3L, holder.getXdmNodeWriteTrx().getRevisionNumber());
-    holder.getXdmNodeWriteTrx().commit();
-    holder.getXdmNodeWriteTrx().close();
-
-    holder = Holder.generateRtx();
-    assertEquals(3L, holder.getXmlNodeReadTrx().getRevisionNumber());
-  }
-
-  @Test
-  public void testTimestamp() throws SirixException {
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx()) {
-      assertTrue(rtx.getRevisionTimestamp().toEpochMilli() < (System.currentTimeMillis() + 1));
-    }
-  }
-
-  @Test
-  public void testCommitMessage() {
-    try (final XmlNodeTrx wtx = holder.getXdmNodeWriteTrx()) {
-      wtx.commit("foo");
-      wtx.commit("bar");
-      wtx.commit("baz");
+    @Before
+    public void setUp() {
+        XmlTestHelper.deleteEverything();
+        holder = Holder.generateWtx();
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(1)) {
-      assertEquals("foo", rtx.getCommitCredentials().getMessage());
+    @After
+    public void tearDown() {
+        holder.close();
+        XmlTestHelper.closeEverything();
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(2)) {
-      assertEquals("bar", rtx.getCommitCredentials().getMessage());
+    @Test
+    public void test() {
+        assertEquals(1L, holder.getXdmNodeWriteTrx().getRevisionNumber());
+        holder.getXdmNodeWriteTrx().commit();
+        holder.getXdmNodeWriteTrx().close();
+
+        holder = Holder.generateWtx();
+        assertEquals(2L, holder.getXdmNodeWriteTrx().getRevisionNumber());
+        XmlDocumentCreator.create(holder.getXdmNodeWriteTrx());
+        holder.getXdmNodeWriteTrx().commit();
+        holder.getXdmNodeWriteTrx().close();
+
+        holder = Holder.generateWtx();
+        assertEquals(3L, holder.getXdmNodeWriteTrx().getRevisionNumber());
+        holder.getXdmNodeWriteTrx().commit();
+        holder.getXdmNodeWriteTrx().close();
+
+        holder = Holder.generateRtx();
+        assertEquals(3L, holder.getXmlNodeReadTrx().getRevisionNumber());
     }
 
-    try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(3)) {
-      assertEquals("baz", rtx.getCommitCredentials().getMessage());
+    @Test
+    public void testTimestamp() throws SirixException {
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx()) {
+            assertTrue(rtx.getRevisionTimestamp().toEpochMilli() < (System.currentTimeMillis() + 1));
+        }
     }
-  }
+
+    @Test
+    public void testCommitMessage() {
+        try (final XmlNodeTrx wtx = holder.getXdmNodeWriteTrx()) {
+            wtx.commit("foo");
+            wtx.commit("bar");
+            wtx.commit("baz");
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(1)) {
+            assertEquals("foo", rtx.getCommitCredentials().getMessage());
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(2)) {
+            assertEquals("bar", rtx.getCommitCredentials().getMessage());
+        }
+
+        try (final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx(3)) {
+            assertEquals("baz", rtx.getCommitCredentials().getMessage());
+        }
+    }
 }

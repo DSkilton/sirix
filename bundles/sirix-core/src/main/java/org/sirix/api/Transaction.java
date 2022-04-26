@@ -1,14 +1,15 @@
 package org.sirix.api;
 
 public interface Transaction extends AutoCloseable {
-  Transaction commit();
 
-  Transaction rollback();
+    Transaction commit();
 
-  long getId();
+    Transaction rollback();
 
-  @Override
-  void close();
+    long getId();
 
-  Transaction add(NodeTrx nodeTrx);
+    @Override
+    void close();
+
+    Transaction add(NodeTrx nodeTrx);
 }

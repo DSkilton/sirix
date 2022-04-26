@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.diff;
 
 import java.util.HashSet;
@@ -28,48 +29,49 @@ import org.sirix.diff.DiffFactory.DiffType;
 import org.sirix.exception.SirixException;
 
 /**
- * Implements {@link DiffObservable}, which can be used for all classes, which implement the
- * {@link DiffObservable} interface.
+ * Implements {@link DiffObservable}, which can be used for all classes, which
+ * implement the {@link DiffObservable} interface.
  *
  * @author Johannes Lichtenberger, University of Konstanz
  *
  */
 abstract class AbstractDiffObservable implements DiffObservable {
 
-  /**
-   * {@link Set} of observers, which want to be notified of the encountered differences.
-   */
-  private final Set<DiffObserver> diffObservers;
+    /**
+     * {@link Set} of observers, which want to be notified of the encountered
+     * differences.
+     */
+    private final Set<DiffObserver> diffObservers;
 
-  /**
-   * Default constructor.
-   */
-  AbstractDiffObservable() {
-    diffObservers = new HashSet<>();
-  }
-
-  @Override
-  public final void fireDiff(final DiffType diff, final @Nonnull long newNodeKey,
-      final @Nonnull long oldNodeKey, final @Nonnull DiffDepth depth) {
-    for (final DiffObserver observer : diffObservers) {
-      observer.diffListener(diff, newNodeKey, oldNodeKey, depth);
+    /**
+     * Default constructor.
+     */
+    AbstractDiffObservable() {
+        diffObservers = new HashSet<>();
     }
-  }
 
-  @Override
-  public final void done() throws SirixException {
-    for (final DiffObserver observer : diffObservers) {
-      observer.diffDone();
+    @Override
+    public final void fireDiff(final DiffType diff, final @Nonnull long newNodeKey,
+            final @Nonnull long oldNodeKey, final @Nonnull DiffDepth depth) {
+        for (final DiffObserver observer : diffObservers) {
+            observer.diffListener(diff, newNodeKey, oldNodeKey, depth);
+        }
     }
-  }
 
-  @Override
-  public final void addObserver(final DiffObserver observer) {
-    diffObservers.add(observer);
-  }
+    @Override
+    public final void done() throws SirixException {
+        for (final DiffObserver observer : diffObservers) {
+            observer.diffDone();
+        }
+    }
 
-  @Override
-  public final void removeObserver(final DiffObserver observer) {
-    diffObservers.remove(observer);
-  }
+    @Override
+    public final void addObserver(final DiffObserver observer) {
+        diffObservers.add(observer);
+    }
+
+    @Override
+    public final void removeObserver(final DiffObserver observer) {
+        diffObservers.remove(observer);
+    }
 }

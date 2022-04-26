@@ -11,14 +11,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.sirix.service.xml.xpath;
 
 import static org.junit.Assert.fail;
@@ -45,49 +46,49 @@ import org.sirix.service.xml.shredder.XmlShredder;
  */
 public final class XPathWriteTransactionTest {
 
-  private static final Path XML = Paths.get("src", "test", "resources", "enwiki-revisions-test.xml");
+    private static final Path XML = Paths.get("src", "test", "resources", "enwiki-revisions-test.xml");
 
-  private static final String RESOURCE = "bla";
+    private static final String RESOURCE = "bla";
 
-  private XmlResourceManager manager;
+    private XmlResourceManager manager;
 
-  private XmlNodeTrx wtx;
+    private XmlNodeTrx wtx;
 
-  private Database<XmlResourceManager> database;
+    private Database<XmlResourceManager> database;
 
-  @Before
-  public void setUp() throws Exception {
-    XmlTestHelper.deleteEverything();
-    // Build simple test tree.
-    XmlShredder.main(XML.toAbsolutePath().toString(), PATHS.PATH1.getFile().toAbsolutePath().toString());
+    @Before
+    public void setUp() throws Exception {
+        XmlTestHelper.deleteEverything();
+        // Build simple test tree.
+        XmlShredder.main(XML.toAbsolutePath().toString(), PATHS.PATH1.getFile().toAbsolutePath().toString());
 
-    // Verify.
-    database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
-    database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
-    manager = database.openResourceManager(XmlTestHelper.RESOURCE);
-    wtx = manager.beginNodeTrx();
-  }
-
-  @Test
-  public void test() throws SirixXPathException {
-    wtx.moveToDocumentRoot();
-    // final XPathAxis xpa =
-    // new XPathAxis(wtx, "//revision[./parent::page/title/text() = '"
-    // + "AmericanSamoa"
-    // + "']");
-    final XPathAxis xpa = new XPathAxis(wtx, "//revision");
-    if (!xpa.hasNext()) {
-      fail();
+        // Verify.
+        database = XmlTestHelper.getDatabase(PATHS.PATH1.getFile());
+        database.createResource(new ResourceConfiguration.Builder(RESOURCE).build());
+        manager = database.openResourceManager(XmlTestHelper.RESOURCE);
+        wtx = manager.beginNodeTrx();
     }
 
-  }
+    @Test
+    public void test() throws SirixXPathException {
+        wtx.moveToDocumentRoot();
+        // final XPathAxis xpa =
+        // new XPathAxis(wtx, "//revision[./parent::page/title/text() = '"
+        // + "AmericanSamoa"
+        // + "']");
+        final XPathAxis xpa = new XPathAxis(wtx, "//revision");
+        if (!xpa.hasNext()) {
+            fail();
+        }
 
-  @After
-  public void tearDown() throws SirixException {
-    // wtx.abort();
-    wtx.close();
-    manager.close();
-    XmlTestHelper.closeEverything();
-  }
+    }
+
+    @After
+    public void tearDown() throws SirixException {
+        // wtx.abort();
+        wtx.close();
+        manager.close();
+        XmlTestHelper.closeEverything();
+    }
 
 }

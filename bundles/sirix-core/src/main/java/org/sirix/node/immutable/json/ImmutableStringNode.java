@@ -22,150 +22,153 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 public final class ImmutableStringNode extends AbstractImmutableJsonStructuralNode implements ImmutableValueNode {
-  /** Mutable {@link StringNode}. */
-  private final StringNode node;
 
-  /**
-   * Private constructor.
-   *
-   * @param node {@link StringNode} to wrap
-   */
-  private ImmutableStringNode(final StringNode node) {
-    this.node = checkNotNull(node);
-  }
+    /**
+     * Mutable {@link StringNode}.
+     */
+    private final StringNode node;
 
-  /**
-   * Get an immutable text node instance.
-   *
-   * @param node the mutable {@link TextNode} to wrap
-   * @return immutable text node instance
-   */
-  public static ImmutableStringNode of(final StringNode node) {
-    return new ImmutableStringNode(node);
-  }
+    /**
+     * Private constructor.
+     *
+     * @param node {@link StringNode} to wrap
+     */
+    private ImmutableStringNode(final StringNode node) {
+        this.node = checkNotNull(node);
+    }
 
-  @Override
-  public boolean isSameItem(final @Nullable Node other) {
-    return node.isSameItem(other);
-  }
+    /**
+     * Get an immutable text node instance.
+     *
+     * @param node the mutable {@link TextNode} to wrap
+     * @return immutable text node instance
+     */
+    public static ImmutableStringNode of(final StringNode node) {
+        return new ImmutableStringNode(node);
+    }
 
-  @Override
-  public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
-    return visitor.visit(this);
-  }
+    @Override
+    public boolean isSameItem(final @Nullable Node other) {
+        return node.isSameItem(other);
+    }
 
-  @Override
-  public long getParentKey() {
-    return node.getParentKey();
-  }
+    @Override
+    public VisitResult acceptVisitor(final JsonNodeVisitor visitor) {
+        return visitor.visit(this);
+    }
 
-  @Override
-  public boolean hasParent() {
-    return node.hasParent();
-  }
+    @Override
+    public long getParentKey() {
+        return node.getParentKey();
+    }
 
-  @Override
-  public long getNodeKey() {
-    return node.getNodeKey();
-  }
+    @Override
+    public boolean hasParent() {
+        return node.hasParent();
+    }
 
-  @Override
-  public NodeKind getKind() {
-    return node.getKind();
-  }
+    @Override
+    public long getNodeKey() {
+        return node.getNodeKey();
+    }
 
-  @Override
-  public long getRevision() {
-    return node.getRevision();
-  }
+    @Override
+    public NodeKind getKind() {
+        return node.getKind();
+    }
 
-  @Override
-  public boolean hasFirstChild() {
-    return node.hasFirstChild();
-  }
+    @Override
+    public long getRevision() {
+        return node.getRevision();
+    }
 
-  @Override
-  public boolean hasLastChild() {
-    return node.hasLastChild();
-  }
+    @Override
+    public boolean hasFirstChild() {
+        return node.hasFirstChild();
+    }
 
-  @Override
-  public boolean hasLeftSibling() {
-    return node.hasLeftSibling();
-  }
+    @Override
+    public boolean hasLastChild() {
+        return node.hasLastChild();
+    }
 
-  @Override
-  public boolean hasRightSibling() {
-    return node.hasRightSibling();
-  }
+    @Override
+    public boolean hasLeftSibling() {
+        return node.hasLeftSibling();
+    }
 
-  @Override
-  public long getChildCount() {
-    return node.getChildCount();
-  }
+    @Override
+    public boolean hasRightSibling() {
+        return node.hasRightSibling();
+    }
 
-  @Override
-  public long getDescendantCount() {
-    return node.getDescendantCount();
-  }
+    @Override
+    public long getChildCount() {
+        return node.getChildCount();
+    }
 
-  @Override
-  public long getFirstChildKey() {
-    return node.getFirstChildKey();
-  }
+    @Override
+    public long getDescendantCount() {
+        return node.getDescendantCount();
+    }
 
-  @Override
-  public long getLastChildKey() {
-    return node.getLastChildKey();
-  }
+    @Override
+    public long getFirstChildKey() {
+        return node.getFirstChildKey();
+    }
 
-  @Override
-  public long getLeftSiblingKey() {
-    return node.getLeftSiblingKey();
-  }
+    @Override
+    public long getLastChildKey() {
+        return node.getLastChildKey();
+    }
 
-  @Override
-  public long getRightSiblingKey() {
-    return node.getRightSiblingKey();
-  }
+    @Override
+    public long getLeftSiblingKey() {
+        return node.getLeftSiblingKey();
+    }
 
-  @Override
-  public byte[] getRawValue() {
-    return node.getRawValue();
-  }
+    @Override
+    public long getRightSiblingKey() {
+        return node.getRightSiblingKey();
+    }
 
-  @Override
-  public String getValue() {
-    return node.getValue();
-  }
+    @Override
+    public byte[] getRawValue() {
+        return node.getRawValue();
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return node.equals(obj);
-  }
+    @Override
+    public String getValue() {
+        return node.getValue();
+    }
 
-  @Override
-  public int hashCode() {
-    return node.hashCode();
-  }
+    @Override
+    public boolean equals(Object obj) {
+        return node.equals(obj);
+    }
 
-  @Override
-  public String toString() {
-    return node.toString();
-  }
+    @Override
+    public int hashCode() {
+        return node.hashCode();
+    }
 
-  @Override
-  public StructNode structDelegate() {
-    return node.getStructNodeDelegate();
-  }
+    @Override
+    public String toString() {
+        return node.toString();
+    }
 
-  @Override
-  public BigInteger computeHash() {
-    return node.computeHash();
-  }
+    @Override
+    public StructNode structDelegate() {
+        return node.getStructNodeDelegate();
+    }
 
-  @Override
-  public SirixDeweyID getDeweyID() {
-    return node.getDeweyID();
-  }
+    @Override
+    public BigInteger computeHash() {
+        return node.computeHash();
+    }
+
+    @Override
+    public SirixDeweyID getDeweyID() {
+        return node.getDeweyID();
+    }
 }

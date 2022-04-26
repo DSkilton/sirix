@@ -2,7 +2,7 @@ package org.sirix.api;
 
 /**
  * Marker interface.
- * 
+ *
  * @author Johannes Lichtenberger
  *
  */

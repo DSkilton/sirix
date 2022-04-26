@@ -11,12 +11,14 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.sirix.node.delegates;
 
@@ -36,9 +38,10 @@ import javax.annotation.Nullable;
 import java.math.BigInteger;
 
 /**
- * Delegate method for all nodes. That means that all nodes stored in Sirix are represented by an
- * instance of the interface {@link Node} namely containing the position in the tree related to a
- * parent-node, the related type and the corresponding hash recursively computed.
+ * Delegate method for all nodes. That means that all nodes stored in Sirix are
+ * represented by an instance of the interface {@link Node} namely containing
+ * the position in the tree related to a parent-node, the related type and the
+ * corresponding hash recursively computed.
  *
  * @author Sebastian Graf, University of Konstanz
  * @author Johannes Lichtenberger, University of Konstanz
@@ -46,158 +49,174 @@ import java.math.BigInteger;
  */
 public class NodeDelegate implements Node {
 
-  /** Untyped type. */
-  private static final int TYPE_KEY = NamePageHash.generateHashForString("xs:untyped");
+    /**
+     * Untyped type.
+     */
+    private static final int TYPE_KEY = NamePageHash.generateHashForString("xs:untyped");
 
-  /** Key of the current node. Must be unique for all nodes. */
-  private final long nodeKey;
+    /**
+     * Key of the current node. Must be unique for all nodes.
+     */
+    private final long nodeKey;
 
-  /** Key of the parent node. */
-  private long parentKey;
+    /**
+     * Key of the parent node.
+     */
+    private long parentKey;
 
-  /** Hash of the parent node. */
-  private final BigInteger hashCode;
+    /**
+     * Hash of the parent node.
+     */
+    private final BigInteger hashCode;
 
-  /**
-   * TypeKey of the parent node. Can be referenced later on over special pages.
-   */
-  private int typeKey;
+    /**
+     * TypeKey of the parent node. Can be referenced later on over special
+     * pages.
+     */
+    private int typeKey;
 
-  /** Revision this node was added. */
-  private final long revision;
+    /**
+     * Revision this node was added.
+     */
+    private final long revision;
 
-  /** {@link SirixDeweyID} reference. */
-  private SirixDeweyID sirixDeweyID;
+    /**
+     * {@link SirixDeweyID} reference.
+     */
+    private SirixDeweyID sirixDeweyID;
 
-  /** The hash function. */
-  private final HashFunction mHashFunction;
+    /**
+     * The hash function.
+     */
+    private final HashFunction mHashFunction;
 
-  /**
-   * Constructor.
-   *
-   * @param nodeKey node key
-   * @param parentKey parent node key
-   * @param hashCode hash code of the node
-   * @param hashFunction the hash function used to compute hash codes
-   * @param revision revision this node was added
-   * @param deweyID optional DeweyID
-   */
-  public NodeDelegate(final @Nonnegative long nodeKey, final long parentKey, final HashFunction hashFunction,
-      final BigInteger hashCode, final @Nonnegative long revision, final SirixDeweyID deweyID) {
-    assert nodeKey >= 0 : "nodeKey must be >= 0!";
-    assert parentKey >= Fixed.NULL_NODE_KEY.getStandardProperty();
-    this.nodeKey = nodeKey;
-    this.parentKey = parentKey;
-    mHashFunction = hashFunction;
-    this.hashCode = hashCode;
-    this.revision = revision;
-    typeKey = TYPE_KEY;
-    sirixDeweyID = deweyID;
-  }
-
-  public HashFunction getHashFunction() {
-    return mHashFunction;
-  }
-
-  @Override
-  public NodeKind getKind() {
-    return NodeKind.UNKNOWN;
-  }
-
-  @Override
-  public long getNodeKey() {
-    return nodeKey;
-  }
-
-  @Override
-  public long getParentKey() {
-    return parentKey;
-  }
-
-  @Override
-  public void setParentKey(final long parentKey) {
-    assert parentKey >= Fixed.NULL_NODE_KEY.getStandardProperty();
-    this.parentKey = parentKey;
-  }
-
-  @Override
-  public BigInteger computeHash() {
-    final Funnel<Node> nodeFunnel = (Node node, PrimitiveSink into) -> into.putLong(node.getNodeKey()).putLong(node.getParentKey()).putByte(node.getKind().getId());
-
-    return Node.to128BitsAtMaximumBigInteger(new BigInteger(1, mHashFunction.hashObject(this, nodeFunnel).asBytes()));
-  }
-
-  @Override
-  public BigInteger getHash() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setHash(final BigInteger hash) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(nodeKey, typeKey, hashCode, parentKey);
-  }
-
-  @Override
-  public boolean equals(final Object otherObj) {
-    if (!(otherObj instanceof NodeDelegate))
-      return false;
-
-    final NodeDelegate other = (NodeDelegate) otherObj;
-
-    return Objects.equal(nodeKey, other.nodeKey) && Objects.equal(typeKey, other.typeKey)
-        && Objects.equal(hashCode, other.hashCode) && Objects.equal(parentKey, other.parentKey);
-  }
-
-  @Override
-  public String toString() {
-    return MoreObjects.toStringHelper(this)
-                      .add("node key", nodeKey)
-                      .add("parent key", parentKey)
-                      .add("type key", typeKey)
-                      .add("hash", hashCode)
-                      .add("deweyID", sirixDeweyID)
-                      .toString();
-  }
-
-  public int getTypeKey() {
-    return typeKey;
-  }
-
-  @Override
-  public void setTypeKey(final int typeKey) {
-    this.typeKey = typeKey;
-  }
-
-  @Override
-  public boolean hasParent() {
-    return parentKey != Fixed.NULL_NODE_KEY.getStandardProperty();
-  }
-
-  @Override
-  public boolean isSameItem(final @Nullable Node other) {
-    if (other == null) {
-      return false;
+    /**
+     * Constructor.
+     *
+     * @param nodeKey node key
+     * @param parentKey parent node key
+     * @param hashCode hash code of the node
+     * @param hashFunction the hash function used to compute hash codes
+     * @param revision revision this node was added
+     * @param deweyID optional DeweyID
+     */
+    public NodeDelegate(final @Nonnegative long nodeKey, final long parentKey, final HashFunction hashFunction,
+            final BigInteger hashCode, final @Nonnegative long revision, final SirixDeweyID deweyID) {
+        assert nodeKey >= 0 : "nodeKey must be >= 0!";
+        assert parentKey >= Fixed.NULL_NODE_KEY.getStandardProperty();
+        this.nodeKey = nodeKey;
+        this.parentKey = parentKey;
+        mHashFunction = hashFunction;
+        this.hashCode = hashCode;
+        this.revision = revision;
+        typeKey = TYPE_KEY;
+        sirixDeweyID = deweyID;
     }
-    return other.getNodeKey() == this.getNodeKey();
-  }
 
-  @Override
-  public long getRevision() {
-    return revision;
-  }
+    public HashFunction getHashFunction() {
+        return mHashFunction;
+    }
 
-  @Override
-  public void setDeweyID(final SirixDeweyID id) {
-    sirixDeweyID = id;
-  }
+    @Override
+    public NodeKind getKind() {
+        return NodeKind.UNKNOWN;
+    }
 
-  @Override
-  public SirixDeweyID getDeweyID() {
-    return sirixDeweyID;
-  }
+    @Override
+    public long getNodeKey() {
+        return nodeKey;
+    }
+
+    @Override
+    public long getParentKey() {
+        return parentKey;
+    }
+
+    @Override
+    public void setParentKey(final long parentKey) {
+        assert parentKey >= Fixed.NULL_NODE_KEY.getStandardProperty();
+        this.parentKey = parentKey;
+    }
+
+    @Override
+    public BigInteger computeHash() {
+        final Funnel<Node> nodeFunnel = (Node node, PrimitiveSink into) -> into.putLong(node.getNodeKey()).putLong(node.getParentKey()).putByte(node.getKind().getId());
+
+        return Node.to128BitsAtMaximumBigInteger(new BigInteger(1, mHashFunction.hashObject(this, nodeFunnel).asBytes()));
+    }
+
+    @Override
+    public BigInteger getHash() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setHash(final BigInteger hash) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(nodeKey, typeKey, hashCode, parentKey);
+    }
+
+    @Override
+    public boolean equals(final Object otherObj) {
+        if (!(otherObj instanceof NodeDelegate)) {
+            return false;
+        }
+
+        final NodeDelegate other = (NodeDelegate) otherObj;
+
+        return Objects.equal(nodeKey, other.nodeKey) && Objects.equal(typeKey, other.typeKey)
+                && Objects.equal(hashCode, other.hashCode) && Objects.equal(parentKey, other.parentKey);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("node key", nodeKey)
+                .add("parent key", parentKey)
+                .add("type key", typeKey)
+                .add("hash", hashCode)
+                .add("deweyID", sirixDeweyID)
+                .toString();
+    }
+
+    public int getTypeKey() {
+        return typeKey;
+    }
+
+    @Override
+    public void setTypeKey(final int typeKey) {
+        this.typeKey = typeKey;
+    }
+
+    @Override
+    public boolean hasParent() {
+        return parentKey != Fixed.NULL_NODE_KEY.getStandardProperty();
+    }
+
+    @Override
+    public boolean isSameItem(final @Nullable Node other) {
+        if (other == null) {
+            return false;
+        }
+        return other.getNodeKey() == this.getNodeKey();
+    }
+
+    @Override
+    public long getRevision() {
+        return revision;
+    }
+
+    @Override
+    public void setDeweyID(final SirixDeweyID id) {
+        sirixDeweyID = id;
+    }
+
+    @Override
+    public SirixDeweyID getDeweyID() {
+        return sirixDeweyID;
+    }
 }
