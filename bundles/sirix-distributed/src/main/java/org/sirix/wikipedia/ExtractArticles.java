@@ -138,11 +138,10 @@ public final class ExtractArticles extends XMLFilterImpl {
 		final XMLReader parser = new ExtractArticles(new SAXParser());
 
 		if (parser != null) {
-			try {
+			try(final XMLSerializer printer = new XMLSerializer(new FileWriter(TARGET), new OutputFormat());) {
 				TARGET.delete();
 				TARGET.createNewFile();
-				final XMLSerializer printer = new XMLSerializer(new FileWriter(TARGET),
-						new OutputFormat());
+
 				parser.setContentHandler(printer);
 				parser.parse(wikiDump);
 			} catch (final IOException | SAXException e) {

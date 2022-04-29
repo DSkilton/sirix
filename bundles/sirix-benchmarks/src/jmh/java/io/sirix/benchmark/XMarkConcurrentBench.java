@@ -80,7 +80,8 @@ public class XMarkConcurrentBench {
                                                    .build());
       manager = database.openResourceManager("resource");
 
-      try (final var wtx = manager.beginNodeTrx(); final var fis = new FileInputStream(pathToXmlFile.toFile())) {
+      try (final var wtx = manager.beginNodeTrx();
+           final var fis = new FileInputStream(pathToXmlFile.toFile())) {
         wtx.insertSubtreeAsFirstChild(XmlShredder.createFileReader(fis));
         wtx.commit();
       } catch (IOException e) {
