@@ -81,18 +81,18 @@ public final class TestXSLTTransformation extends TestCase {
 	public void testTransform() throws Exception {
 		final Processor proc = new Processor(false);
 		final XsltCompiler compiler = proc.newXsltCompiler();
-		try {
-			final XsltExecutable exec = compiler.compile(new StreamSource(new File(
-					STYLESHEET)));
-			final XsltTransformer transform = exec.load();
-			transform.setSource(new StreamSource(new FileInputStream(INPUT)));
-			final Serializer serializer = new Serializer();
-			final OutputStream out = new ByteArrayOutputStream();
+		try (final XsltExecutable exec = compiler.compile(new StreamSource(new File(STYLESHEET);
+			 final StringBuilder expected = TestHelper.readFile(new File(EXPECTED), false);
+			 final Serializer serializer = new Serializer();
+			 final OutputStream out = new ByteArrayOutputStream();
+			 final XsltTransformer transform = exec.load()))){
+
+			 transform.setSource(new StreamSource(new FileInputStream(INPUT)));
+
 			serializer.setOutputStream(out);
 			transform.setDestination(serializer);
 			transform.transform();
-			final StringBuilder expected = TestHelper.readFile(new File(EXPECTED),
-					false);
+
 			assertEquals("XML files match", expected.toString(), new StringBuilder(
 					"<root>").append(out.toString()).append("</root>").toString());
 		} catch (final SaxonApiException e) {
