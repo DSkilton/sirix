@@ -114,7 +114,7 @@ public final class XmlDBSerializer implements Serializer, AutoCloseable {
               out.print(" ");
             }
 
-            out.print(item.toString());
+            out.print(item);
             first = false;
           } else {
             // TODO

@@ -12,6 +12,3 @@ class XmlSessionDBCollection<T>(
     private val user: User
 ) : TemporalNodeCollection<AbstractTemporalNode<XmlDBNode>> by dbCollection, AutoCloseable by dbCollection
         where T : TemporalNodeCollection<AbstractTemporalNode<XmlDBNode>>, T : AutoCloseable
-{
-
-}

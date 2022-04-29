@@ -35,7 +35,7 @@ public final class PastAxis<R extends NodeReadOnlyTrx & NodeCursor, W extends No
     /**
      * Node key to lookup and retrieve.
      */
-    private long mNodeKey;
+    private final long mNodeKey;
 
     /**
      * Constructor.

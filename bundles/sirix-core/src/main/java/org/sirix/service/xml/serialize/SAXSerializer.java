@@ -144,7 +144,7 @@ public final class SAXSerializer extends org.sirix.service.AbstractSerializer<Xm
     @Override
     protected void emitRevisionEndNode(final @Nonnull XmlNodeReadOnlyTrx rtx) {
         final int length = (revisions.length == 1 && revisions[0] < 0)
-                ? (int) resMgr.getMostRecentRevisionNumber()
+                ? resMgr.getMostRecentRevisionNumber()
                 : revisions.length;
 
         if (length > 1) {
@@ -303,7 +303,7 @@ public final class SAXSerializer extends org.sirix.service.AbstractSerializer<Xm
     protected void emitEndDocument() {
         try {
             final int length = (revisions.length == 1 && revisions[0] < 0)
-                    ? (int) resMgr.getMostRecentRevisionNumber()
+                    ? resMgr.getMostRecentRevisionNumber()
                     : revisions.length;
 
             if (length > 1) {

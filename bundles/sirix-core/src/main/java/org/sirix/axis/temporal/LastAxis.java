@@ -25,7 +25,7 @@ public final class LastAxis<R extends NodeReadOnlyTrx & NodeCursor, W extends No
     /**
      * Node key to lookup and retrieve.
      */
-    private long nodeKey;
+    private final long nodeKey;
 
     /**
      * Determines if it's the first call.

@@ -13,7 +13,7 @@ import java.math.BigInteger;
 
 public abstract class AbstractBooleanNode extends AbstractStructForwardingNode implements ImmutableJsonNode {
 
-    private StructNodeDelegate structNodeDelegate;
+    private final StructNodeDelegate structNodeDelegate;
 
     private boolean boolValue;
 

@@ -32,9 +32,7 @@ public class XMarkBenchTestPerfidix {
 
     private final static XMarkBenchTest xmbt = new XMarkBenchTest();
 
-    ;
-
-  @BeforeEachRun
+    @BeforeEachRun
     public static void setUp() throws Exception {
         XMarkBenchTest.setUp();
     }

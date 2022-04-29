@@ -62,7 +62,7 @@ public final class AttributeAxis extends AbstractAxis {
         }
 
         if (asXdmNodeReadTrx().getKind() == NodeKind.ELEMENT) {
-            final XmlNodeReadOnlyTrx rtx = (XmlNodeReadOnlyTrx) asXdmNodeReadTrx();
+            final XmlNodeReadOnlyTrx rtx = asXdmNodeReadTrx();
             if (mNextIndex < rtx.getAttributeCount()) {
                 final long key = rtx.getAttributeKey(mNextIndex);
                 mNextIndex += 1;

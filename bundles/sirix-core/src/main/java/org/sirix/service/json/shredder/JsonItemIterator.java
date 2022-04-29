@@ -12,9 +12,9 @@ import java.util.Objects;
 public final class JsonItemIterator extends AbstractIterator<Item> {
 
     private final IncludeSelf includeSelf;
-    private Deque<Iter> iter;
+    private final Deque<Iter> iter;
     private boolean first;
-    private Item item;
+    private final Item item;
     private Iter currIter;
 
     public JsonItemIterator(Item item, IncludeSelf includeSelf) {

@@ -41,5 +41,5 @@ public interface MutableRBNode<K extends Comparable<? super K>, V> extends Immut
      *
      * @param changed flag which indicates if node is changed or not
      */
-    public void setChanged(boolean changed);
+    void setChanged(boolean changed);
 }

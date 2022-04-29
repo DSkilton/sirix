@@ -55,7 +55,7 @@ public enum DatabaseType {
         }
     };
 
-    private String stringType;
+    private final String stringType;
 
     DatabaseType(String stringType) {
         this.stringType = stringType;

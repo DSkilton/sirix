@@ -100,12 +100,12 @@ public final class XmlShredder extends AbstractShredder implements Callable<Long
     /**
      * Determines if comments should be included.
      */
-    private boolean includeComments;
+    private final boolean includeComments;
 
     /**
      * Determines if processing instructions should be included.
      */
-    private boolean includePIs;
+    private final boolean includePIs;
 
     /**
      * Builder to build an {@link XmlShredder} instance.
@@ -347,9 +347,7 @@ public final class XmlShredder extends AbstractShredder implements Callable<Long
             db.createResource(new ResourceConfiguration.Builder("shredded").build());
             try (final XmlResourceManager resMgr = db.openResourceManager("shredded"); final XmlNodeTrx wtx = resMgr.beginNodeTrx(); final FileInputStream fis = new FileInputStream(Paths.get(args[0]).toFile())) {
                 final XMLEventReader reader = createFileReader(fis);
-                final boolean includeCoPI = args.length == 3
-                        ? Boolean.parseBoolean(args[2])
-                        : false;
+                final boolean includeCoPI = args.length == 3 && Boolean.parseBoolean(args[2]);
                 final XmlShredder shredder
                         = new XmlShredder.Builder(wtx, reader, InsertPosition.AS_FIRST_CHILD).commitAfterwards()
                                 .includeComments(includeCoPI)

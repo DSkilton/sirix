@@ -170,11 +170,7 @@ public final class BitmapReferencesPage implements Page {
         }
         bitmap.set(index, true);
 
-        if (bitmap.cardinality() == THRESHOLD) {
-            return true;
-        }
-
-        return false;
+        return bitmap.cardinality() == THRESHOLD;
     }
 
     private PageReference createNewReference(final int offset) {

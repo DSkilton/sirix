@@ -85,7 +85,7 @@ internal class UpdateTest : CliCommandTest() {
         val insertionMode = if (jsonInsertionMode == null) {
             xmlInsertionMode!!.name
         } else {
-            jsonInsertionMode!!.name
+            jsonInsertionMode.name
         }
 
         return Update(

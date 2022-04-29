@@ -43,7 +43,7 @@ public final class SirixDeweyID implements Comparable<SirixDeweyID>, SimpleDewey
     // choice, DISTANCE_TO_SIBLING/2 nodes fits between the existing node, and
     // the new node. For example: id1=1.7, id2=NULL; new ID will be
     // 1.7+DISTANCE_TO_SIBLING
-    private static int distanceToSibling = 16;
+    private static final int distanceToSibling = 16;
 
     private final static int namespaceRootDivisionValue = 0;
 
@@ -1229,14 +1229,13 @@ public final class SirixDeweyID implements Comparable<SirixDeweyID>, SimpleDewey
 
     public StringBuffer list() {
         StringBuffer output = new StringBuffer();
-        output.append("" + this.toString());
+        output.append("" + this);
         output.append("\t");
         // calculate needed bits for deweyID
         byte[] byteArray = this.toBytes();
         for (int i = 0; i < byteArray.length; i++) {
             output.append(byteArray[i] + "\t");
         }
-        output.append("");
 
         int helpFindingBit;
         for (int bitIndex = 0; bitIndex < (8 * byteArray.length); bitIndex++) {

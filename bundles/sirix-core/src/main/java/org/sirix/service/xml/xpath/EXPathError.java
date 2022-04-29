@@ -160,7 +160,7 @@ public enum EXPathError {
      *
      * @param msg the error message
      */
-    private EXPathError(final String msg) {
+    EXPathError(final String msg) {
         mMessage = msg;
         mException = new SirixXPathException(mMessage);
     }

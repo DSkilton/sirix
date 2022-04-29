@@ -1949,7 +1949,7 @@ public enum FuncDef {
     /**
      * The class that implements the function.
      */
-    private Class<? extends AbstractFunction> mFunc;
+    private final Class<? extends AbstractFunction> mFunc;
 
     /**
      * Private mapping for easy retrieval of enums.
@@ -1973,7 +1973,7 @@ public enum FuncDef {
      * @param paramMax specified maximum number of function arguments
      * @param paramReturnType return type of the function
      */
-    private FuncDef(final Class<? extends AbstractFunction> paramFunc, final int paramMin,
+    FuncDef(final Class<? extends AbstractFunction> paramFunc, final int paramMin,
             final int paramMax, final String paramReturnType, final String... paramName) {
 
         this.mNames = paramName;

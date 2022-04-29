@@ -59,7 +59,7 @@ public final class AtomicValue implements Node, ValueNode, ImmutableXmlNode {
     /**
      * The item's value type.
      */
-    private int mType;
+    private final int mType;
 
     /**
      * The item's key. In case of an Atomic value this is always a negative to

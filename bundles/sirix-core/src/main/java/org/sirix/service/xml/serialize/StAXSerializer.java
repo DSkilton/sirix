@@ -518,11 +518,7 @@ public final class StAXSerializer implements XMLEventReader {
 
         @Override
         public boolean hasNext() {
-            boolean retVal = false;
-
-            if (mIndex < mAttCount) {
-                retVal = true;
-            }
+            boolean retVal = mIndex < mAttCount;
 
             return retVal;
         }
@@ -594,11 +590,7 @@ public final class StAXSerializer implements XMLEventReader {
 
         @Override
         public boolean hasNext() {
-            boolean retVal = false;
-
-            if (mIndex < mNamespCount) {
-                retVal = true;
-            }
+            boolean retVal = mIndex < mNamespCount;
 
             return retVal;
         }

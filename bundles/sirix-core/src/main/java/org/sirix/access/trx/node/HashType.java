@@ -15,5 +15,5 @@ public enum HashType {
     /**
      * No hash structure after all.
      */
-    NONE;
+    NONE
 }

@@ -15,7 +15,7 @@ public final class PathKindFilter extends AbstractFilter<PathSummaryReader> {
     /**
      * Type to filter.
      */
-    private NodeKind mType;
+    private final NodeKind mType;
 
     /**
      * Constructor. Initializes the internal state.

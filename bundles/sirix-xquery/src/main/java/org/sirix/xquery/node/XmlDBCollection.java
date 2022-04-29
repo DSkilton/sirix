@@ -65,12 +65,12 @@ public final class XmlDBCollection extends AbstractNodeCollection<AbstractTempor
   /**
    * "Caches" document nodes.
    */
-  private Map<DocumentData, XmlDBNode> documentDataToXmlDBNodes;
+  private final Map<DocumentData, XmlDBNode> documentDataToXmlDBNodes;
 
   /**
    * "Caches" document nodes.
    */
-  private Map<InstantDocumentData, XmlDBNode> instantDocumentDataToXmlDBNodes;
+  private final Map<InstantDocumentData, XmlDBNode> instantDocumentDataToXmlDBNodes;
 
   /**
    * Constructor.

@@ -20,8 +20,8 @@ class QuerySubCommand :
         "rt",
         "The revision timestamp"
     )
-    val startRevision by option(ArgType.Int, "start-revision", "sr", "The start revision");
-    val endRevision by option(ArgType.Int, "end-revision", "er", "The end revision");
+    val startRevision by option(ArgType.Int, "start-revision", "sr", "The start revision")
+    val endRevision by option(ArgType.Int, "end-revision", "er", "The end revision")
     val startRevisionTimestamp by option(
         CliArgType.Timestamp(),
         "start-revision-timestamp",

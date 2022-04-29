@@ -150,10 +150,7 @@ public final class XMLToken {
             return false;
         }
         final int j = ncName(val, i + 1);
-        if (j == i + 1 || j != l) {
-            return false;
-        }
-        return true;
+        return j != i + 1 && j == l;
     }
 
     /**
@@ -169,13 +166,10 @@ public final class XMLToken {
             return false;
         }
         final String prefix = name.getPrefix();
-        if (!prefix.isEmpty() && !isNCName(prefix.getBytes())) {
-            return false;
-        }
+        return prefix.isEmpty() || isNCName(prefix.getBytes());
         // if (!isUrl(name.getNamespaceURI())) {
         // return false;
         // }
-        return true;
     }
 
     /**

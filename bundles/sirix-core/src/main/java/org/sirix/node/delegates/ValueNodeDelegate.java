@@ -48,7 +48,7 @@ public class ValueNodeDelegate extends AbstractForwardingNode implements ValueNo
     /**
      * Delegate for common node information.
      */
-    private NodeDelegate mDelegate;
+    private final NodeDelegate mDelegate;
 
     /**
      * Storing the value.
@@ -113,9 +113,7 @@ public class ValueNodeDelegate extends AbstractForwardingNode implements ValueNo
 
     @Override
     public void setValue(final byte[] value) {
-        mCompressed = new String(value).length() > 10
-                ? true
-                : false;
+        mCompressed = new String(value).length() > 10;
         mValue = mCompressed
                 ? Compression.compress(value, Deflater.DEFAULT_COMPRESSION)
                 : value;

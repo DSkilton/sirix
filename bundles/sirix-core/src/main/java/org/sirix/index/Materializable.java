@@ -17,7 +17,7 @@ public interface Materializable {
      * @return the root of the materialized tree
      * @throws DocumentException
      */
-    public Node<?> materialize() throws DocumentException;
+    Node<?> materialize() throws DocumentException;
 
     /**
      * Initializes the materialized locator facet
@@ -25,5 +25,5 @@ public interface Materializable {
      * @param root root of the materialized facet subtree
      * @throws DocumentException
      */
-    public void init(Node<?> root) throws DocumentException;
+    void init(Node<?> root) throws DocumentException;
 }

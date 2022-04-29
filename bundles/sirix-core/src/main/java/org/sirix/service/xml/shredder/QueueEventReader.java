@@ -99,10 +99,7 @@ public final class QueueEventReader implements XMLEventReader {
 
     @Override
     public boolean hasNext() {
-        boolean retVal = true;
-        if (mEvents.isEmpty()) {
-            retVal = false;
-        }
+        boolean retVal = !mEvents.isEmpty();
         return retVal;
     }
 

@@ -14,7 +14,7 @@ import java.math.BigInteger;
 
 public abstract class AbstractNumberNode extends AbstractStructForwardingNode implements ImmutableJsonNode {
 
-    private StructNodeDelegate structNodeDelegate;
+    private final StructNodeDelegate structNodeDelegate;
     private Number number;
 
     private BigInteger hashCode;

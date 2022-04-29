@@ -328,7 +328,7 @@ public class XMarkBenchQueries {
     public String getQuery(final int queryNr, final String factor) {
         final StringBuilder sb = new StringBuilder();
         sb.append("Q");
-        sb.append(Integer.toString(queryNr));
+        sb.append(queryNr);
         sb.append("_Fac");
         String fac = null;
         if (factor.equals("0.01")) {
@@ -370,7 +370,7 @@ public class XMarkBenchQueries {
     public String getResult(final int queryNr, final String factor) {
         final StringBuilder sb = new StringBuilder();
         sb.append("R");
-        sb.append(Integer.toString(queryNr));
+        sb.append(queryNr);
         sb.append("_Fac");
         String fac = null;
         if (factor.equals("0.01")) {

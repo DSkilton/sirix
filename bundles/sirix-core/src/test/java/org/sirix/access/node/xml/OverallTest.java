@@ -42,22 +42,22 @@ public final class OverallTest extends TestCase {
     /**
      * Used for random number generator.
      */
-    private static int NUM_CHARS = 3;
+    private static final int NUM_CHARS = 3;
 
     /**
      * Modification number of nodes.
      */
-    private static int ELEMENTS = 1000;
+    private static final int ELEMENTS = 1000;
 
     /**
      * Percentage of commits.
      */
-    private static int COMMITPERCENTAGE = 20;
+    private static final int COMMITPERCENTAGE = 20;
 
     /**
      * Percentage of nodes to remove.
      */
-    private static int REMOVEPERCENTAGE = 20;
+    private static final int REMOVEPERCENTAGE = 20;
 
     /**
      * Random number generator.

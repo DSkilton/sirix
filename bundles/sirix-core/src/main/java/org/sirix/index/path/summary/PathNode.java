@@ -58,7 +58,7 @@ public final class PathNode extends AbstractStructForwardingNode implements Name
     /**
      * Level of this path node.
      */
-    private int level;
+    private final int level;
 
     /**
      * Constructor.

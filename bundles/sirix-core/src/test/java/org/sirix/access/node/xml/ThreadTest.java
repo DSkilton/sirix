@@ -77,7 +77,7 @@ public class ThreadTest {
 
     private class Task implements Callable<Void> {
 
-        private XmlNodeReadOnlyTrx mRTX;
+        private final XmlNodeReadOnlyTrx mRTX;
 
         public Task(final XmlNodeReadOnlyTrx rtx) {
             mRTX = rtx;

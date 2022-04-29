@@ -33,15 +33,15 @@ public class AtomicValueTest {
 
     private AtomicValue a, b, c, d, e, f, zero, n_zero;
 
-    private int aVal = 1;
+    private final int aVal = 1;
 
-    private String bVal = "test";
+    private final String bVal = "test";
 
-    private float cVal = 2345.1441f;
+    private final float cVal = 2345.1441f;
 
-    private double dVal = 245E2;
+    private final double dVal = 245E2;
 
-    private boolean eVal = true;
+    private final boolean eVal = true;
 
     @Before
     public void setUp() {

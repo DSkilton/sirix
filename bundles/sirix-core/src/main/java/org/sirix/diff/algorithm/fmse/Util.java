@@ -68,7 +68,7 @@ public final class Util {
         final int m = y.size();
         final int max = n + m;
 
-        final int v[] = new int[2 * max + 1];
+        final int[] v = new int[2 * max + 1];
         final List<List<Pair<T, T>>> common = new ArrayList<>(2 * max + 1);
         for (int i = 0; i <= 2 * max; i++) {
             v[i] = 0;
@@ -118,7 +118,7 @@ public final class Util {
         float matches = 0;
         // Use a sparse array to reduce the memory usage
         // for unicode characters.
-        final int x[][] = new int[256][];
+        final int[][] x = new int[256][];
         for (char c : second.toCharArray()) {
             if (x[c >> 8] == null) {
                 x[c >> 8] = new int[256];

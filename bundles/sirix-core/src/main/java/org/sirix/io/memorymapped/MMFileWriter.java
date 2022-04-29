@@ -48,7 +48,7 @@ public final class MMFileWriter extends AbstractForwardingReader implements Writ
 
     private static final byte PAGE_FRAGMENT_WORD_ALIGN = 64;
 
-    private static int TEST_BLOCK_SIZE = 64 * 1024; // Smallest safe block size for Windows 8+.
+    private static final int TEST_BLOCK_SIZE = 64 * 1024; // Smallest safe block size for Windows 8+.
 
     private long currByteSizeToMap = Integer.MAX_VALUE;//OS.is64Bit() ? 64L << 20 : TEST_BLOCK_SIZE;
 

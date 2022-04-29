@@ -88,12 +88,8 @@ public final class Load extends AbstractFunction {
       final Sequence resources = args[2];
       if (resources == null)
         throw new QueryException(new QNm("No sequence of resources specified!"));
-      final boolean createNew = args.length == 4
-          ? args[3].booleanValue()
-          : true;
-      final String resName = FunUtil.getString(args, 1, "resName", "resource", null, createNew
-          ? false
-          : true);
+      final boolean createNew = args.length != 4 || args[3].booleanValue();
+      final String resName = FunUtil.getString(args, 1, "resName", "resource", null, !createNew);
 
       final BasicXmlDBStore store = (BasicXmlDBStore) ctx.getNodeStore();
       XmlDBCollection coll;

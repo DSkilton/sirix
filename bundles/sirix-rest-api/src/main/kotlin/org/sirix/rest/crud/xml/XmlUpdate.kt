@@ -4,7 +4,6 @@ import io.vertx.core.Promise
 import io.vertx.core.http.HttpHeaders
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.RoutingContext
-import io.vertx.kotlin.core.executeBlockingAwait
 import io.vertx.kotlin.coroutines.await
 import org.sirix.access.Databases
 import org.sirix.access.trx.node.HashType
@@ -15,6 +14,7 @@ import org.sirix.service.xml.shredder.XmlShredder
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
 import java.nio.file.Path
+import java.util.*
 import javax.xml.stream.XMLEventReader
 
 enum class XmlInsertionMode {
@@ -42,7 +42,7 @@ enum class XmlInsertionMode {
     abstract fun insert(wtx: XmlNodeTrx, xmlReader: XMLEventReader)
 
     companion object {
-        fun getInsertionModeByName(name: String) = valueOf(name.toUpperCase())
+        fun getInsertionModeByName(name: String) = valueOf(name.uppercase(Locale.getDefault()))
     }
 }
 

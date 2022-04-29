@@ -134,12 +134,12 @@ public final class XMLUpdateShredder implements Callable<Long> {
     /**
      * Maximum node key in revision.
      */
-    private transient long mMaxNodeKey;
+    private final transient long mMaxNodeKey;
 
     /**
      * Determines if changes should be commited.
      */
-    private transient ShredderCommit mCommit;
+    private final transient ShredderCommit mCommit;
 
     /**
      * Level where the parser is in the file to shredder.
@@ -232,7 +232,7 @@ public final class XMLUpdateShredder implements Callable<Long> {
 
     private final XMLEventReader mReader;
 
-    private InsertPosition mInsert;
+    private final InsertPosition mInsert;
 
     /**
      * Normal constructor to invoke a shredding process on a existing
@@ -458,7 +458,7 @@ public final class XMLUpdateShredder implements Callable<Long> {
         assert paramText != null;
         // Initialize variables.
         initializeVars();
-        final String text = paramText.getData().toString();
+        final String text = paramText.getData();
         if (!text.isEmpty()) {
             // Main algorithm to determine if same, insert or a delete has to be made.
             algorithm(paramText);
@@ -649,11 +649,7 @@ public final class XMLUpdateShredder implements Callable<Long> {
             //
             // // If next node doesn't match/isn't the same move on.
             // if (!found) {
-            if (mWtx.moveToRightSibling().hasMoved()) {
-                mMovedToRightSibling = true;
-            } else {
-                mMovedToRightSibling = false;
-            }
+            mMovedToRightSibling = mWtx.moveToRightSibling().hasMoved();
             // }
         }
 
@@ -880,11 +876,7 @@ public final class XMLUpdateShredder implements Callable<Long> {
                 // Move to next node if no end tag follows (thus cursor isn't moved to
                 // parent in processEndTag()).
                 if (mReader.peek().getEventType() != XMLStreamConstants.END_ELEMENT) {
-                    if (mWtx.moveToRightSibling().hasMoved()) {
-                        mMovedToRightSibling = true;
-                    } else {
-                        mMovedToRightSibling = false;
-                    }
+                    mMovedToRightSibling = mWtx.moveToRightSibling().hasMoved();
                 } else if (mWtx.hasRightSibling()) {
                     mMovedToRightSibling = false;
                     mInserted = true;
@@ -917,11 +909,7 @@ public final class XMLUpdateShredder implements Callable<Long> {
                 // Move to next node if no end tag follows (thus cursor isn't moved to
                 // parent in processEndTag()).
                 if (mReader.peek().getEventType() != XMLStreamConstants.END_ELEMENT) {
-                    if (mWtx.moveToRightSibling().hasMoved()) {
-                        mMovedToRightSibling = true;
-                    } else {
-                        mMovedToRightSibling = false;
-                    }
+                    mMovedToRightSibling = mWtx.moveToRightSibling().hasMoved();
                 }
                 break;
             case ATMIDDLEBOTTOM:
@@ -1186,11 +1174,7 @@ public final class XMLUpdateShredder implements Callable<Long> {
             }
 
             // Check if atts and namespaces are the same.
-            if (foundAtts && foundNamesps) {
-                retVal = true;
-            } else {
-                retVal = false;
-            }
+            retVal = foundAtts && foundNamesps;
         }
 
         return retVal;

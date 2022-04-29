@@ -31,12 +31,12 @@ public final class PreviousAxis<R extends NodeReadOnlyTrx & NodeCursor, W extend
     /**
      * The revision number.
      */
-    private int mRevision;
+    private final int mRevision;
 
     /**
      * Node key to lookup and retrieve.
      */
-    private long mNodeKey;
+    private final long mNodeKey;
 
     /**
      * Constructor.

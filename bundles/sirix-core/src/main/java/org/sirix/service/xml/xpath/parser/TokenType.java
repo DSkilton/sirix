@@ -90,7 +90,7 @@ public enum TokenType {
     /**
      * Token type that represents a normal quote : " .
      */
-    DBL_QUOTE("\'"),
+    DBL_QUOTE("'"),
     /**
      * Token type that represents a single quote : ' .
      */

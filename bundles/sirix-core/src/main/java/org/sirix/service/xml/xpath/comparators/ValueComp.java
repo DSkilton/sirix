@@ -71,7 +71,7 @@ public class ValueComp extends AbstractComparator {
             type = trx.keyForName("xs:string");
         }
 
-        final AtomicValue atomized = new AtomicValue(((XmlNodeReadOnlyTrx) mOperand.asXdmNodeReadTrx()).getValue().getBytes(), type);
+        final AtomicValue atomized = new AtomicValue(mOperand.asXdmNodeReadTrx().getValue().getBytes(), type);
         final AtomicValue[] op = {atomized};
 
         // (4.) the operands must be singletons in case of a value comparison

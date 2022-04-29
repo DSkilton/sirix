@@ -6,7 +6,6 @@ import io.vertx.core.Promise
 import io.vertx.core.http.HttpHeaders
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.RoutingContext
-import io.vertx.kotlin.core.executeBlockingAwait
 import io.vertx.kotlin.coroutines.await
 import org.sirix.access.Databases
 import org.sirix.access.trx.node.HashType
@@ -21,6 +20,7 @@ import java.io.IOException
 import java.io.StringWriter
 import java.math.BigInteger
 import java.nio.file.Path
+import java.util.*
 
 @Suppress("unused")
 enum class JsonInsertionMode {
@@ -135,7 +135,7 @@ enum class JsonInsertionMode {
     abstract fun insertObjectRecord(wtx: JsonNodeTrx, jsonReader: JsonReader)
 
     companion object {
-        fun getInsertionModeByName(name: String) = valueOf(name.toUpperCase())
+        fun getInsertionModeByName(name: String) = valueOf(name.uppercase(Locale.getDefault()))
     }
 }
 

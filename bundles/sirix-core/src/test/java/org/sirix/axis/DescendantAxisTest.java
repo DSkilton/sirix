@@ -100,7 +100,7 @@ public class DescendantAxisTest {
         rtx.moveTo(13L);
         AbsAxisTest.testAxisConventions(new DescendantAxis(rtx), new long[]{});
         new IteratorTester<Long>(ITERATIONS, IteratorFeature.UNMODIFIABLE,
-                Collections.<Long>emptyList(), null) {
+                Collections.emptyList(), null) {
             @Override
             protected Iterator<Long> newTargetIterator() {
                 final XmlNodeReadOnlyTrx rtx = holder.getXmlNodeReadTrx();

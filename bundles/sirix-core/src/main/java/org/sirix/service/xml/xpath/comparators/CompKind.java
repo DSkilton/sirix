@@ -384,7 +384,7 @@ public enum CompKind {
      *
      * @param paramCompAsString String to be set.
      */
-    private CompKind(final String... paramCompAsString) {
+    CompKind(final String... paramCompAsString) {
         mCompAsString = paramCompAsString;
     }
 

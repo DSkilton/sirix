@@ -215,14 +215,14 @@ public class XPathError extends RuntimeException {
         /**
          * error message.
          */
-        private String message;
+        private final String message;
 
         /**
          * Constructor. Initializes the internal state.
          *
          * @param msg the error message
          */
-        private ErrorType(final String msg) {
+        ErrorType(final String msg) {
 
             message = msg;
         }

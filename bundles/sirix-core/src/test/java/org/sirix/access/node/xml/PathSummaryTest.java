@@ -909,7 +909,7 @@ public class PathSummaryTest {
         OutputStream out = new ByteArrayOutputStream();
         XmlSerializer serializer = new XmlSerializerBuilder(holder.getResourceManager(), out).prettyPrint().build();
         serializer.call();
-        System.out.println(out.toString());
+        System.out.println(out);
 
         System.out.println("summary");
 

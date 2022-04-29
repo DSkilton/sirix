@@ -67,8 +67,6 @@ public final class JsonNameFilter extends AbstractFilter<JsonNodeReadOnlyTrx> {
     public boolean filter() {
         final JsonNodeReadOnlyTrx rtx = getTrx();
 
-        return rtx.isObjectKey()
-                ? mName.equals(rtx.getName())
-                : false;
+        return rtx.isObjectKey() && mName.equals(rtx.getName());
     }
 }

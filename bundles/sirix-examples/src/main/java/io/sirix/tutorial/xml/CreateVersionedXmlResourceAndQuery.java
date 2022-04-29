@@ -27,7 +27,7 @@ public final class CreateVersionedXmlResourceAndQuery {
 
         try (final var database = Databases.openXmlDatabase(databaseFile)) {
             try (final var manager = database.openResourceManager("resource"); // Starts a read only transaction on the most recent revision.
-                     final var rtx = manager.beginNodeReadOnlyTrx()) {
+                 final var rtx = manager.beginNodeReadOnlyTrx()) {
 
                 final var axis = VisitorDescendantAxis.newBuilder(rtx)
                         .includeSelf()

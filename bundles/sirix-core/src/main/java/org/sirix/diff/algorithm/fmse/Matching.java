@@ -120,9 +120,7 @@ public final class Matching {
      */
     public boolean remove(final @Nonnegative long nodeX) {
         mReverseMapping.remove(mMapping.get(nodeX));
-        return mMapping.remove(nodeX) == null
-                ? false
-                : true;
+        return mMapping.remove(nodeX) != null;
     }
 
     /**
@@ -154,9 +152,7 @@ public final class Matching {
      * @return true iff add(x, y) was invoked first
      */
     public boolean contains(final @Nonnegative long nodeX, final @Nonnegative long nodeY) {
-        return mMapping.get(nodeX) == null
-                ? false
-                : mMapping.get(nodeX).equals(nodeY);
+        return mMapping.get(nodeX) != null && mMapping.get(nodeX).equals(nodeY);
     }
 
     /**

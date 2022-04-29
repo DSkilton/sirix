@@ -16,7 +16,7 @@ public interface SimpleDeweyID {
      *
      * @return an array of divisions representing the DeweyID
      */
-    public int[] getDivisionValues();
+    int[] getDivisionValues();
 
     /**
      * Get the number of divisions.
@@ -24,7 +24,7 @@ public interface SimpleDeweyID {
      * @return the number of used divisions (is less or equal to the length of
      * the divisions array)
      */
-    public int getNumberOfDivisions();
+    int getNumberOfDivisions();
 
     /**
      * Determines if it is an attribute.
@@ -32,5 +32,5 @@ public interface SimpleDeweyID {
      * @return {@code true}, iff this DeweyID represents an attribute node,
      * {@code false} otherwise
      */
-    public boolean isAttribute();
+    boolean isAttribute();
 }

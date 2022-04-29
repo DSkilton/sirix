@@ -107,19 +107,19 @@ public final class DiffTest {
 
       try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
         query.serialize(ctx, new PrintStream(out));
-        final String content = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String content = out.toString(StandardCharsets.UTF_8);
         out.reset();
 
         new XQuery(SirixCompileChain.createWithNodeStore(store), content).execute(ctx);
 
         final String xq2 = "xml:doc('" + dbName + "','" + resName + "',3)";
         new XQuery(SirixCompileChain.createWithNodeStore(store), xq2).serialize(ctx, new PrintStream(out));
-        final String contentNewRev = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String contentNewRev = out.toString(StandardCharsets.UTF_8);
         out.reset();
 
         final String xq3 = "xml:doc('" + dbName + "','" + resName + "',2)";
         new XQuery(SirixCompileChain.createWithNodeStore(store), xq3).serialize(ctx, new PrintStream(out));
-        final String contentOldRev = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String contentOldRev = out.toString(StandardCharsets.UTF_8);
 
         Assert.assertEquals(contentNewRev, contentOldRev);
 
@@ -145,19 +145,19 @@ public final class DiffTest {
 
       try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
         query.serialize(ctx, new PrintStream(out));
-        final String content = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String content = out.toString(StandardCharsets.UTF_8);
         out.reset();
 
         new XQuery(SirixCompileChain.createWithNodeStore(store), content).execute(ctx);
 
         final String xq2 = "xml:doc('" + dbName + "','" + resName + "',6)";
         new XQuery(SirixCompileChain.createWithNodeStore(store), xq2).serialize(ctx, new PrintStream(out));
-        final String contentNewRev = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String contentNewRev = out.toString(StandardCharsets.UTF_8);
         out.reset();
 
         final String xq3 = "xml:doc('" + dbName + "','" + resName + "',5)";
         new XQuery(SirixCompileChain.createWithNodeStore(store), xq3).serialize(ctx, new PrintStream(out));
-        final String contentOldRev = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String contentOldRev = out.toString(StandardCharsets.UTF_8);
 
         Assert.assertEquals(contentNewRev, contentOldRev);
 

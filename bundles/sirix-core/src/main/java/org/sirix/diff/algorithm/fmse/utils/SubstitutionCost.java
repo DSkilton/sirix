@@ -43,7 +43,7 @@ public interface SubstitutionCost {
      *
      * @return the name of the cost function
      */
-    public String getShortDescriptionString();
+    String getShortDescriptionString();
 
     /**
      * get cost between characters.
@@ -55,19 +55,19 @@ public interface SubstitutionCost {
      *
      * @return the cost of a given subsitution d(i,j)
      */
-    public float getCost(String str1, int string1Index, String str2, int string2Index);
+    float getCost(String str1, int string1Index, String str2, int string2Index);
 
     /**
      * returns the maximum possible cost.
      *
      * @return the maximum possible cost
      */
-    public float getMaxCost();
+    float getMaxCost();
 
     /**
      * returns the minimum possible cost.
      *
      * @return the minimum possible cost
      */
-    public float getMinCost();
+    float getMinCost();
 }

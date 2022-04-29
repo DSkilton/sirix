@@ -36,7 +36,7 @@ internal class DumpResourceHistoryTest : CliCommandTest() {
     @Test
     fun happyPath() {
         // GIVEN
-        var database = Databases.openXmlDatabase(path(), CliCommandTestConstants.TEST_USER)
+        var database = Databases.openXmlDatabase(path(), TEST_USER)
         database.use {
             database.createResource(ResourceConfiguration.Builder(TEST_RESOURCE).build())
             val manager = database.openResourceManager(TEST_RESOURCE)

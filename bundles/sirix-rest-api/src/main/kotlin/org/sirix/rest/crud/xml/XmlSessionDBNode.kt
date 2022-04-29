@@ -10,6 +10,4 @@ class XmlSessionDBNode<T>(
     private val dbNode: T,
     private val user: User
 ) : StructuredDBItem<XmlNodeReadOnlyTrx> by dbNode, AutoCloseable by dbNode
-        where T : StructuredDBItem<XmlNodeReadOnlyTrx>, T : AutoCloseable {
-
-}
+        where T : StructuredDBItem<XmlNodeReadOnlyTrx>, T : AutoCloseable

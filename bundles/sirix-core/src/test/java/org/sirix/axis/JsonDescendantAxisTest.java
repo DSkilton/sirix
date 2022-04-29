@@ -97,7 +97,7 @@ public class JsonDescendantAxisTest {
 
         rtx.moveTo(13L);
         AbsAxisTest.testAxisConventions(new JsonDescendantAxis(rtx), new long[]{});
-        new IteratorTester<Long>(ITERATIONS, IteratorFeature.UNMODIFIABLE, Collections.<Long>emptyList(), null) {
+        new IteratorTester<Long>(ITERATIONS, IteratorFeature.UNMODIFIABLE, Collections.emptyList(), null) {
             @Override
             protected Iterator<Long> newTargetIterator() {
                 final XmlNodeReadOnlyTrx rtx = holder.getXmlNodeReadTrx();

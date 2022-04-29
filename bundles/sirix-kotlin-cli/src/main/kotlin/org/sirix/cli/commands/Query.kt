@@ -142,31 +142,31 @@ class Query(options: CliOptions, private val queryOptions: QueryOptions) : CliCo
 
                                 when (jsonItem) {
                                     is AbstractJsonDBArray<*> -> {
-                                        jsonItem.getCollection().setJsonDBStore(jsonDBStore)
+                                        jsonItem.collection.setJsonDBStore(jsonDBStore)
                                         jsonDBStore.addDatabase(
-                                            jsonItem.getCollection(),
-                                            jsonItem.getCollection().database
+                                            jsonItem.collection,
+                                            jsonItem.collection.database
                                         )
                                     }
                                     is JsonDBObject -> {
                                         jsonItem.collection.setJsonDBStore(jsonDBStore)
                                         jsonDBStore.addDatabase(
-                                            jsonItem.getCollection(),
-                                            jsonItem.getCollection().database
+                                            jsonItem.collection,
+                                            jsonItem.collection.database
                                         )
                                     }
                                     is AtomicJsonDBItem -> {
                                         jsonItem.collection.setJsonDBStore(jsonDBStore)
                                         jsonDBStore.addDatabase(
-                                            jsonItem.getCollection(),
-                                            jsonItem.getCollection().database
+                                            jsonItem.collection,
+                                            jsonItem.collection.database
                                         )
                                     }
                                     is NumericJsonDBItem -> {
                                         jsonItem.collection.setJsonDBStore(jsonDBStore)
                                         jsonDBStore.addDatabase(
-                                            jsonItem.getCollection(),
-                                            jsonItem.getCollection().database
+                                            jsonItem.collection,
+                                            jsonItem.collection.database
                                         )
                                     }
                                     else -> throw IllegalStateException("Node type not known.")

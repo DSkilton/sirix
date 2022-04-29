@@ -10,6 +10,4 @@ class JsonSessionDBCollection<T>(
     private val dbCollection: T,
     private val user: User
 ) : TemporalJsonCollection<JsonDBItem> by dbCollection, AutoCloseable by dbCollection
-        where T : TemporalJsonCollection<JsonDBItem>, T : AutoCloseable {
-
-}
+        where T : TemporalJsonCollection<JsonDBItem>, T : AutoCloseable

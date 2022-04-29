@@ -34,7 +34,7 @@ public final class AllTimeAxis<R extends NodeReadOnlyTrx & NodeCursor, W extends
     /**
      * Node key to lookup and retrieve.
      */
-    private long nodeKey;
+    private final long nodeKey;
 
     /**
      * Determines if node has been found before and now has been deleted.

@@ -149,7 +149,7 @@ public final class ExcelDiffEmptyTest extends TestCase {
 
       try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
         query.serialize(ctx, new PrintStream(out));
-        final String content = new String(out.toByteArray(), StandardCharsets.UTF_8);
+        final String content = out.toString(StandardCharsets.UTF_8);
         out.reset();
 
         assertEquals("", content);

@@ -7,10 +7,6 @@ import io.vertx.core.file.impl.FileResolver
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
-import io.vertx.kotlin.core.executeBlockingAwait
-import io.vertx.kotlin.core.file.deleteAwait
-import io.vertx.kotlin.core.file.openAwait
-import io.vertx.kotlin.core.http.pipeToAwait
 import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -140,7 +136,7 @@ class XmlCreate(private val location: Path, private val createMultipleResources:
                     val pathToFile = filePath.toPath()
                     val maxNodeKey = insertXmlSubtreeAsFirstChild(manager, pathToFile.toAbsolutePath())
 
-                    ctx.vertx().fileSystem().deleteAwait(filePath.toString())
+                    ctx.vertx().fileSystem().delete(filePath.toString()).await()
 
                     if (maxNodeKey < 5000) {
                         body = serializeXml(manager, ctx)

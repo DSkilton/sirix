@@ -76,7 +76,7 @@ public enum Fixed {
      *
      * @param property property to set
      */
-    private Fixed(final long property) {
+    Fixed(final long property) {
         standardProperty = property;
     }
 

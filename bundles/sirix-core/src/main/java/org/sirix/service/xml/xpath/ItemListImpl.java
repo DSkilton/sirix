@@ -97,7 +97,7 @@ public final class ItemListImpl implements ItemList<AtomicValue> {
 
     @Override
     public String toString() {
-        return new StringBuilder("ItemList: ").append(mList.toString()).toString();
+        return new StringBuilder("ItemList: ").append(mList).toString();
     }
 
 }

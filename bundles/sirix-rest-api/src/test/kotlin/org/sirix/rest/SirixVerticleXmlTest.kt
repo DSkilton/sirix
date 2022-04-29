@@ -191,7 +191,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -266,7 +266,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -405,7 +405,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -484,7 +484,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -570,7 +570,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -666,7 +666,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -755,7 +755,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -858,7 +858,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -940,7 +940,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }
@@ -1048,7 +1048,7 @@ class SirixVerticleXmlTest {
                 }
 
                 if (testContext.failed()) {
-                    throw testContext.causeOfFailure();
+                    throw testContext.causeOfFailure()
                 }
             }
         }

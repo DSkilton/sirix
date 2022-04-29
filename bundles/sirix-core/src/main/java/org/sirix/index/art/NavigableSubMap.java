@@ -30,7 +30,7 @@ abstract class NavigableSubMap<K, V> extends AbstractMap<K, V>
         this.loBytes = fromStart ? null : m.binaryComparable().get(lo);
         this.hiBytes = toEnd ? null : m.binaryComparable().get(hi);
         if (!fromStart && !toEnd) {
-            if (m.compare(loBytes, 0, loBytes.length, hiBytes, 0, hiBytes.length) > 0) {
+            if (AdaptiveRadixTree.compare(loBytes, 0, loBytes.length, hiBytes, 0, hiBytes.length) > 0) {
                 throw new IllegalArgumentException("fromKey > toKey");
             }
         }
@@ -50,9 +50,7 @@ abstract class NavigableSubMap<K, V> extends AbstractMap<K, V>
             // if c == 0 and if lower bound is exclusive
             // then this key is too low
             // else it is not, since it is as low as our lower bound
-            if (c < 0 || (c == 0 && !loInclusive)) {
-                return true;
-            }
+            return c < 0 || (c == 0 && !loInclusive);
         }
         // we don't have a lower bound
         return false;
@@ -64,9 +62,7 @@ abstract class NavigableSubMap<K, V> extends AbstractMap<K, V>
             // if c == 0 and if upper bound is exclusive
             // then this key is too higher
             // else it is not, since it is as greater as our upper bound
-            if (c > 0 || (c == 0 && !hiInclusive)) {
-                return true;
-            }
+            return c > 0 || (c == 0 && !hiInclusive);
         }
         // we don't have an upper bound
         return false;

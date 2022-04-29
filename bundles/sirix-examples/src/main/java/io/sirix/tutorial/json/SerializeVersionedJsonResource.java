@@ -29,7 +29,7 @@ public class SerializeVersionedJsonResource {
         final var serializerForRevisionOneAndTwo = new JsonSerializer.Builder(manager, writer, 1, 2).build();
         serializerForRevisionOneAndTwo.call();
         System.out.println("Revision 1 and 2:");
-        System.out.println(writer.toString());
+        System.out.println(writer);
     }
 
     private static void serializeMostRecentRevision(final JsonResourceManager manager) {
@@ -37,7 +37,7 @@ public class SerializeVersionedJsonResource {
         final var serializerForMostRecentRevision = new JsonSerializer.Builder(manager, writer).build();
         serializerForMostRecentRevision.call();
         System.out.println("Most recent revision:");
-        System.out.println(writer.toString());
+        System.out.println(writer);
     }
 
     private static void serializeAllRevisions(final JsonResourceManager manager) {
@@ -45,6 +45,6 @@ public class SerializeVersionedJsonResource {
         final var serializerForAllRevisions = new JsonSerializer.Builder(manager, writer, -1).build();
         serializerForAllRevisions.call();
         System.out.println("All revisions:");
-        System.out.println(writer.toString());
+        System.out.println(writer);
     }
 }

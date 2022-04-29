@@ -106,12 +106,8 @@ class FMSENodeComparisonUtils {
             } while (mOldRtx.getNodeKey() != mOldStartKey && mNewRtx.getNodeKey() != mNewStartKey && mOldRtx.hasParent()
                     && mNewRtx.hasParent() && calculateRatio(getNodeValue(mOldRtx.getNodeKey(), mOldRtx),
                     getNodeValue(mNewRtx.getNodeKey(), mNewRtx)) >= 0.7f);
-            if ((mOldRtx.hasParent() && mOldRtx.getNodeKey() != mOldStartKey)
-                    || (mNewRtx.hasParent() && mNewRtx.getNodeKey() != mNewStartKey)) {
-                retVal = false;
-            } else {
-                retVal = true;
-            }
+            retVal = (!mOldRtx.hasParent() || mOldRtx.getNodeKey() == mOldStartKey)
+                    && (!mNewRtx.hasParent() || mNewRtx.getNodeKey() == mNewStartKey);
         } else {
             retVal = false;
         }

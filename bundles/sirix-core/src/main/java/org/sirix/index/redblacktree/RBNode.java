@@ -51,7 +51,7 @@ public final class RBNode<K extends Comparable<? super K>, V> extends AbstractFo
     /**
      * {@link NodeDelegate} reference.
      */
-    private NodeDelegate nodeDelegate;
+    private final NodeDelegate nodeDelegate;
 
     private RBNode<K, V> parent;
 

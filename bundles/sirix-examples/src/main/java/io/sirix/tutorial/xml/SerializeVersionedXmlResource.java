@@ -32,7 +32,7 @@ public class SerializeVersionedXmlResource {
                         .build();
         serializerForRevisionOneAndTwo.call();
         System.out.println("Revision 1 and 2:");
-        System.out.println(outputStream.toString());
+        System.out.println(outputStream);
     }
 
     private static void serializeMostRecentRevision(final XmlResourceManager manager) {
@@ -44,7 +44,7 @@ public class SerializeVersionedXmlResource {
                         .build();
         serializerForMostRecentRevision.call();
         System.out.println("Most recent revision:");
-        System.out.println(outputStream.toString());
+        System.out.println(outputStream);
     }
 
     private static void serializeAllRevisions(final XmlResourceManager manager) {
@@ -56,6 +56,6 @@ public class SerializeVersionedXmlResource {
                         .build();
         serializerForAllRevisions.call();
         System.out.println("All revisions:");
-        System.out.println(outputStream.toString());
+        System.out.println(outputStream);
     }
 }

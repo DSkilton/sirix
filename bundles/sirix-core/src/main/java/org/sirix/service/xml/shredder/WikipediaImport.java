@@ -560,11 +560,7 @@ public final class WikipediaImport implements Import<StartElement> {
             }
 
             // Check if qname, atts and namespaces are the same.
-            if (foundAtts && foundNamesps) {
-                retVal = true;
-            } else {
-                retVal = false;
-            }
+            retVal = foundAtts && foundNamesps;
         }
         return retVal;
     }

@@ -85,12 +85,8 @@ public final class Store extends AbstractFunction {
       final Sequence nodes = args[2];
       if (nodes == null)
         throw new QueryException(new QNm("No sequence of nodes specified!"));
-      final boolean createNew = args.length == 4
-          ? args[3].booleanValue()
-          : true;
-      final String resName = FunUtil.getString(args, 1, "resName", "resource", null, createNew
-          ? false
-          : true);
+      final boolean createNew = args.length != 4 || args[3].booleanValue();
+      final String resName = FunUtil.getString(args, 1, "resName", "resource", null, !createNew);
 
       final XmlDBStore store = (XmlDBStore) ctx.getNodeStore();
       if (createNew) {

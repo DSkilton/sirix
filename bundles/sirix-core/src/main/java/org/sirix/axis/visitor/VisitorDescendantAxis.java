@@ -69,7 +69,7 @@ public final class VisitorDescendantAxis extends AbstractAxis {
     /**
      * Optional visitor.
      */
-    private NodeVisitor visitor;
+    private final NodeVisitor visitor;
 
     /**
      * Determines if it is the first call.

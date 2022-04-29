@@ -153,10 +153,7 @@ public final class ModificationVisitor extends AbstractXmlNodeVisitor {
     private VisitResult delete() throws SirixException {
         try {
             final long nodeKey = wtx.getNodeKey();
-            boolean removeTextNode = false;
-            if (wtx.getLeftSiblingKind() == NodeKind.TEXT && wtx.getRightSiblingKind() == NodeKind.TEXT) {
-                removeTextNode = true;
-            }
+            boolean removeTextNode = wtx.getLeftSiblingKind() == NodeKind.TEXT && wtx.getRightSiblingKind() == NodeKind.TEXT;
             wtx.moveTo(nodeKey);
 
             // Case: Has no right and no left sibl. but the parent has a right sibl.

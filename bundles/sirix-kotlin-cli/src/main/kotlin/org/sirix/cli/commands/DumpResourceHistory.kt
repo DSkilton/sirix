@@ -14,7 +14,7 @@ class DumpResourceHistory(options: CliOptions, val resourceName: String, private
             val manager = database.openResourceManager(resourceName)
 
             manager.use {
-                val historyList = manager.getHistory()
+                val historyList = manager.history
 
                 buffer.append("{\"history\":[")
 

@@ -985,7 +985,7 @@ public class UpdateTest {
         final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx();
         testThirdMoveToFirstChild(rtx);
         rtx.moveToDocumentRoot();
-        final Builder<SirixDeweyID> builder = ImmutableSet.<SirixDeweyID>builder();
+        final Builder<SirixDeweyID> builder = ImmutableSet.builder();
         final ImmutableSet<SirixDeweyID> ids = builder.add(new SirixDeweyID("1"))
                 .add(new SirixDeweyID("1.17"))
                 .add(new SirixDeweyID("1.17.0.17"))
@@ -1140,7 +1140,7 @@ public class UpdateTest {
         final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx();
         testFirstMoveSubtreeToRightSibling(rtx);
         rtx.moveToDocumentRoot();
-        final Builder<SirixDeweyID> builder = ImmutableSet.<SirixDeweyID>builder();
+        final Builder<SirixDeweyID> builder = ImmutableSet.builder();
         final ImmutableSet<SirixDeweyID> ids = builder.add(new SirixDeweyID("1"))
                 .add(new SirixDeweyID("1.17"))
                 .add(new SirixDeweyID("1.17.0.17"))
@@ -1198,7 +1198,7 @@ public class UpdateTest {
         final XmlNodeReadOnlyTrx rtx = holder.getResourceManager().beginNodeReadOnlyTrx();
         testSecondMoveSubtreeToRightSibling(rtx);
         rtx.moveToDocumentRoot();
-        final Builder<SirixDeweyID> builder = ImmutableSet.<SirixDeweyID>builder();
+        final Builder<SirixDeweyID> builder = ImmutableSet.builder();
         builder.add(new SirixDeweyID("1"))
                 .add(new SirixDeweyID("1.3"))
                 .add(new SirixDeweyID("1.3.0.3"))
@@ -1472,7 +1472,7 @@ public class UpdateTest {
     }
 
     @Test
-    public void testSubtreeInsertWithFirstNodeBeingAComment() throws FileNotFoundException, IOException {
+    public void testSubtreeInsertWithFirstNodeBeingAComment() throws IOException {
         final XmlNodeTrx wtx = holder.getResourceManager().beginNodeTrx();
         final Path pomFile = Paths.get("src", "test", "resources", "pom.xml");
         try (final var fis = new FileInputStream(pomFile.toFile())) {

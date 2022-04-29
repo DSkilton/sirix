@@ -502,10 +502,7 @@ public final class FMSE implements ImportDiff, AutoCloseable {
                     LOGWRAPPER.error("Something went wrong: First child and child may never be the same!");
                 } else {
                     if (wtx.moveTo(child).hasMoved()) {
-                        boolean isTextKind = false;
-                        if (wtx.getKind() == NodeKind.TEXT) {
-                            isTextKind = true;
-                        }
+                        boolean isTextKind = wtx.getKind() == NodeKind.TEXT;
 
                         checkFromNodeForTextRemoval(wtx, child);
                         wtx.moveTo(parent);

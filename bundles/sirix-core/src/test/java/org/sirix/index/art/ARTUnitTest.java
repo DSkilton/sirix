@@ -273,7 +273,7 @@ public class ARTUnitTest {
         Assertions.assertTrue(leaf instanceof LeafNode);
         Assertions.assertEquals(key, ((LeafNode) leaf).getKey());
         Assertions.assertEquals(value, ((LeafNode) leaf).getValue());
-        Assertions.assertEquals(3, ((InnerNode) newNode).prefixLen);
+        Assertions.assertEquals(3, newNode.prefixLen);
         Assertions.assertArrayEquals("abc".getBytes(), getValidPrefixKey(newNode));
 
         // test removeLCPFromCompressedPath

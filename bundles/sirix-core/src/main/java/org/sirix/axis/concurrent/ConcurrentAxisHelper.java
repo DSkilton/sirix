@@ -59,7 +59,7 @@ public class ConcurrentAxisHelper implements Runnable {
      * result sequence is marked by the NULL_NODE_KEY. This is used for
      * communication with the consumer.
      */
-    private BlockingQueue<Long> mResults;
+    private final BlockingQueue<Long> mResults;
 
     /**
      * Bind axis step to transaction. Make sure to create a new ReadTransaction

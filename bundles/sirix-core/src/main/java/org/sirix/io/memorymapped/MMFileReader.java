@@ -76,7 +76,7 @@ public final class MMFileReader implements Reader {
 
     private MemorySegment dataFileSegment;
 
-    private MemorySegment revisionFileSegment;
+    private final MemorySegment revisionFileSegment;
 
     /**
      * Constructor.

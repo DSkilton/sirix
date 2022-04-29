@@ -55,7 +55,7 @@ public final class XQueryUsage {
      */
     enum Severity {
         low, high, critical
-    };
+    }
 
     /**
      * Main method.
@@ -94,7 +94,7 @@ public final class XQueryUsage {
             // Use XQuery to load sample document into store.
             System.out.println("Loading document:");
             final URI docUri = doc.toUri();
-            final String xq1 = String.format("bit:load('mydoc.xml', '%s')", docUri.toString());
+            final String xq1 = String.format("bit:load('mydoc.xml', '%s')", docUri);
             System.out.println(xq1);
             new XQuery(xq1).evaluate(ctx);
 
@@ -126,7 +126,7 @@ public final class XQueryUsage {
             // Use XQuery to load sample document into store.
             System.out.println("Loading document:");
             final URI docUri = doc.toUri();
-            final String xq1 = String.format("xml:load('mydoc.col', 'mydoc.xml', '%s')", docUri.toString());
+            final String xq1 = String.format("xml:load('mydoc.col', 'mydoc.xml', '%s')", docUri);
             System.out.println(xq1);
             new XQuery(xq1).evaluate(ctx);
 
@@ -160,7 +160,7 @@ public final class XQueryUsage {
             // Use XQuery to load sample document into store.
             System.out.println("Loading document:");
             final URI docUri = doc.toUri();
-            final String xq1 = String.format("sdb:load('mycol.xml', 'mydoc.xml', '%s')", docUri.toString());
+            final String xq1 = String.format("sdb:load('mycol.xml', 'mydoc.xml', '%s')", docUri);
             System.out.println(xq1);
             new XQuery(xq1).evaluate(ctx);
 
@@ -194,7 +194,7 @@ public final class XQueryUsage {
 
             // Use XQuery to load sample document into store.
             System.out.println("Loading document:");
-            final String xq1 = String.format("xml:load('mydocs.col', 'resource1', '%s')", docUri.toString());
+            final String xq1 = String.format("xml:load('mydocs.col', 'resource1', '%s')", docUri);
             System.out.println(xq1);
             new XQuery(compileChain, xq1).evaluate(ctx1);
         }
@@ -363,7 +363,7 @@ public final class XQueryUsage {
 
         // Query CAS index.
         try (final BasicXmlDBStore store = BasicXmlDBStore.newBuilder().build()) {
-            System.out.println("");
+            System.out.println();
             System.out.println("Find CAS index for all attribute values.");
             final QueryContext ctx3 = SirixQueryContext.createWithNodeStore(store);
             final String query
@@ -385,7 +385,7 @@ public final class XQueryUsage {
 
         // Query CAS index.
         try (final BasicXmlDBStore store = BasicXmlDBStore.newBuilder().build()) {
-            System.out.println("");
+            System.out.println();
             System.out.println("Find CAS index for all text values which are integers between 10 and 100.");
             final QueryContext ctx3 = SirixQueryContext.createWithNodeStore(store);
             final String query
@@ -407,7 +407,7 @@ public final class XQueryUsage {
 
         // Query path index which are children of the log-element (only elements).
         try (final BasicXmlDBStore store = BasicXmlDBStore.newBuilder().build()) {
-            System.out.println("");
+            System.out.println();
             System.out.println("Find path index for all elements which are children of the log-element (only elements).");
             final QueryContext ctx3 = SirixQueryContext.createWithNodeStore(store);
             final XmlDBNode node
@@ -434,7 +434,7 @@ public final class XQueryUsage {
 
         // Query name index.
         try (final BasicXmlDBStore store = BasicXmlDBStore.newBuilder().build()) {
-            System.out.println("");
+            System.out.println();
             System.out.println("Query name index (src-element).");
             final QueryContext ctx3 = new BrackitQueryContext(store);
             final String query = "let $doc := xml:doc('mydocs.col', 'resource1')"
@@ -489,7 +489,7 @@ public final class XQueryUsage {
 
             final SirixQueryContext ctx = SirixQueryContext.createWithNodeStore(store);
             System.out.println();
-            final String xq3 = String.format("xml:load('mycoll.col', 'mydoc.xml', '%s')", doc.toUri().toString());
+            final String xq3 = String.format("xml:load('mycoll.col', 'mydoc.xml', '%s')", doc.toUri());
             System.out.println(xq3);
             final XQuery q = new XQuery(SirixCompileChain.createWithNodeStore(store), xq3);
             q.execute(ctx);

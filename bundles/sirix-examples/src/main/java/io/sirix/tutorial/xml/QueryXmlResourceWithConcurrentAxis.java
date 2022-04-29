@@ -36,13 +36,13 @@ public class QueryXmlResourceWithConcurrentAxis {
 
     private static final Path DATABASE_PATH = Constants.SIRIX_DATA_LOCATION.resolve("xml-xmark-database");
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws IOException {
         createXmlDatabase();
 
         queryXmlDatabase();
     }
 
-    static void createXmlDatabase() throws FileNotFoundException, IOException {
+    static void createXmlDatabase() throws IOException {
         final var pathToXmlFile = XML.resolve("10mb.xml");
 
         if (Files.exists(DATABASE_PATH)) {
@@ -56,7 +56,9 @@ public class QueryXmlResourceWithConcurrentAxis {
                     .useTextCompression(false)
                     .useDeweyIDs(true)
                     .build());
-            try (final var manager = database.openResourceManager("resource"); final var wtx = manager.beginNodeTrx(); final var fis = new FileInputStream(pathToXmlFile.toFile())) {
+            try (final var manager = database.openResourceManager("resource");
+                 final var wtx = manager.beginNodeTrx();
+                 final var fis = new FileInputStream(pathToXmlFile.toFile())) {
                 wtx.insertSubtreeAsFirstChild(XmlShredder.createFileReader(fis));
                 wtx.commit();
             }
@@ -64,7 +66,14 @@ public class QueryXmlResourceWithConcurrentAxis {
     }
 
     static void queryXmlDatabase() {
-        try (final var database = Databases.openXmlDatabase(DATABASE_PATH); final var manager = database.openResourceManager("resource"); final var firstConcurrRtx = manager.beginNodeReadOnlyTrx(); final var secondConcurrRtx = manager.beginNodeReadOnlyTrx(); final var thirdConcurrRtx = manager.beginNodeReadOnlyTrx(); final var firstRtx = manager.beginNodeReadOnlyTrx(); final var secondRtx = manager.beginNodeReadOnlyTrx(); final var thirdRtx = manager.beginNodeReadOnlyTrx()) {
+        try (final var database = Databases.openXmlDatabase(DATABASE_PATH);
+             final var manager = database.openResourceManager("resource");
+             final var firstConcurrRtx = manager.beginNodeReadOnlyTrx();
+             final var secondConcurrRtx = manager.beginNodeReadOnlyTrx();
+             final var thirdConcurrRtx = manager.beginNodeReadOnlyTrx();
+             final var firstRtx = manager.beginNodeReadOnlyTrx();
+             final var secondRtx = manager.beginNodeReadOnlyTrx();
+             final var thirdRtx = manager.beginNodeReadOnlyTrx()) {
 
             /* query: //regions/africa//location */
             final Axis axis

@@ -35,7 +35,7 @@ public final class FutureAxis<R extends NodeReadOnlyTrx & NodeCursor, W extends 
     /**
      * Node key to lookup and retrieve.
      */
-    private long mNodeKey;
+    private final long mNodeKey;
 
     /**
      * Constructor.

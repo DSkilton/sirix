@@ -39,10 +39,6 @@ public final class NameFilter implements Filter {
         final boolean included = (includes.isEmpty() || includes.contains(name));
         final boolean excluded = (!excludes.isEmpty() && excludes.contains(name));
 
-        if (!included || excluded) {
-            return false;
-        }
-
-        return true;
+        return included && !excluded;
     }
 }

@@ -774,8 +774,8 @@ public enum Type {
      */
     NMTOKENS(ANY_SIMPLE_TYPE, "xs:NMTOKENS", 3, false);
 
-    private static Map<Integer, Type> keyToType = new HashMap<Integer, Type>();
-    private static Map<String, Type> nameToType = new HashMap<String, Type>();
+    private static final Map<Integer, Type> keyToType = new HashMap<Integer, Type>();
+    private static final Map<String, Type> nameToType = new HashMap<String, Type>();
 
     static {
         for (final Type type : Type.values()) {
@@ -833,7 +833,7 @@ public enum Type {
      * @param mPrec precedence of the type
      * @param mPrimitive true, of type is a primitive type
      */
-    private Type(final Type mBaseType, final String mRepresentation, final int mPrec,
+    Type(final Type mBaseType, final String mRepresentation, final int mPrec,
             final boolean mPrimitive) {
 
         mDerivedFrom = mBaseType;

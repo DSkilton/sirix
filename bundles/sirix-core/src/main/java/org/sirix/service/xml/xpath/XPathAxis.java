@@ -83,7 +83,7 @@ public final class XPathAxis extends AbstractAxis {
     /**
      * Axis holding the consecutive query execution plans of the query.
      */
-    private Axis mPipeline;
+    private final Axis mPipeline;
 
     /**
      * <p>

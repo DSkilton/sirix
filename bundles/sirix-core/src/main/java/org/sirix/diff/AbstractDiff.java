@@ -85,7 +85,7 @@ abstract class AbstractDiff<R extends NodeReadOnlyTrx & NodeCursor, W extends No
      *
      * @see HashType
      */
-    private HashType hashKind;
+    private final HashType hashKind;
 
     /**
      * Kind of difference.

@@ -504,7 +504,6 @@ public class AdaptiveRadixTree<K, V> extends AbstractMap<K, V> implements Naviga
         int end = Math.min(keyBytes.length - depth, Math.min(node.prefixLen, InnerNode.PESSIMISTIC_PATH_COMPRESSION_LIMIT));
         // match pessimistic compressed path
         for (; lcp < end && keyBytes[depth] == node.prefixKeys[lcp]; lcp++, depth++) {
-            ;
         }
 
         if (lcp == node.prefixLen) {
@@ -529,7 +528,6 @@ public class AdaptiveRadixTree<K, V> extends AbstractMap<K, V> implements Naviga
 				if we don't match entirely, then we split
              */
             for (; depth < end && keyBytes[depth] == leafBytes[depth]; depth++, lcp++) {
-                ;
             }
             if (lcp == node.prefixLen) {
                 if (depth == keyBytes.length && !node.hasLeaf()) { // key ended, it means it is a prefix
@@ -766,7 +764,6 @@ public class AdaptiveRadixTree<K, V> extends AbstractMap<K, V> implements Naviga
     static int compare(byte[] a, int aFrom, int aTo, byte[] b, int bFrom, int bTo) {
         int i = aFrom, j = bFrom;
         for (; i < aTo && j < bTo && a[i] == b[j]; i++, j++) {
-            ;
         }
         if (i == aTo && j == bTo) {
             return 0;

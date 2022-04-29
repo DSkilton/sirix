@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 public final class StoreIntegrationTest extends TestCase {
 
-  private Path sirixPath = PATHS.PATH1.getFile();
+  private final Path sirixPath = PATHS.PATH1.getFile();
 
   @Override
   protected void setUp() throws Exception {

@@ -51,7 +51,7 @@ public final class SimpleQueryIntegrationTest {
   private static final String expectedPastOrSelfTimeTravelQueryResult =
       "{\"foo\":[{\"foo\":\"bar\"},\"bar\",null,2.33],\"bar\":{\"hello\":\"world\"},\"baz\":\"hello\",\"tada\":[{\"foo\":\"bar\"},{\"baz\":false},\"boo\",{},[]]} {\"foo\":[{\"foo\":\"bar\"},\"bar\",null,2.33],\"bar\":{\"hello\":\"world\",\"helloo\":true},\"baz\":\"hello\",\"tada\":[{\"foo\":\"bar\"},{\"baz\":false},\"boo\",{},[]]} {\"foo\":[\"bar\",null,2.33],\"bar\":{\"hello\":\"world\",\"helloo\":true},\"baz\":\"hello\",\"tada\":[{\"foo\":\"bar\"},{\"baz\":false},\"boo\",{},[]]}";
 
-  private Path sirixPath = PATHS.PATH1.getFile();
+  private final Path sirixPath = PATHS.PATH1.getFile();
 
   @BeforeEach
   protected void setUp() {

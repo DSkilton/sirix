@@ -75,7 +75,7 @@ public final class JsonRecordSerializer implements Callable<Void> {
      */
     private final int[] revisions;
 
-    private long lastTopLevelNodeKey;
+    private final long lastTopLevelNodeKey;
 
     /**
      * Initialize XMLStreamReader implementation with transaction. The cursor

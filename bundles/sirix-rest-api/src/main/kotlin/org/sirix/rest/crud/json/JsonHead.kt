@@ -6,7 +6,6 @@ import io.vertx.core.http.HttpHeaders
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.HttpException
-import io.vertx.kotlin.core.executeBlockingAwait
 import io.vertx.kotlin.coroutines.await
 import org.sirix.access.Databases
 import org.sirix.access.trx.node.HashType
@@ -27,7 +26,7 @@ class JsonHead(private val location: Path) {
         }
 
         ctx.vertx().executeBlocking<Unit> {
-            head(databaseName!!, ctx, resource!!)
+            head(databaseName, ctx, resource)
         }.await()
 
         return ctx.currentRoute()

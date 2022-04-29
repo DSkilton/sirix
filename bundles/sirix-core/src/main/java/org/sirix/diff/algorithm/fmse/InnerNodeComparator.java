@@ -40,12 +40,12 @@ final class InnerNodeComparator implements NodeComparator<Long> {
     /**
      * Number of descendants in subtree of node on old revision.
      */
-    private Map<Long, Long> mDescendantsOldRev;
+    private final Map<Long, Long> mDescendantsOldRev;
 
     /**
      * Number of descendants in subtree of node on new revision.
      */
-    private Map<Long, Long> mDescendantsNewRev;
+    private final Map<Long, Long> mDescendantsNewRev;
 
     /**
      * Constructor.
@@ -92,11 +92,7 @@ final class InnerNodeComparator implements NodeComparator<Long> {
 
         if (mIdName != null && mOldRtx.isElement() && mNewRtx.isElement()
                 && mOldRtx.moveToAttributeByName(mIdName).hasMoved() && mNewRtx.moveToAttributeByName(mIdName).hasMoved()) {
-            if (mNewRtx.getValue().equals(mOldRtx.getValue())) {
-                retVal = true;
-            } else {
-                retVal = false;
-            }
+            retVal = mNewRtx.getValue().equals(mOldRtx.getValue());
         } else if ((mOldRtx.hasFirstChild() || mOldRtx.hasAttributes() || mOldRtx.hasNamespaces())
                 && (mNewRtx.hasFirstChild() || mNewRtx.hasAttributes() || mNewRtx.hasNamespaces())) {
             final long common = mMatching.containedDescendants(firstNode, secondNode);

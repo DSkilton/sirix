@@ -85,7 +85,7 @@ public final class Main {
     }
   }
 
-  private static List<Option> options = new ArrayList<>();
+  private static final List<Option> options = new ArrayList<>();
 
   static {
     options.add(new Option("-q", "query file [use '-' for stdin (default)]", true));

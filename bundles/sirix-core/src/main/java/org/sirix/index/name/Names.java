@@ -40,7 +40,7 @@ public final class Names {
 
     private long maxNodeKey;
 
-    private int indexNumber;
+    private final int indexNumber;
 
     /**
      * Constructor creating a new index structure.
@@ -115,7 +115,7 @@ public final class Names {
                 countNameMapping.put(key, prevValue - 1);
 
                 final HashCountEntryNode hashCountEntryNode
-                        = (HashCountEntryNode) pageTrx.prepareRecordForModification(countNodeKey, IndexType.NAME, indexNumber);
+                        = pageTrx.prepareRecordForModification(countNodeKey, IndexType.NAME, indexNumber);
                 hashCountEntryNode.decrementValue();
             }
         }
@@ -183,7 +183,7 @@ public final class Names {
             final long nodeKey = countNodeMap.get(key);
 
             final HashCountEntryNode hashCountEntryNode
-                    = (HashCountEntryNode) pageTrx.prepareRecordForModification(nodeKey, IndexType.NAME, indexNumber);
+                    = pageTrx.prepareRecordForModification(nodeKey, IndexType.NAME, indexNumber);
             hashCountEntryNode.incrementValue();
 
             return key;

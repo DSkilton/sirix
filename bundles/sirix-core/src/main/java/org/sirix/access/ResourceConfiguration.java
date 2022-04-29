@@ -251,12 +251,12 @@ public final class ResourceConfiguration {
     /**
      * The name of the resource.
      */
-    private String resourceName;
+    private final String resourceName;
 
     /**
      * Determines whether resource child count should be tracked
      */
-    private boolean storeChildCount;
+    private final boolean storeChildCount;
 
     /**
      * Determines if diffs are going to be stored or not.
@@ -588,7 +588,7 @@ public final class ResourceConfiguration {
         /**
          * Hashing function for hashing nodes.
          */
-        private HashFunction hashFunction = Hashing.sha256();
+        private final HashFunction hashFunction = Hashing.sha256();
 
         /**
          * Type of Storage (File, Berkeley).
